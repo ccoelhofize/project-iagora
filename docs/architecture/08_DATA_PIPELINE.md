@@ -33,7 +33,7 @@ Restriction or removal events invalidate or rebuild affected fragments, assertio
 
 ## Current state
 
-The pipeline is specified but not implemented. Orchestration, storage, retry, scheduling, and execution technologies remain open.
+The local vertical slice implements bounded source registration, normalized input validation, canonical scope-preserving transformation, row-level evidence location, passport projection, and a fail-closed publication check. It does not implement network acquisition, exact raw-byte preservation, quarantine, sandboxed parsing, persistence, scheduling, retry, restriction propagation, or production publication. Those technologies remain open.
 
 ## Related records
 

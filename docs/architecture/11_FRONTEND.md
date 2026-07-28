@@ -33,4 +33,4 @@ Rendered source content is sanitized. External links identify destination and so
 
 ## Current state
 
-No frontend or design system exists. Framework, component library, visualization toolkit, localization system, and analytics provider remain open.
+The vertical slice generates a static French HTML review page with semantic headings, explicit text status, table captions, keyboard-scrollable tables, visible focus, and a machine-readable passport peer. It is a local prototype, not an approved public frontend or design system. Framework, component library, visualization toolkit, localization system, and analytics provider remain open.

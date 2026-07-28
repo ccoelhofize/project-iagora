@@ -25,7 +25,7 @@ This index distinguishes documents and accepted decisions from executable capabi
 | [`01_ARCHITECT_PLAYBOOK.md`](01_ARCHITECT_PLAYBOOK.md) | Accepted | Design and decision workflow |
 | [`vision/00_VISION.md`](vision/00_VISION.md) | Draft | Mission, users, outcomes, and boundaries |
 | [`vision/01_MANIFESTO.md`](vision/01_MANIFESTO.md) | Accepted | Public-interest commitments and values |
-| [`vision/02_PRODUCT_SCOPE.md`](vision/02_PRODUCT_SCOPE.md) | Draft | “Respire à la récré” pilot scope |
+| [`vision/02_PRODUCT_SCOPE.md`](vision/02_PRODUCT_SCOPE.md) | Accepted | “Respire à la récré” POC scope and confirmed case studies |
 | [`vision/03_ROADMAP.md`](vision/03_ROADMAP.md) | Draft | Outcome-based strategic sequence |
 
 ## Architecture specifications
@@ -57,6 +57,7 @@ This index distinguishes documents and accepted decisions from executable capabi
 | [`governance/21_DATA_PROVENANCE.md`](governance/21_DATA_PROVENANCE.md) | Draft | Origin, acquisition, rights, and custody |
 | [`governance/22_GLOSSARY.md`](governance/22_GLOSSARY.md) | Draft | Canonical working vocabulary |
 | [`governance/23_KNOWLEDGE_PASSPORT.md`](governance/23_KNOWLEDGE_PASSPORT.md) | Draft | Public governance projection contract |
+| [`governance/24_PILOT_SOURCE_INVENTORY.md`](governance/24_PILOT_SOURCE_INVENTORY.md) | Active inventory | Verified, missing, limited, and approved POC sources |
 
 ## Decision records
 
@@ -86,11 +87,28 @@ Detailed evidence-conflict comparison and resolution behavior still requires a n
 | [`development/RELEASES.md`](development/RELEASES.md) | Draft | Versioning and release gates |
 | [`development/LICENSE.md`](development/LICENSE.md) | Draft | Artifact-class licensing guide and incomplete implementation state |
 
+## Executable prototype artifacts
+
+| Artifact | State | Role |
+| --- | --- | --- |
+| [`../LICENSE`](../LICENSE) | Present | Exact official English EUPL-1.2 text for original software |
+| [`../NOTICE.md`](../NOTICE.md) | Present | Artifact-class rights notice and third-party exclusions |
+| [`../THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md) | Active | Runtime dependency and third-party boundary inventory |
+| [`../contracts/README.md`](../contracts/README.md) | Pre-stable implementation | Contract lifecycle and local validation instructions |
+| [`../contracts/v1/source-profiles.schema.json`](../contracts/v1/source-profiles.schema.json) | Executable prototype | Source-registration contract |
+| [`../contracts/v1/pilot-snapshot.schema.json`](../contracts/v1/pilot-snapshot.schema.json) | Executable prototype | Bounded POC configuration and publication gate |
+| [`../contracts/v1/knowledge-passport.schema.json`](../contracts/v1/knowledge-passport.schema.json) | Executable prototype | Minimum POC passport projection |
+| [`../data/sources/source-profiles.json`](../data/sources/source-profiles.json) | Active prototype data | Machine-readable source inventory |
+| [`../data/pilot/pilot-snapshot.json`](../data/pilot/pilot-snapshot.json) | Versioned prototype input | Accepted case set, cut-off, fingerprint, and blockers |
+| [`../data/pilot/open-data-subset.json`](../data/pilot/open-data-subset.json) | Third-party normalized prototype data | Six licensed City open-data records for the selected cases |
+| [`../src/iagora/`](../src/iagora/) | Local prototype | Deterministic validation, transformation, passport, and HTML projection |
+| [`../tests/`](../tests/) | Executable tests | Contract, evidence, scope, replay, publication, and accessibility guardrails |
+
 ## Planned capabilities and absent artifacts
 
-No application, executable schema, data contract, source connector, pipeline, backend, API, frontend, AI service, search index, security control set, telemetry stack, test suite, CI workflow, release, dataset, or deployment exists yet.
+The repository now contains a bounded local prototype, three executable contract schemas, an active source inventory, a normalized six-record source subset, and an initial test suite. It does not contain a production source connector, exact raw evidence store, quarantine or parser sandbox, database, backend service, public API, approved frontend, AI service, search index, production security control set, telemetry stack, CI workflow, release, or deployment.
 
-The exact root `LICENSE` text, documentation licence notice, dataset manifest contract, third-party notice, dependency inventory, retention schedule, privacy assessment, threat model, incident plan, and production source inventory are also absent.
+The primary 2020 campaign artifact, general dataset manifest contract, retention schedule, privacy assessment, threat model, incident plan, qualified legal and security reviews, adopted-record chain, executed financial evidence, outcome indicators, and production source inventory remain absent or incomplete.
 
 ## Recommended reading path
 

@@ -44,7 +44,7 @@ sources -> acquisition -> processing -> canonical knowledge -> publication -> ex
 
 ## Current state
 
-These boundaries are specified but not implemented. Physical deployment, persistence, messaging, caching, and model providers remain open.
+The local POC implements a narrow path across source registration, normalized source input, deterministic validation and transformation, Knowledge Passport projection, and accessible static rendering. It deliberately omits production acquisition, raw storage, persistence, review workflow, search, AI, and deployment. Physical deployment, persistence, messaging, caching, and model providers remain open.
 
 ## Related records
 

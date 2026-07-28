@@ -33,6 +33,13 @@ Treat external input as untrusted. Use least privilege, safe defaults, bounded r
 
 Public interfaces, contracts, non-obvious invariants, migrations, and operational procedures require concise documentation. Comments explain why a constraint exists, not restate code.
 
-## Quality tools
+## Prototype quality commands
 
-Formatting, linting, type checking, dependency scanning, and test commands remain undefined until an implementation stack exists. Once selected, they must be reproducible locally and in continuous integration.
+The current local slice uses Python 3.11 or later without third-party runtime packages. Validate contracts and run tests with:
+
+```sh
+PYTHONPATH=src python3 -m iagora validate
+PYTHONPATH=src python3 -m unittest discover -s tests -v
+```
+
+Formatting, linting, static type checking, dependency scanning, and continuous integration remain to be selected before the prototype becomes a distributed service. The current Python choice is a reversible prototype implementation, not an accepted platform-language decision.
