@@ -27,4 +27,13 @@ precise locator, and a five-word citation from an archived 2019 campaign page.
 It does not contain the archived HTML. The archived legal notice reserves
 reproduction rights, so full-page repository storage is blocked pending
 qualified review. `pilot/pilot-snapshot-0.1.json` preserves the earlier missing-
-source state; `pilot/pilot-snapshot.json` is the current `0.2.0` evidence state.
+source state; `pilot/pilot-snapshot.json` is the current `0.3.0` evidence state.
+
+`pilot/administrative-evidence.json` is a metadata-only bundle for ten City PDF
+versions reviewed for the POC. It records exact URLs, acquisition timestamps,
+byte sizes, SHA-256 fingerprints, page-level evidence, authority limits,
+financial stages, school or programme scope, and non-retention decisions. The
+bundle documents adopted policy, programme budget authorization, programme
+expenditure, reported site delivery, and site funding forecasts. It does not
+contain the PDFs, infer missing procurement, establish competent works
+acceptance, or support an outcome or causal-impact conclusion.

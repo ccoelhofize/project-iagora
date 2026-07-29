@@ -76,8 +76,35 @@
         "source_scope": {"const": "Clermont-Ferrand municipal campaign"},
         "quantification_state": {"const": "unquantified_in_primary_fragment"},
         "mapping_state": {"const": "review_incomplete"},
+        "mapping_evidence_state": {"const": "candidate_evidence_found"},
         "artifact_version_id": {"type": "string", "minLength": 1},
         "evidence_id": {"const": "evidence-campaign-schoolyards-2020"}
+      }
+    },
+    "administrative_chain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_version", "commitment_mapping", "policy_adoption",
+        "budget_authorization", "executed_expenditure", "procurement",
+        "competent_completion", "outcome_evidence", "causal_impact",
+        "fulfillment_conclusion", "financial_distinctions",
+        "procurement_searches", "milestones"
+      ],
+      "properties": {
+        "rule_version": {"const": "adr-0003-and-adr-0004-1.0"},
+        "commitment_mapping": {"const": "candidate_evidence_found_review_incomplete"},
+        "policy_adoption": {"const": "evidenced"},
+        "budget_authorization": {"const": "evidenced_at_programme_level"},
+        "executed_expenditure": {"const": "evidenced_at_programme_level"},
+        "procurement": {"const": "not_located"},
+        "competent_completion": {"const": "not_located"},
+        "outcome_evidence": {"const": "missing"},
+        "causal_impact": {"const": "missing"},
+        "fulfillment_conclusion": {"const": "not_verifiable"},
+        "financial_distinctions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "procurement_searches": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "milestones": {"type": "array", "minItems": 1, "items": {"type": "object"}}
       }
     },
     "evidence": {

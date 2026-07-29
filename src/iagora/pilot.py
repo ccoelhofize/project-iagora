@@ -19,6 +19,7 @@ CONTRACTS = ROOT / "contracts" / "v1"
 SOURCE_PROFILES = ROOT / "data" / "sources" / "source-profiles.json"
 SNAPSHOT = ROOT / "data" / "pilot" / "pilot-snapshot.json"
 CAMPAIGN_ARTIFACT = ROOT / "data" / "pilot" / "campaign-artifact.json"
+ADMINISTRATIVE_EVIDENCE = ROOT / "data" / "pilot" / "administrative-evidence.json"
 
 
 def file_sha256(path: Path) -> str:
@@ -70,6 +71,7 @@ def validate_inputs(
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
+    dict[str, Any],
 ]:
     profiles_path = root / SOURCE_PROFILES.relative_to(ROOT)
     snapshot_path = root / SNAPSHOT.relative_to(ROOT)
@@ -78,6 +80,10 @@ def validate_inputs(
     campaign_path = root / snapshot["campaign_artifact"]["local_path"]
     campaign_artifact = validate_files(
         campaign_path, root / "contracts/v1/campaign-artifact.schema.json"
+    )
+    administrative_path = root / snapshot["administrative_evidence"]["local_path"]
+    administrative_evidence = validate_files(
+        administrative_path, root / "contracts/v1/administrative-evidence.schema.json"
     )
     acquisition_path = root / snapshot["source_dataset"]["raw_acquisition_event_path"]
     acquisition_event = validate_files(
@@ -101,6 +107,14 @@ def validate_inputs(
         raise ContractViolation(
             f"{campaign_path}: fingerprint mismatch; expected "
             f"{expected_campaign_metadata_hash}, got {campaign_metadata_hash}"
+        )
+
+    administrative_hash = file_sha256(administrative_path)
+    expected_administrative_hash = snapshot["administrative_evidence"]["sha256"]
+    if administrative_hash != expected_administrative_hash:
+        raise ContractViolation(
+            f"{administrative_path}: fingerprint mismatch; expected "
+            f"{expected_administrative_hash}, got {administrative_hash}"
         )
 
     raw_hash = file_sha256(raw_path)
@@ -146,6 +160,68 @@ def validate_inputs(
     ):
         raise ContractViolation("Campaign artifact version reference does not resolve")
 
+    administrative_ref = snapshot["administrative_evidence"]
+    if administrative_evidence["bundle_id"] != administrative_ref["bundle_id"]:
+        raise ContractViolation("Administrative evidence bundle reference does not resolve")
+    if administrative_evidence["bundle_version"] != administrative_ref["bundle_version"]:
+        raise ContractViolation("Administrative evidence bundle version does not resolve")
+    if administrative_evidence["raw_bytes_preserved"] or administrative_ref["raw_bytes_preserved"]:
+        raise ContractViolation("Administrative PDFs must remain metadata-only pending review")
+
+    documents = administrative_evidence["documents"]
+    artifact_ids = [document["artifact_version_id"] for document in documents]
+    if len(artifact_ids) != len(set(artifact_ids)):
+        raise ContractViolation("Administrative artifact version identifiers must be unique")
+    evidence_ids = [
+        fragment["evidence_id"]
+        for document in documents
+        for fragment in document["evidence_fragments"]
+    ]
+    if len(evidence_ids) != len(set(evidence_ids)):
+        raise ContractViolation("Administrative evidence identifiers must be unique")
+    programme_id = snapshot["programme"]["programme_id"]
+    case_ids = {case["case_id"] for case in snapshot["case_studies"]}
+    for document in documents:
+        profile = source_index.get(document["source_id"])
+        if not profile or profile["status"] != "link_only":
+            raise ContractViolation(
+                f"Administrative source {document['source_id']} must be registered as link-only"
+            )
+        if profile["rights"]["redistribution"] != "blocked":
+            raise ContractViolation("Metadata-only administrative source redistribution must be blocked")
+        if document["issued_at"] > snapshot["observation_cutoff"]:
+            raise ContractViolation("Administrative evidence issued after the observation cut-off")
+        scope = document["scope"]
+        if scope["level"] == "programme" and scope["ids"] != [programme_id]:
+            raise ContractViolation("Programme administrative evidence must resolve to the pilot programme")
+        if scope["level"] == "school_case" and not set(scope["ids"]).issubset(case_ids):
+            raise ContractViolation("Administrative school evidence contains an unknown pilot case")
+        expected_amount_scope = "programme" if scope["level"] == "programme" else "school_case"
+        for fragment in document["evidence_fragments"]:
+            amount = fragment.get("amount")
+            if amount and amount["scope"] != expected_amount_scope:
+                raise ContractViolation("Administrative amount scope differs from its document scope")
+
+    stages = {
+        fragment["stage"]
+        for document in documents
+        for fragment in document["evidence_fragments"]
+    }
+    required_stages = {
+        "adopted_policy",
+        "budget_authorization",
+        "executed_expenditure",
+        "reported_delivery",
+        "funding_forecast",
+    }
+    if not required_stages.issubset(stages):
+        raise ContractViolation(
+            f"Administrative chain is incomplete; missing stages {sorted(required_stages - stages)}"
+        )
+    for search in administrative_evidence["procurement_searches"]:
+        if search["interpretation"] != "not_evidence_of_absence":
+            raise ContractViolation("Procurement search gaps must not become evidence of absence")
+
     rows = dataset.get("records")
     if not isinstance(rows, list) or len(rows) != 6:
         raise ContractViolation("The bounded source snapshot must contain exactly six school-unit rows")
@@ -162,7 +238,15 @@ def validate_inputs(
         raise ContractViolation(
             f"Bounded school set differs: expected {sorted(expected_schools)}, got {sorted(actual_schools)}"
         )
-    return profiles, snapshot, dataset, campaign_artifact, acquisition_event, raw_dataset
+    return (
+        profiles,
+        snapshot,
+        dataset,
+        campaign_artifact,
+        acquisition_event,
+        raw_dataset,
+        administrative_evidence,
+    )
 
 
 def _reported_state(value: str) -> str:
@@ -178,7 +262,15 @@ def _reported_state(value: str) -> str:
 
 
 def build_passport(root: Path = ROOT) -> dict[str, Any]:
-    profiles, snapshot, dataset, campaign_artifact, acquisition_event, _ = validate_inputs(root)
+    (
+        profiles,
+        snapshot,
+        dataset,
+        campaign_artifact,
+        acquisition_event,
+        _,
+        administrative_evidence,
+    ) = validate_inputs(root)
     source = next(
         item for item in profiles["sources"] if item["source_id"] == "src-city-open-data-schools"
     )
@@ -199,6 +291,35 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "source_url": campaign_artifact["archive_url"],
         }
     ]
+    administrative_milestones = []
+    administrative_evidence_by_case: dict[str, list[str]] = defaultdict(list)
+    for document in administrative_evidence["documents"]:
+        for fragment in document["evidence_fragments"]:
+            milestone = {
+                "evidence_id": fragment["evidence_id"],
+                "stage": fragment["stage"],
+                "statement": fragment["statement"],
+                "locator": fragment["locator"],
+                "source_title": document["title"],
+                "source_url": document["canonical_url"],
+                "scope_ids": document["scope"]["ids"],
+                "authority_outcome": document["authority"]["outcome"],
+            }
+            if "amount" in fragment:
+                milestone["amount"] = fragment["amount"]
+            administrative_milestones.append(milestone)
+            evidence.append(
+                {
+                    "evidence_id": fragment["evidence_id"],
+                    "relationship": fragment["relationship"],
+                    "artifact_version_id": document["artifact_version_id"],
+                    "locator": fragment["locator"],
+                    "source_url": document["canonical_url"],
+                }
+            )
+            for scope_id in document["scope"]["ids"]:
+                if scope_id.startswith("case-"):
+                    administrative_evidence_by_case[scope_id].append(fragment["evidence_id"])
     for case in snapshot["case_studies"]:
         school_rows = sorted(rows_by_school[case["school_name"]], key=lambda row: row["uai"])
         states = sorted({row["reported_state"] for row in school_rows})
@@ -210,6 +331,9 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "purpose": case["purpose"],
                 "reported_summary": summary,
                 "scope_warning": "School-unit rows remain distinct and are not a programme-level conclusion.",
+                "administrative_evidence_ids": sorted(
+                    administrative_evidence_by_case[case["case_id"]]
+                ),
                 "records": school_rows,
             }
         )
@@ -236,8 +360,8 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "lifecycle_state": "internal_prototype",
             "plain_language_description": (
                 "Prototype local reliant une promesse de campagne archivée et authentifiée avec "
-                "limites à des états scolaires rapportés, sans conclure à sa réalisation ni à "
-                "son impact."
+                "limites à une politique adoptée, à des étapes financières distinctes et à des "
+                "états scolaires rapportés, sans conclure à sa réalisation ni à son impact."
             ),
         },
         "scope": {
@@ -251,9 +375,10 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "epistemic_kind": "methodological_inference",
             "statement": (
                 "The bounded evidence authenticates an unquantified primary campaign commitment "
-                "and demonstrates source-linked delivery states for three school cases, but the "
-                "commitment-to-programme mapping, public fulfillment conclusion, observed outcome, "
-                "and causal impact remain unverified."
+                "and documents adopted policy, programme-level authorization and expenditure, and "
+                "source-linked delivery states for three school cases. The commitment mapping, "
+                "procurement and competent completion chain, public fulfillment conclusion, "
+                "observed outcome, and causal impact remain unverified."
             ),
             "fulfillment_conclusion": snapshot["campaign_commitment"]["fulfillment_conclusion"],
             "causal_claim_class": "causal_status_not_verifiable",
@@ -264,6 +389,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "source_scope": "Clermont-Ferrand municipal campaign",
             "quantification_state": "unquantified_in_primary_fragment",
             "mapping_state": "review_incomplete",
+            "mapping_evidence_state": "candidate_evidence_found",
             "artifact_version_id": campaign_artifact["artifact_version_id"],
             "evidence_id": "evidence-campaign-schoolyards-2020",
         },
@@ -287,6 +413,28 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 ),
                 "limitations": campaign_artifact["authenticity"]["limitations"],
             },
+        },
+        "administrative_chain": {
+            "rule_version": "adr-0003-and-adr-0004-1.0",
+            "commitment_mapping": administrative_evidence["chain_summary"]["commitment_mapping"],
+            "policy_adoption": administrative_evidence["chain_summary"]["policy_adoption"],
+            "budget_authorization": administrative_evidence["chain_summary"]["budget_authorization"],
+            "executed_expenditure": administrative_evidence["chain_summary"]["executed_expenditure"],
+            "procurement": administrative_evidence["chain_summary"]["procurement"],
+            "competent_completion": administrative_evidence["chain_summary"]["competent_completion"],
+            "outcome_evidence": administrative_evidence["chain_summary"]["outcome_evidence"],
+            "causal_impact": administrative_evidence["chain_summary"]["causal_impact"],
+            "fulfillment_conclusion": administrative_evidence["chain_summary"]["fulfillment_conclusion"],
+            "financial_distinctions": [
+                "Programme authorization is not annual payment credit.",
+                "Annual payment credit is not executed expenditure.",
+                "Programme expenditure is not a school allocation.",
+                "Reported or forecast site cost is not a contract or payment."
+            ],
+            "procurement_searches": administrative_evidence["procurement_searches"],
+            "milestones": sorted(
+                administrative_milestones, key=lambda item: item["evidence_id"]
+            ),
         },
         "evidence": sorted(evidence, key=lambda item: item["evidence_id"]),
         "provenance": {
@@ -320,6 +468,15 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "raw_bytes_preserved": campaign_artifact["raw_bytes_preserved"],
                 "nonretention_reason": campaign_artifact["nonretention_reason"],
             },
+            "administrative_evidence": {
+                "bundle_id": administrative_evidence["bundle_id"],
+                "bundle_version": administrative_evidence["bundle_version"],
+                "local_path": snapshot["administrative_evidence"]["local_path"],
+                "content_fingerprint_sha256": snapshot["administrative_evidence"]["sha256"],
+                "assembled_at": administrative_evidence["assembled_at"],
+                "document_count": len(administrative_evidence["documents"]),
+                "raw_bytes_preserved": administrative_evidence["raw_bytes_preserved"],
+            },
         },
         "lineage": [
             {
@@ -351,11 +508,20 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "deterministic": True,
             },
             {
+                "event_id": "lineage-review-administrative-evidence-001",
+                "event_type": "evidence_review",
+                "input": snapshot["administrative_evidence"]["local_path"],
+                "input_sha256": snapshot["administrative_evidence"]["sha256"],
+                "rule_version": "iagora.pilot.administrative-evidence/0.1.0",
+                "result": "partial_chain_validated_publication_still_blocked",
+                "deterministic": False,
+            },
+            {
                 "event_id": "lineage-project-knowledge-passport-001",
                 "event_type": "projection",
                 "input": snapshot["source_dataset"]["local_path"],
                 "input_sha256": snapshot["source_dataset"]["sha256"],
-                "rule_version": "iagora.pilot.project-passport/0.2.0",
+                "rule_version": "iagora.pilot.project-passport/0.3.0",
                 "output": "knowledge-passport",
                 "deterministic": True,
             },
@@ -371,7 +537,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "intended_use": "Local validation of contracts, lineage, scope separation, and rendering.",
             "excluded_uses": [
                 "Public campaign fulfillment conclusion",
-                "Executed expenditure conclusion",
+                "School-level executed expenditure conclusion",
                 "Outcome or causal-impact conclusion",
                 "Generalization beyond the three selected cases",
             ],
@@ -381,12 +547,16 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "Campaign HTML is fingerprinted but not retained because redistribution is blocked.",
                 "Source values have not been corroborated with competent completion records.",
                 "Dataset acquisition occurred after the historical observation cut-off.",
+                "Administrative PDF bytes are fingerprinted but not retained pending rights and privacy review.",
+                "Programme-level financial records cannot be allocated to individual schools from the reviewed evidence.",
             ],
         },
         "conflicts_and_uncertainty": [
             "The primary campaign fragment is unquantified and does not state a delivery date, budget, or number of schoolyards.",
             "The all-neighbourhood scope appears in supporting interview evidence, not in the retained primary fragment.",
             "Pierre-et-Marie-Curie has different reported states for its maternelle and élémentaire units; this is a scope difference, not a resolved contradiction.",
+            "The 1.09 million euros reported for 2022 and 1,939,810.63 euros of cumulative mandates before 2023 have different periods and precision; they must not be treated as contradictory or interchangeable.",
+            "No unambiguous Respire procurement record was found in the bounded searches; this is a search gap, not evidence that no contract exists.",
             "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.",
         ],
         "rights": {
@@ -400,6 +570,12 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "redistribution": campaign_artifact["rights"]["redistribution"],
                 "raw_bytes_preserved": campaign_artifact["raw_bytes_preserved"],
                 "nonretention_reason": campaign_artifact["nonretention_reason"],
+            },
+            "administrative_evidence": {
+                "state": "rights_review_pending",
+                "redistribution": "blocked",
+                "raw_bytes_preserved": administrative_evidence["raw_bytes_preserved"],
+                "retention_class": "metadata_only",
             },
         },
         "review": {
@@ -435,6 +611,72 @@ def render_html(passport: dict[str, Any]) -> str:
         "reported_not_complete": "Non achevé selon la source",
         "mixed_by_school_unit": "États différents selon l’unité scolaire",
     }
+    milestones = {
+        item["evidence_id"]: item for item in passport["administrative_chain"]["milestones"]
+    }
+
+    def milestone_link(evidence_id: str, label: str) -> str:
+        item = milestones[evidence_id]
+        return (
+            f'<a href="{html.escape(item["source_url"], quote=True)}" '
+            f'rel="external noreferrer">{html.escape(label)}</a>'
+        )
+
+    chain_rows = [
+        (
+            "Correspondance promesse → programme",
+            "Pièce candidate trouvée, revue méthodologique incomplète",
+            milestone_link("evidence-pev-respire-definition-2023", "Projet éducatif adopté"),
+        ),
+        (
+            "Politique publique",
+            "Adoption établie",
+            milestone_link("evidence-pev-adoption-2023", "Délibération du 5 mai 2023"),
+        ),
+        (
+            "Autorisation budgétaire",
+            "Établie à l’échelle du programme",
+            milestone_link("evidence-apcp-respire-total-2022", "AP de 4,07 M€")
+            + " ; "
+            + milestone_link("evidence-budget-2023-cp-opened", "810 000 € de CP 2023"),
+        ),
+        (
+            "Dépense exécutée",
+            "Établie à l’échelle du programme, non répartie par école",
+            milestone_link("evidence-account-2022-respire-expenditure", "1,09 M€ en 2022")
+            + " ; "
+            + milestone_link(
+                "evidence-budget-2023-prior-mandates", "1 939 810,63 € cumulés avant 2023"
+            ),
+        ),
+        (
+            "Marchés publics",
+            "Aucune pièce non ambiguë localisée dans la recherche bornée",
+            "Lacune de recherche — ce n’est pas une preuve d’absence",
+        ),
+        (
+            "Livraison et réception",
+            "Livraison déclarée pour certains sites ; réception compétente non localisée",
+            milestone_link("evidence-transition-nestor-reported-use", "Nestor-Perret")
+            + " ; "
+            + milestone_link("evidence-pierre-curie-reported-delivery", "Curie maternelle")
+            + " ; "
+            + milestone_link("evidence-jean-zay-forecast-cost", "Jean-Zay : prévision"),
+        ),
+        (
+            "Résultats et impact",
+            "Non établis",
+            "Aucun indicateur de résultat ni dispositif causal revu",
+        ),
+    ]
+    rendered_chain_rows = "".join(
+        "<tr>"
+        f'<th scope="row">{html.escape(stage)}</th>'
+        f"<td>{html.escape(state)}</td>"
+        f"<td>{evidence_cell}</td>"
+        "</tr>"
+        for stage, state, evidence_cell in chain_rows
+    )
     sections = []
     for case in passport["case_studies"]:
         rows = []
@@ -455,6 +697,7 @@ def render_html(passport: dict[str, Any]) -> str:
               <h2 id="{html.escape(case['case_id'])}">{html.escape(case['school_name'])}</h2>
               <p><strong>Lecture :</strong> {html.escape(status_labels[case['reported_summary']])}.</p>
               <p>{html.escape(case['scope_warning'])}</p>
+              <p><strong>Pièces administratives reliées :</strong> {len(case['administrative_evidence_ids'])}. Leur présence ne vaut ni réception des travaux ni preuve d’impact.</p>
               <div class="table-wrap" tabindex="0" aria-label="Tableau défilable des données de {html.escape(case['school_name'])}">
                 <table>
                   <caption>Données déclarées dans le jeu open data pour {html.escape(case['school_name'])}</caption>
@@ -503,7 +746,18 @@ def render_html(passport: dict[str, Any]) -> str:
   </section>
   <section aria-labelledby="conclusion">
     <h2 id="conclusion">Ce que l’on peut conclure</h2>
-    <p>Le document primaire est <strong>authentifié avec limites</strong>. Le respect de la promesse reste néanmoins <strong>non vérifiable</strong>, car le rapprochement méthodologique et la chaîne administrative ne sont pas encore validés. Les lignes ci-dessous sont des états déclarés par le jeu de données municipal, acquis après la date d’observation du 31 décembre 2025.</p>
+    <p>Le document primaire est <strong>authentifié avec limites</strong>. La chaîne administrative est maintenant partiellement documentée, mais le respect de la promesse reste <strong>non vérifiable</strong> : le rapprochement méthodologique n’est pas validé et les marchés, réceptions, résultats et impacts restent incomplets. Les états scolaires ci-dessous proviennent d’un jeu de données municipal acquis après la date d’observation du 31 décembre 2025.</p>
+  </section>
+  <section aria-labelledby="chaine">
+    <h2 id="chaine">Croisement avec les décisions et les finances municipales</h2>
+    <p>Chaque montant conserve son étape et sa portée. Un budget voté n’est pas une dépense, une dépense de programme n’est pas une dépense par école, et un coût annoncé n’est pas un paiement.</p>
+    <div class="table-wrap" tabindex="0" aria-label="Tableau défilable de la chaîne administrative">
+      <table>
+        <caption>État des preuves administratives au 31 décembre 2025</caption>
+        <thead><tr><th scope="col">Étape</th><th scope="col">État vérifiable</th><th scope="col">Pièce ou limite</th></tr></thead>
+        <tbody>{rendered_chain_rows}</tbody>
+      </table>
+    </div>
   </section>
   {''.join(sections)}
   <section aria-labelledby="limites">
@@ -517,6 +771,7 @@ def render_html(passport: dict[str, Any]) -> str:
   <section aria-labelledby="source">
     <h2 id="source">Source et passeport</h2>
     <p><a href="{source_url}" rel="external noreferrer">Jeu de données de la Ville de Clermont-Ferrand</a>, Licence Ouverte 2.0.</p>
+    <p>Les dix PDF administratifs sont enregistrés sous forme de métadonnées, empreintes et citations précises ; leurs octets ne sont pas redistribués avant la revue des droits et de la vie privée.</p>
     <p>Le fichier <code>passport.json</code> fournit la version machine-readable équivalente.</p>
   </section>
 </main>

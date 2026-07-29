@@ -20,11 +20,11 @@ class PilotSliceTests(unittest.TestCase):
         self.assertEqual("mixed_by_school_unit", self.cases["Pierre-et-Marie-Curie"]["reported_summary"])
 
     def test_every_source_row_has_precise_evidence(self) -> None:
-        self.assertEqual(7, len(self.passport["evidence"]))
+        self.assertEqual(22, len(self.passport["evidence"]))
         school_evidence = [
             item
             for item in self.passport["evidence"]
-            if item["evidence_id"] != "evidence-campaign-schoolyards-2020"
+            if item["evidence_id"].startswith("evidence-063")
         ]
         self.assertEqual(6, len(school_evidence))
         self.assertTrue(all("records[uai=" in item["locator"] for item in school_evidence))
@@ -45,6 +45,32 @@ class PilotSliceTests(unittest.TestCase):
         self.assertEqual(
             "primary_source_authenticated_with_limitations",
             self.passport["campaign_commitment"]["verification_state"],
+        )
+        self.assertEqual(
+            "candidate_evidence_found",
+            self.passport["campaign_commitment"]["mapping_evidence_state"],
+        )
+        self.assertEqual(
+            "evidenced_at_programme_level",
+            self.passport["administrative_chain"]["executed_expenditure"],
+        )
+        self.assertEqual("not_located", self.passport["administrative_chain"]["procurement"])
+        self.assertIn(
+            "procurement_and_competent_completion_evidence_missing",
+            self.passport["publication"]["blockers"],
+        )
+
+    def test_administrative_evidence_is_linked_without_scope_conflation(self) -> None:
+        self.assertEqual(1, len(self.cases["Nestor-Perret"]["administrative_evidence_ids"]))
+        self.assertEqual(
+            2, len(self.cases["Pierre-et-Marie-Curie"]["administrative_evidence_ids"])
+        )
+        self.assertEqual(3, len(self.cases["Jean-Zay"]["administrative_evidence_ids"]))
+        self.assertTrue(
+            all(
+                search["interpretation"] == "not_evidence_of_absence"
+                for search in self.passport["administrative_chain"]["procurement_searches"]
+            )
         )
 
     def test_reported_permeable_share_matches_reported_surfaces(self) -> None:
@@ -73,11 +99,13 @@ class PilotSliceTests(unittest.TestCase):
         rendered = render_html(self.passport)
         self.assertIn('<html lang="fr">', rendered)
         self.assertIn("<main>", rendered)
-        self.assertEqual(3, rendered.count("<caption>"))
+        self.assertEqual(4, rendered.count("<caption>"))
         self.assertIn("Prototype local — publication bloquée", rendered)
         self.assertIn("Engagement de campagne retrouvé", rendered)
         self.assertIn("authentifié avec limites", rendered)
         self.assertIn("ni à un impact sur la ville", rendered)
+        self.assertIn("Croisement avec les décisions et les finances municipales", rendered)
+        self.assertIn("1 939 810,63 € cumulés avant 2023", rendered)
 
 
 if __name__ == "__main__":

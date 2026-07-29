@@ -98,10 +98,12 @@ Detailed evidence-conflict comparison and resolution behavior still requires a n
 | [`../contracts/v1/source-profiles.schema.json`](../contracts/v1/source-profiles.schema.json) | Executable prototype | Source-registration contract |
 | [`../contracts/v1/campaign-artifact.schema.json`](../contracts/v1/campaign-artifact.schema.json) | Executable prototype | Rights-aware archived campaign evidence metadata |
 | [`../contracts/v1/acquisition-event.schema.json`](../contracts/v1/acquisition-event.schema.json) | Executable prototype | Bounded exact-response acquisition metadata and invariants |
+| [`../contracts/v1/administrative-evidence.schema.json`](../contracts/v1/administrative-evidence.schema.json) | Executable prototype | Metadata-only adopted-policy, financial-stage, site-evidence, and procurement-gap contract |
 | [`../contracts/v1/pilot-snapshot.schema.json`](../contracts/v1/pilot-snapshot.schema.json) | Executable prototype | Bounded POC configuration and publication gate |
 | [`../contracts/v1/knowledge-passport.schema.json`](../contracts/v1/knowledge-passport.schema.json) | Executable prototype | Minimum POC passport projection |
 | [`../data/sources/source-profiles.json`](../data/sources/source-profiles.json) | Active prototype data | Machine-readable source inventory |
 | [`../data/pilot/campaign-artifact.json`](../data/pilot/campaign-artifact.json) | Authenticated with limitations | Fingerprint, citation, authenticity basis, rights, and non-retention reason for the archived campaign page |
+| [`../data/pilot/administrative-evidence.json`](../data/pilot/administrative-evidence.json) | Partial administrative chain | Ten official PDF versions represented by metadata, fingerprints, precise evidence, financial stages, authority limits, and non-retention decisions |
 | [`../data/pilot/pilot-snapshot-0.1.json`](../data/pilot/pilot-snapshot-0.1.json) | Historical prototype input | Preserved state before the primary campaign fragment was located |
 | [`../data/pilot/pilot-snapshot.json`](../data/pilot/pilot-snapshot.json) | Versioned prototype input | Accepted case set, cut-off, fingerprint, and blockers |
 | [`../data/pilot/open-data-subset.json`](../data/pilot/open-data-subset.json) | Third-party normalized prototype data | Six licensed City open-data records for the selected cases |
@@ -112,9 +114,9 @@ Detailed evidence-conflict comparison and resolution behavior still requires a n
 
 ## Planned capabilities and absent artifacts
 
-The repository now contains a bounded local prototype, five executable contract schemas, an active source inventory, authenticated campaign-artifact metadata, one exact bounded API response with acquisition metadata, a validated six-record normalization, and an initial test suite. It does not contain a production source connector, general raw-evidence store, quarantine or parser sandbox, database, backend service, public API, approved frontend, AI service, search index, production security control set, telemetry stack, CI workflow, release, or deployment.
+The repository now contains a bounded local prototype, six executable contract schemas, an active source inventory, authenticated campaign-artifact metadata, a partial administrative-evidence chain, one exact bounded API response with acquisition metadata, a validated six-record normalization, and an initial test suite. It does not contain a production source connector, general raw-evidence store, quarantine or parser sandbox, database, backend service, public API, approved frontend, AI service, search index, production security control set, telemetry stack, CI workflow, release, or deployment.
 
-The primary 2020 campaign fragment is authenticated with limitations, but its full raw HTML remains absent for rights reasons and its mapping has not completed methodological review. The general dataset manifest contract, retention schedule, privacy assessment, threat model, incident plan, qualified legal and security reviews, adopted-record chain, executed financial evidence, outcome indicators, and production source inventory remain absent or incomplete.
+The primary 2020 campaign fragment is authenticated with limitations, but its full raw HTML remains absent for rights reasons and its mapping has not completed methodological review. Adopted policy, programme authorization, programme expenditure, and limited site-level reports are now present as metadata-only evidence; procurement, competent acceptance, school-level accounting, outcomes, and impact evidence remain absent. The general dataset manifest contract, retention schedule, privacy assessment, threat model, incident plan, qualified legal and security reviews, and production source inventory remain absent or incomplete.
 
 ## Recommended reading path
 

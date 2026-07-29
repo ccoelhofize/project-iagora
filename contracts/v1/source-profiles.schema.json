@@ -31,7 +31,8 @@
               "campaign_artifact", "campaign_interview", "election_record",
               "official_web_page", "official_dataset", "budget_summary",
               "administrative_archive", "administrative_report",
-              "adopted_policy"
+              "adopted_policy", "adopted_budget", "approved_account",
+              "official_communication", "funding_disclosure"
             ]
           },
           "publisher": {"type": "string", "minLength": 1},
