@@ -4,21 +4,21 @@
   "sources": [
     {
       "source_id": "src-campaign-2020-primary",
-      "version": "1.0.0",
-      "status": "missing",
-      "title": "Naturellement Clermont 2020 primary campaign artifact",
+      "version": "1.1.0",
+      "status": "link_only",
+      "title": "Archived Naturellement Clermont 2020 campaign page — Une ville nature",
       "source_class": "campaign_artifact",
-      "publisher": "Naturellement Clermont campaign",
-      "canonical_url": null,
+      "publisher": "Olivier Bianchi 2020 campaign",
+      "canonical_url": "https://olivierbianchi2020.fr/une-ville-nature/",
       "purpose": "Authenticate the original wording, scope, conditions, and target of the schoolyard commitment.",
       "fact_types": ["original_campaign_wording"],
       "territory": "fr-63113-clermont-ferrand",
-      "rights": {"state": "not_acquired", "license_id": null, "redistribution": "not_applicable", "review_state": "not_applicable"},
-      "privacy": {"classification": "unknown", "personal_data_expected": false, "child_data_allowed": false},
-      "security": {"risk_tier": "unknown", "remote_content_untrusted": true},
-      "acquisition": {"mode": "none", "frequency": "none", "prototype_authorized": false},
-      "retention": {"class": "unassigned", "state": "not_acquired", "review_required_before_production": true},
-      "review": {"verified_at": "2026-07-28", "reviewer_role": "maintainer", "authority_state": "undetermined", "limitations": ["Primary artifact not located; secondary evidence cannot replace it."]}
+      "rights": {"state": "rights_unknown", "license_id": null, "redistribution": "blocked", "review_state": "pending"},
+      "privacy": {"classification": "public_official_role", "personal_data_expected": true, "child_data_allowed": false},
+      "security": {"risk_tier": "medium", "remote_content_untrusted": true},
+      "acquisition": {"mode": "manual_link", "frequency": "one_off", "prototype_authorized": false},
+      "retention": {"class": "metadata_only", "state": "active", "review_required_before_production": true},
+      "review": {"verified_at": "2026-07-29", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["Wayback capture authenticates a campaign-controlled web publication, not a legally certified profession of faith.", "The archived page states an unquantified schoolyard-regreening commitment; the wider all-neighbourhood scope appears only in supporting interview evidence.", "The archived legal notice blocks repository redistribution of the full page without permission."]}
     },
     {
       "source_id": "src-campaign-2020-interview",
@@ -112,7 +112,7 @@
     },
     {
       "source_id": "src-city-open-data-schools",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "status": "approved_prototype",
       "title": "Respire à la récré et Les enfants d'abord - Ville de Clermont-Ferrand",
       "source_class": "official_dataset",
@@ -126,7 +126,7 @@
       "security": {"risk_tier": "low", "remote_content_untrusted": true},
       "acquisition": {"mode": "bounded_api_query", "frequency": "one_off", "prototype_authorized": true},
       "retention": {"class": "open_data_prototype", "state": "active", "review_required_before_production": true},
-      "review": {"verified_at": "2026-07-28", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["Source-reported values are not competent completion certificates or causal evidence.", "Dataset was updated and acquired after the 2025 observation cut-off."]}
+      "review": {"verified_at": "2026-07-29", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["Source-reported values are not competent completion certificates or causal evidence.", "Dataset was updated and acquired after the 2025 observation cut-off.", "Exact bytes are preserved only for the bounded six-UAI field selection, not for the full dataset history."]}
     },
     {
       "source_id": "src-city-budget-2025-summary",

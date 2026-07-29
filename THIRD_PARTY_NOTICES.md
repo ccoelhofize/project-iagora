@@ -2,7 +2,7 @@
 
 **Status:** Active
 **Owner:** Maintainers
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 The first vertical slice has no third-party runtime package dependency. It uses
 the Python standard library.
@@ -14,3 +14,8 @@ redistribution state are recorded in the pilot source inventory and the nearest
 
 This inventory must be updated before adding or distributing a dependency or
 third-party asset.
+
+The archived Olivier Bianchi 2020 campaign page is not redistributed in this
+repository. Only governance metadata, its fingerprint, a precise locator, and a
+short citation are retained. The archived legal notice reserves reproduction
+rights; qualified review or permission is required before broader reuse.

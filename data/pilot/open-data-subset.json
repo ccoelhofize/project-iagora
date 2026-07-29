@@ -9,7 +9,11 @@
   "acquired_at": "2026-07-28T18:55:00+00:00",
   "license_id": "etalab-2.0",
   "normalization": "Selected six records and omitted image metadata and coordinates as unnecessary for the POC.",
-  "raw_bytes_preserved": false,
+  "raw_bytes_preserved": true,
+  "raw_artifact_version_id": "dataset-respire-selected-raw-20260729-001",
+  "raw_local_path": "data/raw/respire-a-la-recre/2026-07-29/records-selected.json",
+  "raw_sha256": "62f26237a39465942e18749aa1ba4957885fe7ca1d6979b0620067c99a2517ae",
+  "raw_acquisition_event_path": "data/raw/respire-a-la-recre/2026-07-29/acquisition-event.json",
   "records": [
     {"uai": "0630258N", "school_name": "Pierre-et-Marie-Curie", "school_unit": "Élémentaire", "children_reported": 201, "vegetation_year": "À venir", "reported_completion": "non", "shared_courtyard": "non", "courtyards_reported": null, "existing_surface_m2": null, "post_vegetation_surface_m2": null, "existing_trees": null, "trees_planted": null, "deimpermeabilized_surface_m2": null, "permeable_share_percent": null},
     {"uai": "0630268Z", "school_name": "Nestor-Perret", "school_unit": "Élémentaire", "children_reported": 208, "vegetation_year": "2022", "reported_completion": "oui", "shared_courtyard": "oui", "courtyards_reported": 2, "existing_surface_m2": 3160.0, "post_vegetation_surface_m2": 3160.0, "existing_trees": 8, "trees_planted": 34, "deimpermeabilized_surface_m2": 1367.0, "permeable_share_percent": 43.25949367088607},

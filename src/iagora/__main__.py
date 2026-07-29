@@ -19,7 +19,10 @@ def main() -> int:
     if args.command == "validate":
         validate_inputs()
         build_passport()
-        print("Validated source profiles, pilot snapshot, evidence subset, and Knowledge Passport.")
+        print(
+            "Validated source profiles, campaign artifact metadata, pilot snapshot, "
+            "evidence subset, and Knowledge Passport."
+        )
         return 0
 
     passport_path, html_path = build(args.output)

@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Pipeline stages
 
@@ -33,7 +33,7 @@ Restriction or removal events invalidate or rebuild affected fragments, assertio
 
 ## Current state
 
-The local vertical slice implements bounded source registration, normalized input validation, canonical scope-preserving transformation, row-level evidence location, passport projection, and a fail-closed publication check. It does not implement network acquisition, exact raw-byte preservation, quarantine, sandboxed parsing, persistence, scheduling, retry, restriction propagation, or production publication. Those technologies remain open.
+The local vertical slice implements bounded source registration, one manually triggered constrained API acquisition, exact preservation of its selected-field response, acquisition-event validation, deterministic raw-to-normalized comparison, canonical scope-preserving transformation, row-level evidence location, passport projection, and a fail-closed publication check. It does not implement a reusable production connector, quarantine, sandboxed parsing, managed persistence, scheduling, retry, restriction propagation, or production publication. Those technologies remain open.
 
 ## Related records
 

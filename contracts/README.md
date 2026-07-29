@@ -2,11 +2,19 @@
 
 **Status:** Pre-stable implementation
 **Owner:** Maintainers
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 The `v1` directory contains the first field-level contracts for the bounded
 “Respire à la récré” proof of concept. They implement a deliberately small
 subset of the accepted logical model and do not freeze a future database or API.
+
+The campaign-artifact contract records an archived primary fragment without
+redistributing restricted HTML. The pilot-snapshot contract accepts the
+historical `1.0.0` state and the additive `1.1.0` evidence reference; both
+snapshot files remain validateable, while the current build uses `0.2.0`.
+The acquisition-event contract covers the single bounded official API response
+and binds its request, exact bytes, fingerprint, rights, minimization, security
+result, and limitations. It is not a general production acquisition contract.
 
 The contracts use JSON Schema 2020-12 vocabulary. The prototype validator
 enforces the keywords used by these files with the Python standard library; a

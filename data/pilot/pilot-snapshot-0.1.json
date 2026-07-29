@@ -1,40 +1,30 @@
 {
   "contract_id": "iagora.pilot-snapshot",
-  "contract_version": "1.1.0",
+  "contract_version": "1.0.0",
   "snapshot_id": "pilot-respire-recre-2025",
-  "snapshot_version": "0.2.0",
+  "snapshot_version": "0.1.0",
   "observation_cutoff": "2025-12-31",
-  "generated_at": "2026-07-29T12:40:13+00:00",
+  "generated_at": "2026-07-28T19:00:00+00:00",
   "territory": "fr-63113-clermont-ferrand",
   "programme": {
     "programme_id": "programme-respire-a-la-recre",
     "name": "Respire à la récré"
   },
   "campaign_commitment": {
-    "verification_state": "primary_source_authenticated_with_limitations",
+    "verification_state": "primary_source_unverified",
     "fulfillment_conclusion": "not_verifiable",
-    "blocking_reason": "commitment_mapping_and_methodological_review_incomplete"
-  },
-  "campaign_artifact": {
-    "source_id": "src-campaign-2020-primary",
-    "artifact_version_id": "campaign-naturellement-clermont-schoolyards-wayback-20191128144201",
-    "local_path": "data/pilot/campaign-artifact.json",
-    "sha256": "afa6405a147185bf979eb995a12f32fe4258631f970f21f7875908ea31744308"
+    "blocking_reason": "primary_campaign_artifact_missing"
   },
   "source_dataset": {
     "source_id": "src-city-open-data-schools",
     "artifact_id": "dataset-respire-enfants-vcf",
     "artifact_version_id": "dataset-respire-enfants-vcf-2026-06-26-normalized-poc",
     "local_path": "data/pilot/open-data-subset.json",
-    "sha256": "ec968fa432768ab6348c100f53cfaa0915683a7e79e2b3fab6480256c58d7fae",
+    "sha256": "7a1ff06e2ae6c72e0a23c11ed33f5f0dec082f430dc141fd3c7f3e739e0aa6d0",
     "acquired_at": "2026-07-28T18:55:00+00:00",
     "source_modified_at": "2026-06-26T14:41:40.240000+00:00",
     "license_id": "etalab-2.0",
-    "raw_bytes_preserved": true,
-    "raw_artifact_version_id": "dataset-respire-selected-raw-20260729-001",
-    "raw_local_path": "data/raw/respire-a-la-recre/2026-07-29/records-selected.json",
-    "raw_sha256": "62f26237a39465942e18749aa1ba4957885fe7ca1d6979b0620067c99a2517ae",
-    "raw_acquisition_event_path": "data/raw/respire-a-la-recre/2026-07-29/acquisition-event.json"
+    "raw_bytes_preserved": false
   },
   "case_studies": [
     {
@@ -56,8 +46,8 @@
   "publication_gate": {
     "eligible": false,
     "blockers": [
-      "commitment_mapping_and_methodological_review_incomplete",
-      "campaign_artifact_raw_bytes_not_preserved_for_rights",
+      "primary_campaign_artifact_missing",
+      "raw_source_bytes_not_preserved",
       "methodological_review_incomplete",
       "outcome_and_impact_evidence_missing",
       "production_privacy_security_and_retention_review_incomplete"

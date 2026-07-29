@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/acquisition-event.schema.json",
+  "title": "IAgora bounded acquisition event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "event_id", "source_id",
+    "artifact_version_id", "requested_endpoint", "resolved_url", "request",
+    "acquired_at", "method", "response", "raw_artifact", "software",
+    "authentication_class", "rights", "privacy", "security", "limitations"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.acquisition-event"},
+    "contract_version": {"const": "1.0.0"},
+    "event_id": {"const": "acquisition-respire-selected-20260729-001"},
+    "source_id": {"const": "src-city-open-data-schools"},
+    "artifact_version_id": {"const": "dataset-respire-selected-raw-20260729-001"},
+    "requested_endpoint": {"type": "string", "format": "uri"},
+    "resolved_url": {"type": "string", "format": "uri"},
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected_fields", "uai", "order_by", "limit"],
+      "properties": {
+        "selected_fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "uai": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^063[0-9A-Z]{5}$"}
+        },
+        "order_by": {"const": "uai"},
+        "limit": {"const": 100}
+      }
+    },
+    "acquired_at": {"type": "string", "format": "date-time"},
+    "method": {"const": "https_get"},
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["http_status", "media_type", "byte_size", "record_count"],
+      "properties": {
+        "http_status": {"const": 200},
+        "media_type": {"const": "application/json; charset=utf-8"},
+        "byte_size": {"const": 3189},
+        "record_count": {"const": 6}
+      }
+    },
+    "raw_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["local_path", "sha256", "immutable", "retention_class"],
+      "properties": {
+        "local_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "immutable": {"const": true},
+        "retention_class": {"const": "open_data_prototype"}
+      }
+    },
+    "software": {"type": "string", "minLength": 1},
+    "authentication_class": {"const": "public_unauthenticated"},
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["license_id", "attribution", "redistribution"],
+      "properties": {
+        "license_id": {"const": "etalab-2.0"},
+        "attribution": {"const": "Direction Enfance Jeunesse, Ville de Clermont-Ferrand"},
+        "redistribution": {"const": "allowed_with_attribution"}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "coordinates_excluded", "image_metadata_excluded"],
+      "properties": {
+        "classification": {"const": "public_school_level_aggregate"},
+        "coordinates_excluded": {"const": true},
+        "image_metadata_excluded": {"const": true}
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["risk_tier", "content_treated_as_untrusted", "result"],
+      "properties": {
+        "risk_tier": {"const": "low"},
+        "content_treated_as_untrusted": {"const": true},
+        "result": {"const": "accepted_after_contract_validation"}
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}
