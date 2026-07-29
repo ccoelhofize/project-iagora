@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/source-profiles.schema.json",
+  "title": "IAgora pilot source profiles",
+  "type": "object",
+  "required": ["contract_id", "contract_version", "sources"],
+  "properties": {
+    "contract_id": {"const": "iagora.source-profiles"},
+    "contract_version": {"const": "1.0.0"},
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id", "version", "status", "title", "source_class",
+          "publisher", "canonical_url", "purpose", "fact_types",
+          "territory", "rights", "privacy", "security", "acquisition",
+          "retention", "review"
+        ],
+        "properties": {
+          "source_id": {"type": "string", "pattern": "^src-[a-z0-9-]+$"},
+          "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+          "status": {
+            "enum": ["missing", "link_only", "approved_prototype", "suspended"]
+          },
+          "title": {"type": "string", "minLength": 1},
+          "source_class": {
+            "enum": [
+              "campaign_artifact", "campaign_interview", "election_record",
+              "official_web_page", "official_dataset", "budget_summary",
+              "administrative_archive", "administrative_report",
+              "adopted_policy"
+            ]
+          },
+          "publisher": {"type": "string", "minLength": 1},
+          "canonical_url": {"type": ["string", "null"], "format": "uri"},
+          "purpose": {"type": "string", "minLength": 1},
+          "fact_types": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "territory": {"const": "fr-63113-clermont-ferrand"},
+          "rights": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["state", "license_id", "redistribution", "review_state"],
+            "properties": {
+              "state": {"enum": ["open_license", "rights_unknown", "not_acquired"]},
+              "license_id": {"type": ["string", "null"]},
+              "redistribution": {"enum": ["allowed_with_attribution", "blocked", "not_applicable"]},
+              "review_state": {"enum": ["reviewed_for_prototype", "pending", "not_applicable"]}
+            }
+          },
+          "privacy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["classification", "personal_data_expected", "child_data_allowed"],
+            "properties": {
+              "classification": {"enum": ["public_non_personal", "public_official_role", "unknown"]},
+              "personal_data_expected": {"type": "boolean"},
+              "child_data_allowed": {"const": false}
+            }
+          },
+          "security": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["risk_tier", "remote_content_untrusted"],
+            "properties": {
+              "risk_tier": {"enum": ["low", "medium", "unknown"]},
+              "remote_content_untrusted": {"const": true}
+            }
+          },
+          "acquisition": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["mode", "frequency", "prototype_authorized"],
+            "properties": {
+              "mode": {"enum": ["none", "manual_link", "bounded_api_query"]},
+              "frequency": {"enum": ["none", "manual", "one_off"]},
+              "prototype_authorized": {"type": "boolean"}
+            }
+          },
+          "retention": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["class", "state", "review_required_before_production"],
+            "properties": {
+              "class": {"enum": ["metadata_only", "open_data_prototype", "unassigned"]},
+              "state": {"enum": ["active", "not_acquired", "blocked"]},
+              "review_required_before_production": {"const": true}
+            }
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["verified_at", "reviewer_role", "authority_state", "limitations"],
+            "properties": {
+              "verified_at": {"type": "string", "format": "date"},
+              "reviewer_role": {"const": "maintainer"},
+              "authority_state": {
+                "enum": ["authoritative", "authoritative_with_limitation", "not_authoritative", "undetermined"]
+              },
+              "limitations": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

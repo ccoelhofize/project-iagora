@@ -1,0 +1,11 @@
+[project]
+name = "project-iagora"
+version = "0.1.0"
+description = "Evidence-first civic knowledge prototype for Project IAgora"
+requires-python = ">=3.11"
+dependencies = []
+license = "EUPL-1.2"
+
+[tool.iagora]
+implementation-status = "prototype"
+publication-status = "blocked"

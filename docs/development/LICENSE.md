@@ -36,7 +36,9 @@ Open-source code does not make input evidence or output datasets open. When anal
 
 ## Implementation status
 
-The root `LICENSE`, documentation notice, dataset manifest contract, third-party notice, dependency inventory, and SPDX checks are still absent. Until those items and the required rights review are complete, repository visibility must not be treated as a completed licence grant.
+The exact official English EUPL-1.2 text is present in the root [`LICENSE`](../../LICENSE). [`NOTICE.md`](../../NOTICE.md) records the CC-BY-4.0 documentation notice and artifact-class exclusions. [`THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) records that the current prototype has no third-party runtime dependency, and the bounded open-data subset carries source-specific attribution and Licence Ouverte 2.0 metadata under [`data/`](../../data/README.md).
+
+Dataset manifest generalization, automated SPDX checks, qualified ownership and compatibility review, and a formal contributor-attestation workflow remain incomplete. The presence of these notices does not relicense third-party evidence or establish legal compliance.
 
 ## Authoritative licence sources
 

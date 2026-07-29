@@ -8,9 +8,9 @@
 
 This roadmap is a proposed sequence of outcomes and decision gates. It is not a delivery schedule, release commitment, or evidence of implementation. Dates should be added only when ownership, capacity, dependencies, and acceptance criteria are known.
 
-## Current phase: foundation
+## Current phase: bounded vertical-slice prototype
 
-The repository is in its foundation and architecture phase. The immediate objective is to establish a small, reviewable decision baseline before implementation.
+The initial decision foundation is merged. A local, non-public vertical slice now validates source profiles and a six-record open-data subset, projects a Knowledge Passport, and renders the three accepted school cases. The immediate objective is to replace prototype gaps with reviewable evidence and production-grade controls without widening the pilot.
 
 ### Current repository evidence
 
@@ -20,8 +20,12 @@ The repository is in its foundation and architecture phase. The immediate object
 - The Manifesto and contribution guide are accepted.
 - The Source of Truth and Source of Evidence specifications are accepted.
 - All architecture specifications, the remaining development guides, and the remaining governance specifications remain drafts.
-- No executable schema, source connector, application, test suite, dataset, deployment, or public service exists.
-- Licence notices, field-level contracts, retention schedules, source inventory, privacy assessment, and production security controls remain incomplete.
+- The product scope is accepted and the three case studies are confirmed through an active source inventory.
+- The exact EUPL-1.2 text, artifact-class notice, and third-party notice are present.
+- Pre-stable executable source-profile, pilot-snapshot, and Knowledge Passport schemas exist with a standard-library validator.
+- A deterministic local transformation, accessible HTML projection, and initial contract and methodology guardrail tests exist.
+- No production connector, immutable raw store, database, network service, public API, deployment, or public service exists.
+- The primary campaign artifact, exact administrative chains, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
 
 ### Exit criteria
 
@@ -59,19 +63,30 @@ Define the minimum governance and domain model needed for the “Respire à la r
 - enforceable rules have deterministic validation criteria;
 - legal and security risks are either mitigated or explicitly block implementation.
 
-## Phase 2: thin vertical slice
+## Phase 2: thin vertical slice — in progress
 
 Implement one end-to-end path for the programme and three selected school case studies.
 
-### Proposed outcomes
+### Current prototype evidence
+
+- bounded source profiles and rights states;
+- normalized six-record open-data subset for the three accepted cases;
+- deterministic validation and transformation;
+- row-level evidence locators and source attribution;
+- versioned Knowledge Passport JSON;
+- accessible static HTML review view;
+- publication gate that fails closed on known blockers;
+- initial automated tests for contracts, scope separation, evidence coverage, determinism, and unsupported conclusions.
+
+### Remaining outcomes
 
 - idempotent acquisition from the approved official corpus;
 - immutable raw evidence with recovery and governed redaction behavior;
 - parsing, validation, and canonical transformation;
 - source-fragment citations and transformation lineage;
-- versioned Knowledge Passport output;
-- inspectable commitment-to-action and action-to-impact pathways;
-- accessible plain-language exploration;
+- immutable raw source versions and governed acquisition events;
+- inspectable commitment-to-action and action-to-impact pathways backed by the missing authoritative records;
+- reviewed accessible plain-language exploration;
 - contract, lineage, accessibility, and security tests;
 - observability for acquisition and publication failures.
 

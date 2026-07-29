@@ -114,7 +114,8 @@ docs/
 │   ├── 20_DATA_QUALITY.md
 │   ├── 21_DATA_PROVENANCE.md
 │   ├── 22_GLOSSARY.md
-│   └── 23_KNOWLEDGE_PASSPORT.md
+│   ├── 23_KNOWLEDGE_PASSPORT.md
+│   └── 24_PILOT_SOURCE_INVENTORY.md
 ├── adr/
 │   ├── README.md
 │   ├── ADR-INDEX.md
@@ -135,6 +136,14 @@ docs/
 │   ├── RELEASES.md
 │   └── LICENSE.md
 └── 99_ARCHITECTURE_INDEX.md
+contracts/
+├── README.md
+└── v1/
+data/
+├── sources/
+└── pilot/
+src/iagora/
+tests/
 ```
 
 The architecture index is the detailed navigation hub. The ADR index records accepted, proposed, superseded, and rejected architectural decisions.
@@ -169,16 +178,33 @@ The architecture index is the detailed navigation hub. The ADR index records acc
 
 ## Current phase
 
-IAgora is in its **foundation and architecture phase**. The immediate goals are to:
+IAgora has completed its initial documentation foundation and now has a **bounded local proof of concept**. The immediate goals are to:
 
 - consolidate the vision and product scope;
 - complete and cross-reference the architecture specifications;
 - stabilize the canonical data model and governance vocabulary;
 - document significant decisions as ADRs;
-- define the first Clermont-Ferrand pilot around a small, evidence-rich set of municipal commitments and public records;
-- implement only after the relevant contracts, acceptance criteria, and risks are understood.
+- complete the missing primary campaign evidence and authoritative administrative chains for the accepted Clermont-Ferrand pilot;
+- evolve the pre-stable executable contracts without weakening the accepted evidence, authority, lineage, rights, and publication invariants;
+- validate the local vertical slice with methodological, privacy, security, legal, and accessibility reviewers before any public release.
 
-The roadmap describes strategic milestones rather than guaranteed dates. Document status fields, the ADR index, and the repository history are authoritative for current progress.
+The current implementation validates a six-record official open-data subset for Nestor-Perret, Pierre-et-Marie-Curie, and Jean-Zay, projects a versioned Knowledge Passport, and renders an accessible local HTML view. Its publication gate intentionally fails because the primary campaign artifact, raw acquisition, authoritative completion chain, outcome evidence, and production reviews are incomplete. The roadmap describes strategic milestones rather than guaranteed dates.
+
+## Run the local proof of concept
+
+The prototype uses Python 3.11 or later and has no third-party runtime dependency.
+
+```sh
+PYTHONPATH=src python3 -m iagora validate
+PYTHONPATH=src python3 -m iagora build
+python3 -m http.server --directory build/pilot 8000
+```
+
+The generated preview is available at `http://localhost:8000`. It is a local review artifact, not an authorized civic publication. Run the test suite with:
+
+```sh
+PYTHONPATH=src python3 -m unittest discover -s tests -v
+```
 
 ## Working with the project
 
@@ -212,7 +238,7 @@ Follow the accepted [contribution guide](docs/development/CONTRIBUTING.md). Befo
 
 ## License
 
-[ADR-0009](docs/adr/ADR-0009-project-licensing-policy.md) accepts the project licensing policy: EUPL-1.2 for original software, CC BY 4.0 for original reusable documentation, and dataset-specific Licence Ouverte 2.0 publication after rights review. The [licensing guide](docs/development/LICENSE.md) is present, but the exact licence texts, rights review, and repository notices have not yet been added. Until that implementation is complete, do not infer reuse rights from the repository's public visibility.
+[ADR-0009](docs/adr/ADR-0009-project-licensing-policy.md) accepts the project licensing policy: EUPL-1.2 for original software, CC BY 4.0 for original reusable documentation, and dataset-specific Licence Ouverte 2.0 publication after rights review. The exact EUPL-1.2 text is in [`LICENSE`](LICENSE), and [`NOTICE.md`](NOTICE.md) explains artifact classes and exclusions. Third-party evidence and data retain their original rights; consult their manifests and the [licensing guide](docs/development/LICENSE.md). Qualified ownership, compatibility, and dataset-publication reviews remain necessary.
 
 ## Status
 

@@ -40,7 +40,7 @@ Internal and public profiles MAY differ for a documented legal, privacy, safety,
 
 ## Initial transport
 
-JSON is the planned initial interchange representation and accessible HTML the public representation. The field-level schema, controlled vocabularies, compatibility rules, and conformance examples remain to be created. Both representations must convey equivalent material meaning.
+JSON is the initial prototype interchange representation and accessible HTML is its local human-readable projection. The [pre-stable field-level schema](../../contracts/v1/knowledge-passport.schema.json) covers the bounded pilot profile. Controlled vocabularies, general compatibility rules, restricted disclosure profiles, and public conformance examples remain incomplete. Both representations must convey equivalent material meaning.
 
 ## Validation
 

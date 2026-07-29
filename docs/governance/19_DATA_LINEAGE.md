@@ -35,4 +35,4 @@ Changed, restricted, or removed inputs trigger an impact traversal. Dependent as
 
 ## Current state
 
-No lineage store or replay mechanism exists. Physical representation remains open.
+The local vertical slice emits deterministic normalization and publication-gate lineage events in its Knowledge Passport and verifies replay equality in tests. No persistent lineage store, general dependency traversal, restriction propagation, or production replay mechanism exists. Physical representation remains open.

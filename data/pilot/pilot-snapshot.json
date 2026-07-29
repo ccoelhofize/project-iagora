@@ -1,0 +1,56 @@
+{
+  "contract_id": "iagora.pilot-snapshot",
+  "contract_version": "1.0.0",
+  "snapshot_id": "pilot-respire-recre-2025",
+  "snapshot_version": "0.1.0",
+  "observation_cutoff": "2025-12-31",
+  "generated_at": "2026-07-28T19:00:00+00:00",
+  "territory": "fr-63113-clermont-ferrand",
+  "programme": {
+    "programme_id": "programme-respire-a-la-recre",
+    "name": "Respire à la récré"
+  },
+  "campaign_commitment": {
+    "verification_state": "primary_source_unverified",
+    "fulfillment_conclusion": "not_verifiable",
+    "blocking_reason": "primary_campaign_artifact_missing"
+  },
+  "source_dataset": {
+    "source_id": "src-city-open-data-schools",
+    "artifact_id": "dataset-respire-enfants-vcf",
+    "artifact_version_id": "dataset-respire-enfants-vcf-2026-06-26-normalized-poc",
+    "local_path": "data/pilot/open-data-subset.json",
+    "sha256": "7a1ff06e2ae6c72e0a23c11ed33f5f0dec082f430dc141fd3c7f3e739e0aa6d0",
+    "acquired_at": "2026-07-28T18:55:00+00:00",
+    "source_modified_at": "2026-06-26T14:41:40.240000+00:00",
+    "license_id": "etalab-2.0",
+    "raw_bytes_preserved": false
+  },
+  "case_studies": [
+    {
+      "case_id": "case-nestor-perret",
+      "school_name": "Nestor-Perret",
+      "purpose": "Exercise completed reported output, shared-courtyard semantics, and school-unit citations."
+    },
+    {
+      "case_id": "case-pierre-marie-curie",
+      "school_name": "Pierre-et-Marie-Curie",
+      "purpose": "Exercise materially different maternelle and élémentaire states without silent aggregation."
+    },
+    {
+      "case_id": "case-jean-zay",
+      "school_name": "Jean-Zay",
+      "purpose": "Exercise in-progress reporting at the historical observation cut-off."
+    }
+  ],
+  "publication_gate": {
+    "eligible": false,
+    "blockers": [
+      "primary_campaign_artifact_missing",
+      "raw_source_bytes_not_preserved",
+      "methodological_review_incomplete",
+      "outcome_and_impact_evidence_missing",
+      "production_privacy_security_and_retention_review_incomplete"
+    ]
+  }
+}

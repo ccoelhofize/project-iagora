@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/pilot-snapshot.schema.json",
+  "title": "IAgora bounded pilot snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "snapshot_id", "snapshot_version",
+    "observation_cutoff", "generated_at", "territory", "programme",
+    "campaign_commitment", "source_dataset", "case_studies",
+    "publication_gate"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.pilot-snapshot"},
+    "contract_version": {"const": "1.0.0"},
+    "snapshot_id": {"const": "pilot-respire-recre-2025"},
+    "snapshot_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "observation_cutoff": {"const": "2025-12-31"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "territory": {"const": "fr-63113-clermont-ferrand"},
+    "programme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["programme_id", "name"],
+      "properties": {
+        "programme_id": {"const": "programme-respire-a-la-recre"},
+        "name": {"const": "Respire à la récré"}
+      }
+    },
+    "campaign_commitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verification_state", "fulfillment_conclusion", "blocking_reason"],
+      "properties": {
+        "verification_state": {"const": "primary_source_unverified"},
+        "fulfillment_conclusion": {"const": "not_verifiable"},
+        "blocking_reason": {"const": "primary_campaign_artifact_missing"}
+      }
+    },
+    "source_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "artifact_id", "artifact_version_id", "local_path", "sha256", "acquired_at", "source_modified_at", "license_id", "raw_bytes_preserved"],
+      "properties": {
+        "source_id": {"const": "src-city-open-data-schools"},
+        "artifact_id": {"const": "dataset-respire-enfants-vcf"},
+        "artifact_version_id": {"type": "string", "minLength": 1},
+        "local_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "acquired_at": {"type": "string", "format": "date-time"},
+        "source_modified_at": {"type": "string", "format": "date-time"},
+        "license_id": {"const": "etalab-2.0"},
+        "raw_bytes_preserved": {"const": false}
+      }
+    },
+    "case_studies": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["case_id", "school_name", "purpose"],
+        "properties": {
+          "case_id": {"type": "string", "pattern": "^case-[a-z0-9-]+$"},
+          "school_name": {"enum": ["Nestor-Perret", "Pierre-et-Marie-Curie", "Jean-Zay"]},
+          "purpose": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "publication_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eligible", "blockers"],
+      "properties": {
+        "eligible": {"const": false},
+        "blockers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

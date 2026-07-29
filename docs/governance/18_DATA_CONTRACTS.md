@@ -37,4 +37,6 @@ Source profile, acquisition event, artifact version, evidence fragment, assertio
 
 ## Current state
 
-No executable schema or contract test exists. This document defines the common contract standard only.
+Pre-stable executable contracts now exist for [source profiles](../../contracts/v1/source-profiles.schema.json), the [bounded pilot snapshot](../../contracts/v1/pilot-snapshot.schema.json), and the [Knowledge Passport prototype](../../contracts/v1/knowledge-passport.schema.json). A deterministic standard-library validator and contract tests implement the keywords used by those schemas.
+
+The remaining contract families listed above are still absent. The current schemas are local prototype contracts, not a stable public API.

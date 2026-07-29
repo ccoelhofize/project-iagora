@@ -32,7 +32,7 @@ Repositories or ports should isolate domain logic from storage. The logical grap
 
 ## Current state and open choices
 
-No backend exists. Language, framework, database, migrations, job execution, authentication, and deployment require evidence from pilot contracts and operating constraints.
+A dependency-free Python prototype implements contract validation and deterministic local projection only. It is not a backend-service or platform-language decision. Framework, database, migrations, job execution, authentication, network API, and deployment still require evidence from pilot contracts and operating constraints.
 
 ## Related records
 

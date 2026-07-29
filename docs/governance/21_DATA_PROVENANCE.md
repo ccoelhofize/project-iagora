@@ -31,3 +31,7 @@ Provenance carries the actual source licence, rights holder where known, attribu
 ## Publication
 
 The Knowledge Passport exposes the source and acquisition context needed for inspection while withholding secrets, unsafe locations, and unnecessary personal data.
+
+## Current implementation
+
+The pilot source registry and normalized open-data subset record publisher, URLs, acquisition and source-modification times, rights, retention class, and a local content fingerprint. Exact raw HTTP bytes are explicitly not preserved in this prototype, which is a publication blocker rather than a hidden omission. General acquisition-event and artifact-version contracts remain absent.

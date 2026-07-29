@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/knowledge-passport.schema.json",
+  "title": "IAgora Knowledge Passport prototype",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "passport_id", "passport_version",
+    "asset", "scope", "assertion", "authority", "evidence", "provenance",
+    "lineage", "quality", "conflicts_and_uncertainty", "rights", "review",
+    "accessibility", "case_studies", "publication"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.knowledge-passport"},
+    "contract_version": {"const": "1.0.0"},
+    "passport_id": {"type": "string", "pattern": "^passport-[a-z0-9-]+$"},
+    "passport_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["asset_id", "asset_type", "asset_version", "lifecycle_state", "plain_language_description"],
+      "properties": {
+        "asset_id": {"const": "pilot-respire-recre-2025"},
+        "asset_type": {"const": "pilot_assessment_snapshot"},
+        "asset_version": {"type": "string"},
+        "lifecycle_state": {"const": "internal_prototype"},
+        "plain_language_description": {"type": "string", "minLength": 1}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["territory", "institution", "period_start", "observation_cutoff", "population"],
+      "properties": {
+        "territory": {"const": "fr-63113-clermont-ferrand"},
+        "institution": {"const": "Ville de Clermont-Ferrand"},
+        "period_start": {"const": "2021-01-01"},
+        "observation_cutoff": {"const": "2025-12-31"},
+        "population": {"const": "three selected public-school case studies"}
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epistemic_kind", "statement", "fulfillment_conclusion", "causal_claim_class"],
+      "properties": {
+        "epistemic_kind": {"const": "methodological_inference"},
+        "statement": {"type": "string", "minLength": 1},
+        "fulfillment_conclusion": {"const": "not_verifiable"},
+        "causal_claim_class": {"const": "causal_status_not_verifiable"}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact_type", "rule_version", "outcome", "rationale", "limitations"],
+      "properties": {
+        "fact_type": {"const": "reported_output_or_completion"},
+        "rule_version": {"const": "adr-0003-1.0"},
+        "outcome": {"const": "authoritative_with_limitation"},
+        "rationale": {"type": "string", "minLength": 1},
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidence_id", "relationship", "artifact_version_id", "locator", "source_url"],
+        "properties": {
+          "evidence_id": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"},
+          "relationship": {"enum": ["supports", "contradicts", "contextualizes"]},
+          "artifact_version_id": {"type": "string", "minLength": 1},
+          "locator": {"type": "string", "minLength": 1},
+          "source_url": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    "provenance": {"type": "object"},
+    "lineage": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "quality": {"type": "object"},
+    "conflicts_and_uncertainty": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "rights": {"type": "object"},
+    "review": {"type": "object"},
+    "accessibility": {"type": "object"},
+    "case_studies": {"type": "array", "minItems": 3, "items": {"type": "object"}},
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eligible", "blockers"],
+      "properties": {
+        "eligible": {"const": false},
+        "blockers": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    }
+  }
+}

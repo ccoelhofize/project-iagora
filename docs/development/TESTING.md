@@ -34,4 +34,4 @@ Test commands, environments, seeds, dependencies, and expected results must be r
 
 ## Current state
 
-No implementation, test framework, CI workflow, coverage baseline, or executable contract suite exists.
+The first standard-library test suite covers contract rejection, source-snapshot integrity, school-unit scope separation, precise evidence locators, deterministic replay, fail-closed publication, unsupported fulfillment and causal conclusions, and basic semantic HTML structure. No CI workflow, coverage baseline, browser assistive-technology run, security test harness, production integration test, or recovery environment exists.
