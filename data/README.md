@@ -23,11 +23,17 @@ No child-level personal data is included. School-level aggregate counts remain
 third-party public data and retain their source licence.
 
 `pilot/campaign-artifact.json` contains metadata, a content fingerprint, a
-precise locator, and a five-word citation from an archived 2019 campaign page.
+precise locator, and a short citation from an archived 2019 campaign page.
 It does not contain the archived HTML. The archived legal notice reserves
 reproduction rights, so full-page repository storage is blocked pending
 qualified review. `pilot/pilot-snapshot-0.1.json` preserves the earlier missing-
-source state; `pilot/pilot-snapshot.json` is the current `0.3.0` evidence state.
+source state; `pilot/pilot-snapshot.json` is the current `0.4.0` evidence state.
+
+`pilot/commitment-mapping.json` is an AI-assisted, review-pending proposal that
+preserves the primary wording as one essential, unquantified action component.
+It compares territory, action, quantity, deadline, geographic extent,
+institutional continuity, and chronology with “Respire à la récré.” It does not
+establish direct continuity, delivery, fulfillment, outcomes, or impact.
 
 `pilot/administrative-evidence.json` is a metadata-only bundle for ten City PDF
 versions reviewed for the POC. It records exact URLs, acquisition timestamps,

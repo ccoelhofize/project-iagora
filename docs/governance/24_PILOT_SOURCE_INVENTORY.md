@@ -39,7 +39,7 @@ The executable metadata bundle is in [`../../data/pilot/administrative-evidence.
 
 | Stage | Present and supported | Still missing or limited |
 | --- | --- | --- |
-| Campaign-to-programme mapping | The adopted education project explicitly identifies and defines “Respire à la récré” in a way compatible with the campaign subject | A methodological reviewer has not accepted direct continuity, scope equivalence, or component decomposition |
+| Campaign-to-programme mapping | A versioned AI-assisted proposal preserves one essential campaign component and compares seven dimensions with the adopted “Respire à la récré” policy using three precise evidence references | Independent methodological and authority reviewers have not accepted direct continuity or the proposed relationship; the proposal cannot establish fulfillment |
 | Adopted policy | Final council adoption and attached policy definition | Adoption does not prove implementation or campaign fulfillment |
 | Programme authorization | €4.07 million programme authorization; €810,000 of 2023 payment credits; a €350,000 rephasing | No school-level allocation follows from these programme figures |
 | Executed expenditure | Approved account reports €1.09 million for 2022; the 2023 budget annex reports €1,939,810.63 in cumulative prior mandates | The two figures have different periods and precision; neither is a transaction or school ledger |
@@ -78,7 +78,7 @@ The raw archived HTML is intentionally not committed. The archived legal notice 
 
 ## Blocking gaps
 
-1. Candidate mapping evidence now connects the authenticated, unquantified campaign subject to the adopted municipal programme, but methodological review has not accepted the relationship or component decomposition.
+1. A structured candidate mapping now connects the authenticated, unquantified campaign subject to the adopted municipal programme without adding a target or deadline. It remains an AI-assisted proposal: independent methodological and authority review has not accepted the relationship.
 2. Adopted policy, programme authorization, programme expenditure, and limited site evidence are mapped. Procurement, transaction-level or school-level accounting, and competent completion records remain missing.
 3. No reviewed baseline, outcome indicator, comparison design, or causal evaluation is available.
 4. Page-level rights, retention classes, and privacy assessments remain incomplete for link-only sources; the campaign page remains metadata-only pending qualified rights review.

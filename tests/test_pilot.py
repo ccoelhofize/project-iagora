@@ -60,6 +60,22 @@ class PilotSliceTests(unittest.TestCase):
             self.passport["publication"]["blockers"],
         )
 
+    def test_mapping_is_explicit_ai_assisted_and_review_pending(self) -> None:
+        mapping = self.passport["commitment_mapping"]
+        self.assertEqual("proposed_review_pending", mapping["lifecycle_state"])
+        self.assertEqual("ai_assisted", mapping["proposal_origin"])
+        self.assertEqual(
+            "pending_independent_methodological_review", mapping["review_state"]
+        )
+        self.assertEqual("implements", mapping["relationship_role"])
+        self.assertEqual("essential", mapping["component"]["essentiality"])
+        self.assertEqual("action", mapping["component"]["component_type"])
+        self.assertEqual("not_stated", mapping["component"]["quantity"]["state"])
+        self.assertEqual("not_stated", mapping["component"]["deadline"]["state"])
+        self.assertEqual("unknown", mapping["component"]["implementation_state"])
+        self.assertEqual(7, len(mapping["scope_comparison"]))
+        self.assertEqual("not_verifiable", mapping["fulfillment_conclusion"])
+
     def test_administrative_evidence_is_linked_without_scope_conflation(self) -> None:
         self.assertEqual(1, len(self.cases["Nestor-Perret"]["administrative_evidence_ids"]))
         self.assertEqual(
@@ -99,9 +115,17 @@ class PilotSliceTests(unittest.TestCase):
         rendered = render_html(self.passport)
         self.assertIn('<html lang="fr">', rendered)
         self.assertIn("<main>", rendered)
-        self.assertEqual(4, rendered.count("<caption>"))
+        self.assertEqual(5, rendered.count("<caption>"))
         self.assertIn("Prototype local — publication bloquée", rendered)
         self.assertIn("Engagement de campagne retrouvé", rendered)
+        self.assertIn("Pourquoi le rapprochement avec", rendered)
+        self.assertIn("proposition assistée par IA", rendered)
+        self.assertIn("Comparaison explicite des périmètres", rendered)
+        self.assertIn("Aucune échéance indiquée", rendered)
+        self.assertIn("Les lignes par unité scolaire restent distinctes", rendered)
+        self.assertIn("La revue méthodologique globale du POC reste incomplète", rendered)
+        self.assertNotIn("School-unit rows remain distinct", rendered)
+        self.assertNotIn("commitment_mapping_and_methodological_review_incomplete", rendered)
         self.assertIn("authentifié avec limites", rendered)
         self.assertIn("ni à un impact sur la ville", rendered)
         self.assertIn("Croisement avec les décisions et les finances municipales", rendered)

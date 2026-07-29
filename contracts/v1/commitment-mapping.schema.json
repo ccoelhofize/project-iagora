@@ -1,0 +1,369 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/commitment-mapping.schema.json",
+  "title": "IAgora bounded campaign commitment mapping proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "mapping_id", "mapping_version",
+    "lifecycle_state", "observation_cutoff", "created_at", "territory",
+    "method", "original_commitment", "components", "target_programme",
+    "mapping", "evidence_references", "uncertainty", "review",
+    "output_constraints", "lineage"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.commitment-mapping"},
+    "contract_version": {"const": "1.0.0"},
+    "mapping_id": {"const": "mapping-campaign-schoolyards-to-respire-001"},
+    "mapping_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "lifecycle_state": {"const": "proposed_review_pending"},
+    "observation_cutoff": {"const": "2025-12-31"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "territory": {"const": "fr-63113-clermont-ferrand"},
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method_id", "method_version", "governing_adrs", "proposal_origin"],
+      "properties": {
+        "method_id": {"const": "iagora.commitment-mapping"},
+        "method_version": {"const": "adr-0004-1.0"},
+        "governing_adrs": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {"enum": ["ADR-0002", "ADR-0003", "ADR-0004"]}
+        },
+        "proposal_origin": {"const": "ai_assisted"}
+      }
+    },
+    "original_commitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commitment_id", "source_id", "artifact_version_id", "evidence_id",
+        "wording", "attribution", "source_verification", "specificity",
+        "scope_limits"
+      ],
+      "properties": {
+        "commitment_id": {"const": "commitment-schoolyard-regreening-2020"},
+        "source_id": {"const": "src-campaign-2020-primary"},
+        "artifact_version_id": {"type": "string", "minLength": 1},
+        "evidence_id": {"const": "evidence-campaign-schoolyards-2020"},
+        "wording": {"const": "Végétalisation des cours d’école"},
+        "attribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["actor", "campaign_list", "election_context", "territory"],
+          "properties": {
+            "actor": {"const": "Olivier Bianchi"},
+            "campaign_list": {"const": "Naturellement Clermont"},
+            "election_context": {"const": "2020 Clermont-Ferrand municipal election"},
+            "territory": {"const": "fr-63113-clermont-ferrand"}
+          }
+        },
+        "source_verification": {"const": "primary_source_authenticated_with_limitations"},
+        "specificity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "quantity_state", "deadline_state", "budget_state",
+            "broader_geographic_claim_state"
+          ],
+          "properties": {
+            "quantity_state": {"const": "not_stated"},
+            "deadline_state": {"const": "not_stated"},
+            "budget_state": {"const": "not_stated"},
+            "broader_geographic_claim_state": {"const": "absent_from_primary_fragment"}
+          }
+        },
+        "scope_limits": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "component_id", "component_version", "sequence", "original_span",
+          "component_type", "essentiality", "canonical_subject", "action",
+          "object", "territorial_scope", "responsible_competence", "quantity",
+          "deadline", "implementation_state", "implementation_state_rationale",
+          "decomposition_rationale", "limitations"
+        ],
+        "properties": {
+          "component_id": {"pattern": "^component-[a-z0-9-]+$", "type": "string"},
+          "component_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+          "sequence": {"type": "integer", "minimum": 1},
+          "original_span": {"const": "Végétalisation des cours d’école"},
+          "component_type": {"enum": ["action", "output", "outcome", "impact_target", "condition"]},
+          "essentiality": {"enum": ["essential", "supporting"]},
+          "canonical_subject": {"const": "municipal_action_in_clermont_ferrand"},
+          "action": {"const": "vegetate"},
+          "object": {"const": "schoolyards"},
+          "territorial_scope": {"const": "fr-63113-clermont-ferrand"},
+          "responsible_competence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["state", "candidate_institution", "rationale"],
+            "properties": {
+              "state": {"const": "municipal_context_review_pending"},
+              "candidate_institution": {"const": "Ville de Clermont-Ferrand"},
+              "rationale": {"type": "string", "minLength": 1}
+            }
+          },
+          "quantity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["state", "value", "unit"],
+            "properties": {
+              "state": {"const": "not_stated"},
+              "value": {"type": "null"},
+              "unit": {"type": "null"}
+            }
+          },
+          "deadline": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["state", "value"],
+            "properties": {
+              "state": {"const": "not_stated"},
+              "value": {"type": "null"}
+            }
+          },
+          "implementation_state": {"const": "unknown"},
+          "implementation_state_rationale": {"type": "string", "minLength": 1},
+          "decomposition_rationale": {"type": "string", "minLength": 1},
+          "limitations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "target_programme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "programme_id", "name", "institution", "target_assertion_id",
+        "definition_evidence_id", "adoption_evidence_id"
+      ],
+      "properties": {
+        "programme_id": {"const": "programme-respire-a-la-recre"},
+        "name": {"const": "Respire à la récré"},
+        "institution": {"const": "Ville de Clermont-Ferrand"},
+        "target_assertion_id": {"const": "assertion-respire-schoolyard-transformation-policy-2023"},
+        "definition_evidence_id": {"const": "evidence-pev-respire-definition-2023"},
+        "adoption_evidence_id": {"const": "evidence-pev-adoption-2023"}
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "component_id", "target_assertion_id", "relationship_role", "state",
+        "candidate_conclusion", "scope_comparison", "rationale", "evidence_ids",
+        "counterevidence", "limitations"
+      ],
+      "properties": {
+        "component_id": {"pattern": "^component-[a-z0-9-]+$", "type": "string"},
+        "target_assertion_id": {"const": "assertion-respire-schoolyard-transformation-policy-2023"},
+        "relationship_role": {
+          "enum": [
+            "implements", "partially_implements", "changes_scope", "replaces",
+            "contributes_to", "reports_outcome_for", "claims_impact_for"
+          ]
+        },
+        "state": {"const": "proposed_review_pending"},
+        "candidate_conclusion": {"const": "candidate_evidence_found_review_incomplete"},
+        "scope_comparison": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dimension", "commitment_scope", "programme_scope",
+              "comparison_result", "rationale"
+            ],
+            "properties": {
+              "dimension": {
+                "enum": [
+                  "territory", "action_and_object", "quantity", "deadline",
+                  "geographic_extent", "institutional_continuity", "temporal_sequence"
+                ]
+              },
+              "commitment_scope": {"type": "string", "minLength": 1},
+              "programme_scope": {"type": "string", "minLength": 1},
+              "comparison_result": {
+                "enum": [
+                  "compatible", "compatible_with_broader_programme", "indeterminate",
+                  "not_comparable", "pending_additional_evidence"
+                ]
+              },
+              "rationale": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "rationale": {"type": "string", "minLength": 1},
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"}
+        },
+        "counterevidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "evidence_ids", "limitations"],
+          "properties": {
+            "state": {"const": "none_identified_in_bounded_corpus"},
+            "evidence_ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"}
+            },
+            "limitations": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "evidence_references": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id", "role", "relationship", "artifact_version_id",
+          "locator", "source_url"
+        ],
+        "properties": {
+          "evidence_id": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"},
+          "role": {"enum": ["original_commitment", "programme_definition", "policy_adoption"]},
+          "relationship": {"enum": ["supports", "contradicts", "contextualizes"]},
+          "artifact_version_id": {"type": "string", "minLength": 1},
+          "locator": {"type": "string", "minLength": 1},
+          "source_url": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension", "state", "explanation"],
+        "properties": {
+          "dimension": {
+            "enum": [
+              "semantic_alignment", "direct_continuity_evidence",
+              "scope_equivalence", "temporal_continuity", "competent_completion"
+            ]
+          },
+          "state": {
+            "enum": [
+              "compatible_with_limitations", "insufficient", "indeterminate",
+              "plausible_not_directly_evidenced", "not_located"
+            ]
+          },
+          "explanation": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state", "required_reviews", "completed_reviews",
+        "reviewer_separation_required", "final_decision", "notes"
+      ],
+      "properties": {
+        "state": {"const": "pending_independent_methodological_review"},
+        "required_reviews": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"enum": ["methodological_reviewer", "evidence_authority_reviewer"]}
+        },
+        "completed_reviews": {"type": "array", "items": {"type": "object"}},
+        "reviewer_separation_required": {"const": true},
+        "final_decision": {"type": "null"},
+        "notes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "output_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fulfillment_conclusion", "publication_eligible", "prohibited_inferences"],
+      "properties": {
+        "fulfillment_conclusion": {"const": "not_verifiable"},
+        "publication_eligible": {"const": false},
+        "prohibited_inferences": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generator", "inputs"],
+      "properties": {
+        "generator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind", "provider", "model_identifier", "exact_deployment_identifier_available",
+            "task_version", "generated_at", "human_review_required"
+          ],
+          "properties": {
+            "kind": {"const": "ai_assisted"},
+            "provider": {"const": "OpenAI"},
+            "model_identifier": {"const": "Codex GPT-5 family"},
+            "exact_deployment_identifier_available": {"const": false},
+            "task_version": {"const": "iagora.commitment-mapping.proposal/0.1.0"},
+            "generated_at": {"type": "string", "format": "date-time"},
+            "human_review_required": {"const": true}
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["local_path", "sha256", "role"],
+            "properties": {
+              "local_path": {"type": "string", "minLength": 1},
+              "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+              "role": {"enum": ["original_commitment_evidence", "administrative_mapping_evidence"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}

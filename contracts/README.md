@@ -9,10 +9,16 @@ The `v1` directory contains the first field-level contracts for the bounded
 subset of the accepted logical model and do not freeze a future database or API.
 
 The campaign-artifact contract records an archived primary fragment without
-redistributing restricted HTML. The pilot-snapshot contract accepts the
-historical `1.0.0` state and the additive `1.1.0` and `1.2.0` evidence
-references; both snapshot files remain validateable, while the current build
-uses `0.3.0`.
+redistributing restricted HTML. The commitment-mapping contract records one
+essential, unquantified action component and an explicit scope comparison with
+the later municipal programme. It is an AI-assisted proposal with mandatory
+independent review, not an accepted mapping or fulfillment conclusion.
+
+The pilot-snapshot contract accepts the historical `1.0.0` state and the
+additive `1.1.0` through `1.3.0` evidence references; both snapshot files remain
+validateable, while the current build uses `0.4.0`. The `1.1.0` Knowledge
+Passport projection exposes the proposed mapping without changing the
+fail-closed publication state.
 The acquisition-event contract covers the single bounded official API response
 and binds its request, exact bytes, fingerprint, rights, minimization, security
 result, and limitations. It is not a general production acquisition contract.
