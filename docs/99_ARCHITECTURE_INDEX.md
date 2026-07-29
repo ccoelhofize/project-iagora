@@ -23,7 +23,7 @@ This index distinguishes documents and accepted decisions from executable capabi
 | [`../AGENTS.md`](../AGENTS.md) | Present, acceptance not recorded | AI-agent working policy |
 | [`00_PROJECT_INTENT.md`](00_PROJECT_INTENT.md) | Accepted | Concise product intent and current reality |
 | [`01_ARCHITECT_PLAYBOOK.md`](01_ARCHITECT_PLAYBOOK.md) | Accepted | Design and decision workflow |
-| [`vision/00_VISION.md`](vision/00_VISION.md) | Draft | Mission, users, outcomes, and boundaries |
+| [`vision/00_VISION.md`](vision/00_VISION.md) | Draft | Mission, users, outcomes, dashboard product direction, and boundaries |
 | [`vision/01_MANIFESTO.md`](vision/01_MANIFESTO.md) | Accepted | Public-interest commitments and values |
 | [`vision/02_PRODUCT_SCOPE.md`](vision/02_PRODUCT_SCOPE.md) | Accepted | “Respire à la récré” POC scope and confirmed case studies |
 | [`vision/03_ROADMAP.md`](vision/03_ROADMAP.md) | Draft | Outcome-based strategic sequence |
@@ -39,7 +39,7 @@ This index distinguishes documents and accepted decisions from executable capabi
 | [`architecture/08_DATA_PIPELINE.md`](architecture/08_DATA_PIPELINE.md) | Draft | Acquisition-to-publication stages and failure behavior |
 | [`architecture/09_BACKEND.md`](architecture/09_BACKEND.md) | Draft | Backend module and service boundaries |
 | [`architecture/10_API.md`](architecture/10_API.md) | Draft | Public and internal API contract principles |
-| [`architecture/11_FRONTEND.md`](architecture/11_FRONTEND.md) | Draft | Accessible public information architecture |
+| [`architecture/11_FRONTEND.md`](architecture/11_FRONTEND.md) | Draft | Territory dashboard, thematic drill-down, evidence detail, and printable-report architecture |
 | [`architecture/12_AI_ENGINE.md`](architecture/12_AI_ENGINE.md) | Draft | Evidence-constrained AI responsibilities |
 | [`architecture/13_SEARCH_ENGINE.md`](architecture/13_SEARCH_ENGINE.md) | Draft | Governed discovery and index lifecycle |
 | [`architecture/14_SECURITY.md`](architecture/14_SECURITY.md) | Draft | Trust boundaries and required controls |
@@ -61,7 +61,7 @@ This index distinguishes documents and accepted decisions from executable capabi
 
 ## Decision records
 
-The [ADR policy](adr/README.md), [index](adr/ADR-INDEX.md), and [template](adr/ADR-TEMPLATE.md) are present as drafts. The following decisions are accepted:
+The [ADR policy](adr/README.md), [index](adr/ADR-INDEX.md), and [template](adr/ADR-TEMPLATE.md) are present as drafts. ADR-0001 through ADR-0010 are accepted:
 
 | ADR | Decision |
 | --- | --- |
@@ -74,6 +74,7 @@ The [ADR policy](adr/README.md), [index](adr/ADR-INDEX.md), and [template](adr/A
 | [ADR-0007](adr/ADR-0007-raw-evidence-retention-redaction-and-legal-removal.md) | Raw-evidence retention, redaction, and legal removal |
 | [ADR-0008](adr/ADR-0008-public-source-acquisition-privacy-and-security-boundaries.md) | Public-source privacy and security boundaries |
 | [ADR-0009](adr/ADR-0009-project-licensing-policy.md) | Project licensing policy |
+| [ADR-0010](adr/ADR-0010-multidimensional-accountability-and-policy-lineage.md) | Multidimensional accountability views and policy lineage |
 
 Detailed evidence-conflict comparison and resolution behavior still requires a normative field-level specification. A new ADR is necessary only if that work changes an accepted invariant or selects a material architectural alternative.
 
@@ -97,27 +98,29 @@ Detailed evidence-conflict comparison and resolution behavior still requires a n
 | [`../contracts/README.md`](../contracts/README.md) | Pre-stable implementation | Contract lifecycle and local validation instructions |
 | [`../contracts/v1/source-profiles.schema.json`](../contracts/v1/source-profiles.schema.json) | Executable prototype | Source-registration contract |
 | [`../contracts/v1/campaign-artifact.schema.json`](../contracts/v1/campaign-artifact.schema.json) | Executable prototype | Rights-aware archived campaign evidence metadata |
+| [`../contracts/v1/commitment-mapping.schema.json`](../contracts/v1/commitment-mapping.schema.json) | Executable prototype | Review-gated campaign-component and programme scope-comparison contract |
 | [`../contracts/v1/acquisition-event.schema.json`](../contracts/v1/acquisition-event.schema.json) | Executable prototype | Bounded exact-response acquisition metadata and invariants |
 | [`../contracts/v1/administrative-evidence.schema.json`](../contracts/v1/administrative-evidence.schema.json) | Executable prototype | Metadata-only adopted-policy, financial-stage, site-evidence, and procurement-gap contract |
 | [`../contracts/v1/pilot-snapshot.schema.json`](../contracts/v1/pilot-snapshot.schema.json) | Executable prototype | Bounded POC configuration and publication gate |
 | [`../contracts/v1/knowledge-passport.schema.json`](../contracts/v1/knowledge-passport.schema.json) | Executable prototype | Minimum POC passport projection |
 | [`../data/sources/source-profiles.json`](../data/sources/source-profiles.json) | Active prototype data | Machine-readable source inventory |
 | [`../data/pilot/campaign-artifact.json`](../data/pilot/campaign-artifact.json) | Authenticated with limitations | Fingerprint, citation, authenticity basis, rights, and non-retention reason for the archived campaign page |
+| [`../data/pilot/commitment-mapping.json`](../data/pilot/commitment-mapping.json) | Proposed, review pending | AI-assisted one-component mapping proposal with explicit scope comparison, uncertainty, lineage, and publication constraints |
 | [`../data/pilot/administrative-evidence.json`](../data/pilot/administrative-evidence.json) | Partial administrative chain | Ten official PDF versions represented by metadata, fingerprints, precise evidence, financial stages, authority limits, and non-retention decisions |
 | [`../data/pilot/pilot-snapshot-0.1.json`](../data/pilot/pilot-snapshot-0.1.json) | Historical prototype input | Preserved state before the primary campaign fragment was located |
 | [`../data/pilot/pilot-snapshot.json`](../data/pilot/pilot-snapshot.json) | Versioned prototype input | Accepted case set, cut-off, fingerprint, and blockers |
 | [`../data/pilot/open-data-subset.json`](../data/pilot/open-data-subset.json) | Third-party normalized prototype data | Six licensed City open-data records for the selected cases |
 | [`../data/raw/respire-a-la-recre/2026-07-29/records-selected.json`](../data/raw/respire-a-la-recre/2026-07-29/records-selected.json) | Immutable prototype evidence | Exact 3,189-byte bounded API response under Licence Ouverte 2.0 |
 | [`../data/raw/respire-a-la-recre/2026-07-29/acquisition-event.json`](../data/raw/respire-a-la-recre/2026-07-29/acquisition-event.json) | Validated prototype metadata | Request, fingerprint, rights, privacy minimization, security result, and limitations |
-| [`../src/iagora/`](../src/iagora/) | Local prototype | Deterministic validation, transformation, passport, and HTML projection |
+| [`../src/iagora/`](../src/iagora/) | Local prototype | Deterministic validation, transformation, passport, territory home, Education dashboard, and printable programme dossier projection |
 | [`../tests/`](../tests/) | Executable tests | Contract, evidence, scope, replay, publication, and accessibility guardrails |
 | [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml) | Executable development control | Read-only continuous validation, tests, and deterministic build on Python 3.11 |
 
 ## Planned capabilities and absent artifacts
 
-The repository now contains a bounded local prototype, six executable contract schemas, an active source inventory, authenticated campaign-artifact metadata, a partial administrative-evidence chain, one exact bounded API response with acquisition metadata, a validated six-record normalization, an initial test suite, and a minimal CI workflow. It does not contain a production source connector, general raw-evidence store, quarantine or parser sandbox, database, backend service, public API, approved frontend, AI service, search index, production security control set, telemetry stack, release, or deployment.
+The repository now contains a bounded local prototype, seven executable contract schemas, an active source inventory, authenticated campaign-artifact metadata, an explicit review-pending commitment-mapping proposal, a partial administrative-evidence chain, one exact bounded API response with acquisition metadata, a validated six-record normalization, an initial test suite, and a minimal CI workflow. Its static product projection now contains a Clermont-Ferrand home, an Education dashboard, a policy-lineage timeline, and a detailed printable dossier governed by the accepted multidimensional method in ADR-0010. The home has an honest macro-series placeholder rather than a city-wide KPI, and the non-Education themes remain absent or programme-limited. The repository does not contain a real macro city visualization, generalized indicator explorer, production report service, production source connector, general raw-evidence store, quarantine or parser sandbox, database, backend service, public API, approved public frontend, account system, AI service, search index, production security control set, telemetry stack, release, SaaS capability, or deployment.
 
-The primary 2020 campaign fragment is authenticated with limitations, but its full raw HTML remains absent for rights reasons and its mapping has not completed methodological review. Adopted policy, programme authorization, programme expenditure, and limited site-level reports are now present as metadata-only evidence; procurement, competent acceptance, school-level accounting, outcomes, and impact evidence remain absent. The general dataset manifest contract, retention schedule, privacy assessment, threat model, incident plan, qualified legal and security reviews, and production source inventory remain absent or incomplete.
+The primary 2020 campaign fragment is authenticated with limitations, but its full raw HTML remains absent for rights reasons. Its mapping proposal is explicit, versioned, AI-labeled, and fail-closed, but independent methodological and authority review has not accepted the relationship. Adopted policy, programme authorization, programme expenditure, and limited site-level reports are present as metadata-only evidence; procurement, competent acceptance, school-level accounting, outcomes, and impact evidence remain absent. The general dataset manifest contract, retention schedule, privacy assessment, threat model, incident plan, qualified legal and security reviews, and production source inventory remain absent or incomplete.
 
 ## Recommended reading path
 

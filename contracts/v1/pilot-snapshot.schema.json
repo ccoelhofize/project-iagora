@@ -12,7 +12,7 @@
   ],
   "properties": {
     "contract_id": {"const": "iagora.pilot-snapshot"},
-    "contract_version": {"enum": ["1.0.0", "1.1.0", "1.2.0"]},
+    "contract_version": {"enum": ["1.0.0", "1.1.0", "1.2.0", "1.3.0"]},
     "snapshot_id": {"const": "pilot-respire-recre-2025"},
     "snapshot_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "observation_cutoff": {"const": "2025-12-31"},
@@ -52,6 +52,20 @@
         "source_id": {"const": "src-campaign-2020-primary"},
         "artifact_version_id": {"type": "string", "minLength": 1},
         "local_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "commitment_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mapping_id", "mapping_version", "lifecycle_state", "local_path", "sha256"
+      ],
+      "properties": {
+        "mapping_id": {"const": "mapping-campaign-schoolyards-to-respire-001"},
+        "mapping_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "lifecycle_state": {"const": "proposed_review_pending"},
+        "local_path": {"const": "data/pilot/commitment-mapping.json"},
         "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
       }
     },

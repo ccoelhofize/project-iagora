@@ -34,13 +34,19 @@ Fulfillment, outcome, and impact passports additionally expose original commitme
 
 Persisted generated material identifies itself as non-evidence and records purpose, model and instruction versions, input assets, cited fragments, validations, review, limitations, and correction path.
 
+## Presentation projections
+
+Territory dashboards, thematic views, indicator pages, programme or commitment detail, and printable reports MUST reference the same governed asset and method versions as their Knowledge Passport. Progressive disclosure may reduce visible detail, but it MUST NOT change the represented conclusion, cut-off, scope, evidence state, conflicts, uncertainty, or limitations.
+
+A printable report records its generation time, territory, period, filters, source and method versions, and correction state. It is a publication projection, not an independent truth store. The extended dashboard and policy-lineage rules are governed by accepted [ADR-0010](../adr/ADR-0010-multidimensional-accountability-and-policy-lineage.md); field-level contracts and product components remain unimplemented.
+
 ## Disclosure profiles
 
 Internal and public profiles MAY differ for a documented legal, privacy, safety, security, or contractual reason. Public views disclose a lawful non-sensitive reason code for restricted fields. If redaction would make the asset materially misleading, publication is blocked.
 
 ## Initial transport
 
-JSON is the initial prototype interchange representation and accessible HTML is its local human-readable projection. The [pre-stable field-level schema](../../contracts/v1/knowledge-passport.schema.json) covers the bounded pilot profile, including the authenticated-with-limitations campaign fragment, its separate fact-specific authority, and the still-unverified fulfillment mapping. Controlled vocabularies, general compatibility rules, restricted disclosure profiles, and public conformance examples remain incomplete. Both representations must convey equivalent material meaning.
+JSON is the initial prototype interchange representation and accessible HTML is its local human-readable projection. The [pre-stable field-level schema](../../contracts/v1/knowledge-passport.schema.json) covers the bounded pilot profile, including the authenticated-with-limitations campaign fragment, its separate fact-specific authority, and the explicit AI-assisted [commitment-mapping proposal](../../data/pilot/commitment-mapping.json). The proposal remains unreviewed and cannot change the `not_verifiable` fulfillment or blocked-publication state. Controlled vocabularies, general compatibility rules, restricted disclosure profiles, and public conformance examples remain incomplete. Both representations must convey equivalent material meaning.
 
 ## Validation
 

@@ -28,6 +28,8 @@ The project serves citizens, journalists, researchers, civil-society organizatio
 
 IAgora is not merely an open-data portal, dashboard, document search engine, or chatbot. It is designed as a **verifiable knowledge platform** in which every significant claim can be traced back to public evidence.
 
+The planned public experience is an interactive territory dashboard rather than a report-only product. A macro territory view and thematic blocks lead to indicator, programme, commitment, evidence, and Knowledge Passport detail. Printable reports remain available as reproducible exports of the same governed records. A local static prototype now demonstrates the territory-home, education-theme, and programme-dossier path; it is not a deployed SaaS product.
+
 Its governance model is built around complementary concepts:
 
 - **Source of Truth** identifies the source with the strongest authority for a given fact.
@@ -128,7 +130,8 @@ docs/
 │   ├── ADR-0006-minimum-knowledge-passport-contract.md
 │   ├── ADR-0007-raw-evidence-retention-redaction-and-legal-removal.md
 │   ├── ADR-0008-public-source-acquisition-privacy-and-security-boundaries.md
-│   └── ADR-0009-project-licensing-policy.md
+│   ├── ADR-0009-project-licensing-policy.md
+│   └── ADR-0010-multidimensional-accountability-and-policy-lineage.md
 ├── development/
 │   ├── CONTRIBUTING.md
 │   ├── CODING_STANDARDS.md
@@ -188,7 +191,7 @@ IAgora has completed its initial documentation foundation and now has a **bounde
 - evolve the pre-stable executable contracts without weakening the accepted evidence, authority, lineage, rights, and publication invariants;
 - validate the local vertical slice with methodological, privacy, security, legal, and accessibility reviewers before any public release.
 
-The current implementation authenticates a short, unquantified schoolyard-regreening commitment from a 2019 archived campaign page, preserves one exact bounded official API response, and validates its six-record normalization for Nestor-Perret, Pierre-et-Marie-Curie, and Jean-Zay. It also fingerprints and cites ten metadata-only municipal documents that establish adopted policy, programme-level budget authorization and expenditure, reported site delivery, and funding forecasts without conflating those stages. The Knowledge Passport and accessible local HTML expose the resulting partial administrative chain. Publication remains blocked because the commitment mapping has not completed methodological review, procurement and competent-completion records remain missing, administrative-document rights remain pending, and no reviewed outcome or causal-impact evidence exists. The roadmap describes strategic milestones rather than guaranteed dates.
+The current implementation authenticates a short, unquantified schoolyard-regreening commitment from a 2019 archived campaign page, preserves one exact bounded official API response, and validates its six-record normalization for Nestor-Perret, Pierre-et-Marie-Curie, and Jean-Zay. It also fingerprints and cites ten metadata-only municipal documents that establish adopted policy, programme-level budget authorization and expenditure, reported site delivery, and funding forecasts without conflating those stages. An explicit AI-assisted proposal maps one essential campaign component to the later programme through a visible scope comparison; it remains pending independent methodological and authority review. The Knowledge Passport and a deterministic three-level static interface expose the same bounded records through a Clermont-Ferrand home, an education dashboard, and a detailed printable dossier. The home keeps the macro city chart as an explicit missing-data state and keeps unsupported themes as placeholders; it does not invent a generalized city KPI. No generalized indicator explorer, production report service, account system, public frontend, or SaaS deployment exists. Publication remains blocked because the mapping is not accepted, procurement and competent-completion records remain missing, administrative-document rights remain pending, and no reviewed outcome or causal-impact evidence exists. The roadmap describes strategic milestones rather than guaranteed dates.
 
 ## Run the local proof of concept
 
@@ -200,7 +203,7 @@ PYTHONPATH=src python3 -m iagora build
 python3 -m http.server --directory build/pilot 8000
 ```
 
-The generated preview is available at `http://localhost:8000`. It is a local review artifact, not an authorized civic publication. Run the test suite with:
+The generated territory home is available at `http://localhost:8000`, the first thematic dashboard at `http://localhost:8000/education/`, and the detailed printable dossier at `http://localhost:8000/programmes/respire-a-la-recre/`. They are local review artifacts, not an authorized civic publication. Run the test suite with:
 
 ```sh
 PYTHONPATH=src python3 -m unittest discover -s tests -v

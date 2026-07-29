@@ -12,7 +12,7 @@
   ],
   "properties": {
     "contract_id": {"const": "iagora.knowledge-passport"},
-    "contract_version": {"const": "1.0.0"},
+    "contract_version": {"enum": ["1.0.0", "1.1.0"]},
     "passport_id": {"type": "string", "pattern": "^passport-[a-z0-9-]+$"},
     "passport_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "asset": {
@@ -79,6 +79,42 @@
         "mapping_evidence_state": {"const": "candidate_evidence_found"},
         "artifact_version_id": {"type": "string", "minLength": 1},
         "evidence_id": {"const": "evidence-campaign-schoolyards-2020"}
+      }
+    },
+    "commitment_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mapping_id", "mapping_version", "lifecycle_state", "method_id",
+        "method_version", "proposal_origin", "review_state", "relationship_role",
+        "candidate_conclusion", "target_programme_id", "target_programme_name",
+        "component", "scope_comparison", "rationale", "uncertainty",
+        "limitations", "fulfillment_conclusion", "prohibited_inferences"
+      ],
+      "properties": {
+        "mapping_id": {"const": "mapping-campaign-schoolyards-to-respire-001"},
+        "mapping_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "lifecycle_state": {"const": "proposed_review_pending"},
+        "method_id": {"const": "iagora.commitment-mapping"},
+        "method_version": {"const": "adr-0004-1.0"},
+        "proposal_origin": {"const": "ai_assisted"},
+        "review_state": {"const": "pending_independent_methodological_review"},
+        "relationship_role": {"const": "implements"},
+        "candidate_conclusion": {"const": "candidate_evidence_found_review_incomplete"},
+        "target_programme_id": {"const": "programme-respire-a-la-recre"},
+        "target_programme_name": {"const": "Respire à la récré"},
+        "component": {"type": "object"},
+        "scope_comparison": {"type": "array", "minItems": 5, "items": {"type": "object"}},
+        "rationale": {"type": "string", "minLength": 1},
+        "uncertainty": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "fulfillment_conclusion": {"const": "not_verifiable"},
+        "prohibited_inferences": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
       }
     },
     "administrative_chain": {

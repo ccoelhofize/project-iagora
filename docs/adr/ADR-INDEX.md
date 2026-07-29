@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Purpose
 
@@ -10,7 +10,7 @@ This index is the authoritative inventory of ADR records and lifecycle states. A
 
 ## ADR records
 
-Nine ADRs have been accepted.
+Ten ADRs have been accepted.
 
 | ID | Title | Status | Proposed | Accepted | Supersedes |
 | --- | --- | --- | --- | --- | --- |
@@ -23,10 +23,11 @@ Nine ADRs have been accepted.
 | ADR-0007 | [Raw-Evidence Retention, Redaction, and Legal Removal](ADR-0007-raw-evidence-retention-redaction-and-legal-removal.md) | Accepted | 2026-07-28 | 2026-07-28 | None |
 | ADR-0008 | [Public-Source Acquisition Privacy and Security Boundaries](ADR-0008-public-source-acquisition-privacy-and-security-boundaries.md) | Accepted | 2026-07-28 | 2026-07-28 | None |
 | ADR-0009 | [Project Licensing Policy](ADR-0009-project-licensing-policy.md) | Accepted | 2026-07-28 | 2026-07-28 | None |
+| ADR-0010 | [Multidimensional Accountability Views and Policy Lineage](ADR-0010-multidimensional-accountability-and-policy-lineage.md) | Accepted | 2026-07-29 | 2026-07-29 | None |
 
 ## Candidate decision topics
 
-The previously identified foundation topics now have accepted ADRs. No additional ADR topic is currently allocated.
+The previously identified foundation topics and the multidimensional public projection for fulfillment, implementation, financial execution, outputs, outcomes, impact, policy lineage, and evidence state now have accepted ADRs.
 
 Detailed evidence-conflict comparison and resolution behavior remains planned as a normative specification. A separate ADR is required only if that work exposes a material architectural alternative or changes an accepted invariant.
 

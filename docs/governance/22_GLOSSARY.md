@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Purpose
 
@@ -33,6 +33,12 @@ Media reporting may provide evidence about a campaign statement but is not the o
 An attributable campaign statement that promises, undertakes, or clearly proposes a future public action or outcome if the relevant candidate or list obtains office. A commitment must preserve its original wording, author, campaign, election, date, territorial scope, conditions, and degree of specificity.
 
 A campaign commitment is not automatically equivalent to a later programme, budget line, administrative act, or observed result. Those relationships require explicit evidence-backed mappings.
+
+### Commitment mapping
+
+A versioned, reviewable relationship between an atomic campaign commitment component and a later assertion about a public decision, resource, output, outcome, or impact. A mapping preserves the compared scopes, evidence, rationale, method version, uncertainty, counterevidence, lineage, and review state.
+
+Compatible wording or chronology may support a proposed mapping but cannot establish it alone. A proposed or AI-assisted mapping is not an accepted relationship, implementation state, fulfillment conclusion, or impact claim.
 
 ### Fulfillment assessment
 
@@ -186,6 +192,12 @@ A governed grouping of public objectives, activities, resources, and expected ou
 
 A dated or date-bounded event used to describe progress, such as an announcement, authorization, funding decision, start of work, reported completion, or measurement. A milestone records the event evidenced; it does not by itself establish overall programme completion.
 
+### Policy lineage assessment
+
+A versioned derived assessment describing an evidence-backed relationship between a public action and earlier or concurrent decisions, programmes, resources, outputs, or commitments. Possible relationships include a new initiative, continuation, extension, acceleration, reorientation, renaming or reframing, replacement, and indeterminate lineage.
+
+A lineage assessment preserves the compared scopes, dated events, evidence, counterevidence, search boundary, method, uncertainty, and review state. Chronology, shared terminology, political identity, or an election boundary cannot establish novelty, continuity, causation, ownership, or political credit by itself. The rules are governed by [`ADR-0010`](../adr/ADR-0010-multidimensional-accountability-and-policy-lineage.md).
+
 ## Outcome and impact terms
 
 ### Baseline
@@ -277,7 +289,8 @@ Initial stages include:
 - **grant requested:** external funding applied for but not yet awarded;
 - **grant awarded:** external funding formally allocated under stated conditions;
 - **commitment:** an amount legally committed to a third party;
+- **mandate or expenditure order:** an amount ordered for payment under the applicable accounting process, which is not automatically proof of disbursement;
 - **payment:** an amount actually disbursed;
 - **final cost:** a closed or formally reported total under the applicable accounting method.
 
-These terms do not establish a complete French public-accounting model. The data model must map them to accepted legal and accounting definitions before implementation.
+These terms do not establish a complete French public-accounting model. The data model must map them to accepted legal and accounting definitions before implementation. A public label such as “spent” must identify which reviewed stage the source actually supports.

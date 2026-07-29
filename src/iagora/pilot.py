@@ -12,6 +12,15 @@ from pathlib import Path
 from typing import Any
 
 from .contracts import ContractViolation, load_json, validate, validate_files
+from .presentation import (
+    PAGE_STYLES,
+    render_dashboard_html,
+    render_education_html,
+    render_footer,
+    render_multidimensional_summary,
+    render_policy_timeline,
+    render_site_header,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,6 +28,7 @@ CONTRACTS = ROOT / "contracts" / "v1"
 SOURCE_PROFILES = ROOT / "data" / "sources" / "source-profiles.json"
 SNAPSHOT = ROOT / "data" / "pilot" / "pilot-snapshot.json"
 CAMPAIGN_ARTIFACT = ROOT / "data" / "pilot" / "campaign-artifact.json"
+COMMITMENT_MAPPING = ROOT / "data" / "pilot" / "commitment-mapping.json"
 ADMINISTRATIVE_EVIDENCE = ROOT / "data" / "pilot" / "administrative-evidence.json"
 
 
@@ -72,6 +82,7 @@ def validate_inputs(
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
+    dict[str, Any],
 ]:
     profiles_path = root / SOURCE_PROFILES.relative_to(ROOT)
     snapshot_path = root / SNAPSHOT.relative_to(ROOT)
@@ -80,6 +91,10 @@ def validate_inputs(
     campaign_path = root / snapshot["campaign_artifact"]["local_path"]
     campaign_artifact = validate_files(
         campaign_path, root / "contracts/v1/campaign-artifact.schema.json"
+    )
+    mapping_path = root / snapshot["commitment_mapping"]["local_path"]
+    commitment_mapping = validate_files(
+        mapping_path, root / "contracts/v1/commitment-mapping.schema.json"
     )
     administrative_path = root / snapshot["administrative_evidence"]["local_path"]
     administrative_evidence = validate_files(
@@ -160,6 +175,81 @@ def validate_inputs(
     ):
         raise ContractViolation("Campaign artifact version reference does not resolve")
 
+    mapping_ref = snapshot["commitment_mapping"]
+    mapping_hash = file_sha256(mapping_path)
+    if mapping_hash != mapping_ref["sha256"]:
+        raise ContractViolation(
+            f"{mapping_path}: fingerprint mismatch; expected "
+            f"{mapping_ref['sha256']}, got {mapping_hash}"
+        )
+    if commitment_mapping["mapping_id"] != mapping_ref["mapping_id"]:
+        raise ContractViolation("Commitment mapping identifier reference does not resolve")
+    if commitment_mapping["mapping_version"] != mapping_ref["mapping_version"]:
+        raise ContractViolation("Commitment mapping version reference does not resolve")
+    if commitment_mapping["lifecycle_state"] != mapping_ref["lifecycle_state"]:
+        raise ContractViolation("Commitment mapping lifecycle reference does not resolve")
+    if commitment_mapping["territory"] != snapshot["territory"]:
+        raise ContractViolation("Commitment mapping territory differs from the pilot snapshot")
+    if commitment_mapping["observation_cutoff"] != snapshot["observation_cutoff"]:
+        raise ContractViolation("Commitment mapping cut-off differs from the pilot snapshot")
+    if (
+        commitment_mapping["original_commitment"]["artifact_version_id"]
+        != campaign_artifact["artifact_version_id"]
+    ):
+        raise ContractViolation("Commitment mapping campaign artifact reference does not resolve")
+    if (
+        commitment_mapping["original_commitment"]["wording"]
+        != campaign_artifact["evidence_fragment"]["quote"]
+    ):
+        raise ContractViolation("Commitment mapping must preserve the exact primary wording")
+    if (
+        commitment_mapping["target_programme"]["programme_id"]
+        != snapshot["programme"]["programme_id"]
+    ):
+        raise ContractViolation("Commitment mapping programme reference does not resolve")
+    components = commitment_mapping["components"]
+    if len(components) != 1:
+        raise ContractViolation("The bounded primary wording must remain one unsplit component")
+    component = components[0]
+    if component["component_id"] != commitment_mapping["mapping"]["component_id"]:
+        raise ContractViolation("Commitment mapping component reference does not resolve")
+    if component["essentiality"] != "essential" or component["component_type"] != "action":
+        raise ContractViolation("The bounded commitment must remain one essential action component")
+    if component["quantity"]["state"] != "not_stated":
+        raise ContractViolation("The campaign fragment must not receive an invented quantity")
+    if component["deadline"]["state"] != "not_stated":
+        raise ContractViolation("The campaign fragment must not receive an invented deadline")
+    if component["implementation_state"] != "unknown":
+        raise ContractViolation("Implementation must remain unknown until mapping review completes")
+    if commitment_mapping["mapping"]["state"] != "proposed_review_pending":
+        raise ContractViolation("AI-assisted commitment mapping must remain a review-pending proposal")
+    if commitment_mapping["method"]["proposal_origin"] != "ai_assisted":
+        raise ContractViolation("Generated mapping proposal origin must remain explicit")
+    if commitment_mapping["review"]["completed_reviews"]:
+        raise ContractViolation("The current commitment mapping has no completed independent review")
+    if commitment_mapping["review"]["final_decision"] is not None:
+        raise ContractViolation("The current commitment mapping cannot contain a final review decision")
+    if not commitment_mapping["lineage"]["generator"]["human_review_required"]:
+        raise ContractViolation("AI-assisted commitment mapping must require human review")
+    if commitment_mapping["output_constraints"]["fulfillment_conclusion"] != "not_verifiable":
+        raise ContractViolation("Proposed mapping cannot change the fulfillment conclusion")
+    if commitment_mapping["output_constraints"]["publication_eligible"]:
+        raise ContractViolation("Proposed mapping cannot authorize publication")
+    required_comparison_dimensions = {
+        "territory",
+        "action_and_object",
+        "quantity",
+        "deadline",
+        "geographic_extent",
+        "institutional_continuity",
+        "temporal_sequence",
+    }
+    actual_comparison_dimensions = {
+        item["dimension"] for item in commitment_mapping["mapping"]["scope_comparison"]
+    }
+    if actual_comparison_dimensions != required_comparison_dimensions:
+        raise ContractViolation("Commitment mapping scope comparison is incomplete")
+
     administrative_ref = snapshot["administrative_evidence"]
     if administrative_evidence["bundle_id"] != administrative_ref["bundle_id"]:
         raise ContractViolation("Administrative evidence bundle reference does not resolve")
@@ -179,6 +269,35 @@ def validate_inputs(
     ]
     if len(evidence_ids) != len(set(evidence_ids)):
         raise ContractViolation("Administrative evidence identifiers must be unique")
+    mapping_evidence_ids = commitment_mapping["mapping"]["evidence_ids"]
+    available_mapping_evidence = {
+        commitment_mapping["original_commitment"]["evidence_id"], *evidence_ids
+    }
+    if not set(mapping_evidence_ids).issubset(available_mapping_evidence):
+        raise ContractViolation("Commitment mapping references unknown evidence")
+    reference_ids = [
+        reference["evidence_id"]
+        for reference in commitment_mapping["evidence_references"]
+    ]
+    if len(reference_ids) != len(set(reference_ids)):
+        raise ContractViolation("Commitment mapping evidence references must be unique")
+    if set(reference_ids) != set(mapping_evidence_ids):
+        raise ContractViolation("Commitment mapping evidence list and references differ")
+    expected_input_hashes = {
+        snapshot["campaign_artifact"]["local_path"]: snapshot["campaign_artifact"]["sha256"],
+        snapshot["administrative_evidence"]["local_path"]: snapshot["administrative_evidence"]["sha256"],
+    }
+    mapping_input_hashes = {
+        item["local_path"]: item["sha256"]
+        for item in commitment_mapping["lineage"]["inputs"]
+    }
+    if mapping_input_hashes != expected_input_hashes:
+        raise ContractViolation("Commitment mapping lineage does not bind its exact input versions")
+    if (
+        administrative_evidence["chain_summary"]["commitment_mapping"]
+        != commitment_mapping["mapping"]["candidate_conclusion"]
+    ):
+        raise ContractViolation("Administrative chain and mapping proposal states differ")
     programme_id = snapshot["programme"]["programme_id"]
     case_ids = {case["case_id"] for case in snapshot["case_studies"]}
     for document in documents:
@@ -246,6 +365,7 @@ def validate_inputs(
         acquisition_event,
         raw_dataset,
         administrative_evidence,
+        commitment_mapping,
     )
 
 
@@ -270,6 +390,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
         acquisition_event,
         _,
         administrative_evidence,
+        commitment_mapping,
     ) = validate_inputs(root)
     source = next(
         item for item in profiles["sources"] if item["source_id"] == "src-city-open-data-schools"
@@ -350,7 +471,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
 
     passport = {
         "contract_id": "iagora.knowledge-passport",
-        "contract_version": "1.0.0",
+        "contract_version": "1.1.0",
         "passport_id": "passport-pilot-respire-recre-2025",
         "passport_version": snapshot["snapshot_version"],
         "asset": {
@@ -392,6 +513,30 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "mapping_evidence_state": "candidate_evidence_found",
             "artifact_version_id": campaign_artifact["artifact_version_id"],
             "evidence_id": "evidence-campaign-schoolyards-2020",
+        },
+        "commitment_mapping": {
+            "mapping_id": commitment_mapping["mapping_id"],
+            "mapping_version": commitment_mapping["mapping_version"],
+            "lifecycle_state": commitment_mapping["lifecycle_state"],
+            "method_id": commitment_mapping["method"]["method_id"],
+            "method_version": commitment_mapping["method"]["method_version"],
+            "proposal_origin": commitment_mapping["method"]["proposal_origin"],
+            "review_state": commitment_mapping["review"]["state"],
+            "relationship_role": commitment_mapping["mapping"]["relationship_role"],
+            "candidate_conclusion": commitment_mapping["mapping"]["candidate_conclusion"],
+            "target_programme_id": commitment_mapping["target_programme"]["programme_id"],
+            "target_programme_name": commitment_mapping["target_programme"]["name"],
+            "component": commitment_mapping["components"][0],
+            "scope_comparison": commitment_mapping["mapping"]["scope_comparison"],
+            "rationale": commitment_mapping["mapping"]["rationale"],
+            "uncertainty": commitment_mapping["uncertainty"],
+            "limitations": commitment_mapping["mapping"]["limitations"],
+            "fulfillment_conclusion": commitment_mapping["output_constraints"][
+                "fulfillment_conclusion"
+            ],
+            "prohibited_inferences": commitment_mapping["output_constraints"][
+                "prohibited_inferences"
+            ],
         },
         "authority": {
             "fact_type": "reported_output_or_completion",
@@ -477,6 +622,15 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "document_count": len(administrative_evidence["documents"]),
                 "raw_bytes_preserved": administrative_evidence["raw_bytes_preserved"],
             },
+            "commitment_mapping": {
+                "mapping_id": commitment_mapping["mapping_id"],
+                "mapping_version": commitment_mapping["mapping_version"],
+                "lifecycle_state": commitment_mapping["lifecycle_state"],
+                "local_path": snapshot["commitment_mapping"]["local_path"],
+                "content_fingerprint_sha256": snapshot["commitment_mapping"]["sha256"],
+                "created_at": commitment_mapping["created_at"],
+                "proposal_origin": commitment_mapping["method"]["proposal_origin"],
+            },
         },
         "lineage": [
             {
@@ -508,6 +662,17 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "deterministic": True,
             },
             {
+                "event_id": "lineage-propose-commitment-mapping-001",
+                "event_type": "ai_assisted_mapping_proposal",
+                "inputs": commitment_mapping["lineage"]["inputs"],
+                "rule_version": commitment_mapping["method"]["method_version"],
+                "generator": commitment_mapping["lineage"]["generator"],
+                "output": snapshot["commitment_mapping"]["local_path"],
+                "output_sha256": snapshot["commitment_mapping"]["sha256"],
+                "result": commitment_mapping["lifecycle_state"],
+                "deterministic": False,
+            },
+            {
                 "event_id": "lineage-review-administrative-evidence-001",
                 "event_type": "evidence_review",
                 "input": snapshot["administrative_evidence"]["local_path"],
@@ -521,7 +686,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "event_type": "projection",
                 "input": snapshot["source_dataset"]["local_path"],
                 "input_sha256": snapshot["source_dataset"]["sha256"],
-                "rule_version": "iagora.pilot.project-passport/0.3.0",
+                "rule_version": "iagora.pilot.project-passport/0.4.0",
                 "output": "knowledge-passport",
                 "deterministic": True,
             },
@@ -549,6 +714,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "Dataset acquisition occurred after the historical observation cut-off.",
                 "Administrative PDF bytes are fingerprinted but not retained pending rights and privacy review.",
                 "Programme-level financial records cannot be allocated to individual schools from the reviewed evidence.",
+                "The commitment mapping is an AI-assisted proposal awaiting independent methodological and authority review.",
             ],
         },
         "conflicts_and_uncertainty": [
@@ -582,6 +748,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "state": "prototype_maintainer_review_only",
             "reviewer_role": "maintainer",
             "methodological_review_complete": False,
+            "commitment_mapping_review_state": commitment_mapping["review"]["state"],
             "correction_channel": "repository issue or pull request",
         },
         "accessibility": {
@@ -622,10 +789,66 @@ def render_html(passport: dict[str, Any]) -> str:
             f'rel="external noreferrer">{html.escape(label)}</a>'
         )
 
+    mapping_dimension_labels = {
+        "territory": "Territoire",
+        "action_and_object": "Action et objet",
+        "quantity": "Quantité",
+        "deadline": "Échéance",
+        "geographic_extent": "Étendue géographique",
+        "institutional_continuity": "Continuité institutionnelle",
+        "temporal_sequence": "Chronologie",
+    }
+    mapping_result_labels = {
+        "compatible": "Compatible, sans preuve suffisante à elle seule",
+        "compatible_with_broader_programme": "Compatible avec un programme plus large",
+        "indeterminate": "Indéterminé",
+        "not_comparable": "Non comparable",
+        "pending_additional_evidence": "Preuve complémentaire requise",
+    }
+    mapping_scope_labels = {
+        "territory": (
+            "Campagne municipale de Clermont-Ferrand",
+            "Politique municipale de la Ville de Clermont-Ferrand",
+        ),
+        "action_and_object": (
+            "Végétalisation de cours d’école",
+            "Transformation écologique, plus fraîche, perméable, inclusive et coconçue des cours d’école",
+        ),
+        "quantity": (
+            "Aucun nombre, proportion ou dénominateur indiqué",
+            "Des objectifs ultérieurs existent, mais ne deviennent pas des objectifs de campagne",
+        ),
+        "deadline": (
+            "Aucune échéance indiquée",
+            "Le projet éducatif adopté couvre 2022–2025",
+        ),
+        "geographic_extent": (
+            "Plusieurs cours, sans couverture de tous les quartiers ni de toute la ville dans le fragment primaire",
+            "Programme municipal portant sur plusieurs sites scolaires",
+        ),
+        "institutional_continuity": (
+            "Proposition attribuée à Olivier Bianchi et Naturellement Clermont",
+            "Politique adoptée et mise en œuvre par la Ville de Clermont-Ferrand",
+        ),
+        "temporal_sequence": (
+            "Page de campagne capturée en 2019 avant l’élection municipale de 2020",
+            "Actions et politique publique postérieures",
+        ),
+    }
+    mapping_rows = "".join(
+        "<tr>"
+        f'<th scope="row">{html.escape(mapping_dimension_labels[item["dimension"]])}</th>'
+        f'<td>{html.escape(mapping_scope_labels[item["dimension"]][0])}</td>'
+        f'<td>{html.escape(mapping_scope_labels[item["dimension"]][1])}</td>'
+        f'<td>{html.escape(mapping_result_labels[item["comparison_result"]])}</td>'
+        "</tr>"
+        for item in passport["commitment_mapping"]["scope_comparison"]
+    )
+
     chain_rows = [
         (
             "Correspondance promesse → programme",
-            "Pièce candidate trouvée, revue méthodologique incomplète",
+            "Proposition structurée, revue indépendante en attente",
             milestone_link("evidence-pev-respire-definition-2023", "Projet éducatif adopté"),
         ),
         (
@@ -696,7 +919,7 @@ def render_html(passport: dict[str, Any]) -> str:
             <section aria-labelledby="{html.escape(case['case_id'])}">
               <h2 id="{html.escape(case['case_id'])}">{html.escape(case['school_name'])}</h2>
               <p><strong>Lecture :</strong> {html.escape(status_labels[case['reported_summary']])}.</p>
-              <p>{html.escape(case['scope_warning'])}</p>
+              <p>Les lignes par unité scolaire restent distinctes et ne constituent pas une conclusion à l’échelle du programme.</p>
               <p><strong>Pièces administratives reliées :</strong> {len(case['administrative_evidence_ids'])}. Leur présence ne vaut ni réception des travaux ni preuve d’impact.</p>
               <div class="table-wrap" tabindex="0" aria-label="Tableau défilable des données de {html.escape(case['school_name'])}">
                 <table>
@@ -709,40 +932,82 @@ def render_html(passport: dict[str, Any]) -> str:
             """
         )
 
-    blockers = "".join(f"<li>{html.escape(item)}</li>" for item in passport["publication"]["blockers"])
-    limits = "".join(f"<li>{html.escape(item)}</li>" for item in passport["conflicts_and_uncertainty"])
+    blocker_labels = {
+        "commitment_mapping_and_methodological_review_incomplete": "La correspondance entre la promesse et le programme attend une revue méthodologique indépendante.",
+        "campaign_artifact_raw_bytes_not_preserved_for_rights": "La page de campagne complète n’est pas conservée dans le dépôt en raison des droits de reproduction.",
+        "methodological_review_incomplete": "La revue méthodologique globale du POC reste incomplète.",
+        "procurement_and_competent_completion_evidence_missing": "Les marchés et les pièces de réception compétente n’ont pas été localisés.",
+        "outcome_and_impact_evidence_missing": "Les preuves de résultats et d’impact restent absentes.",
+        "production_privacy_security_and_retention_review_incomplete": "Les revues de confidentialité, de sécurité et de conservation nécessaires à la production restent incomplètes.",
+    }
+    limit_labels = {
+        "The primary campaign fragment is unquantified and does not state a delivery date, budget, or number of schoolyards.": "Le fragment primaire n’est pas chiffré et ne précise ni échéance, ni budget, ni nombre de cours d’école.",
+        "The all-neighbourhood scope appears in supporting interview evidence, not in the retained primary fragment.": "La portée « tous les quartiers » apparaît dans un entretien de soutien, pas dans le fragment primaire retenu.",
+        "Pierre-et-Marie-Curie has different reported states for its maternelle and élémentaire units; this is a scope difference, not a resolved contradiction.": "Pierre-et-Marie-Curie présente des états déclarés différents pour la maternelle et l’élémentaire ; il s’agit d’une différence de périmètre, pas d’une contradiction résolue.",
+        "The 1.09 million euros reported for 2022 and 1,939,810.63 euros of cumulative mandates before 2023 have different periods and precision; they must not be treated as contradictory or interchangeable.": "Les 1,09 M€ déclarés pour 2022 et les 1 939 810,63 € de mandats cumulés avant 2023 couvrent des périodes et des précisions différentes ; ils ne sont ni contradictoires ni interchangeables par défaut.",
+        "No unambiguous Respire procurement record was found in the bounded searches; this is a search gap, not evidence that no contract exists.": "Aucun marché Respire non ambigu n’a été trouvé dans les recherches bornées ; cette lacune n’est pas une preuve d’absence de marché.",
+        "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.": "Aucune référence initiale, aucun indicateur de résultat, contrefactuel ou examen de contribution n’a été validé.",
+    }
+    blockers = "".join(
+        f"<li>{html.escape(blocker_labels.get(item, item))}</li>"
+        for item in passport["publication"]["blockers"]
+    )
+    limits = "".join(
+        f"<li>{html.escape(limit_labels.get(item, item))}</li>"
+        for item in passport["conflicts_and_uncertainty"]
+    )
     source_url = html.escape(passport["provenance"]["source_url"], quote=True)
     return f"""<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IAgora — POC Respire à la récré</title>
-  <style>
-    :root {{ color-scheme: light; font-family: system-ui, sans-serif; line-height: 1.55; }}
-    body {{ margin: 0; color: #17211b; background: #f5f7f5; }}
-    main {{ max-width: 68rem; margin: auto; padding: 2rem 1rem 4rem; }}
-    .banner {{ border: .25rem solid #6c4514; background: #fff4dc; padding: 1rem; }}
-    section {{ background: white; margin-top: 1.5rem; padding: 1.25rem; border: 1px solid #c7d0ca; }}
-    table {{ width: 100%; border-collapse: collapse; }}
-    caption {{ text-align: left; font-weight: 700; padding-bottom: .5rem; }}
-    th, td {{ padding: .6rem; border: 1px solid #9eaaa2; text-align: left; }}
-    .table-wrap {{ overflow-x: auto; }}
-    a {{ color: #004f3d; text-decoration-thickness: .12em; }}
-    :focus-visible {{ outline: .2rem solid #7a2e00; outline-offset: .2rem; }}
-  </style>
+  <meta name="description" content="Dossier détaillé et traçable du programme Respire à la récré dans le prototype local IAgora.">
+  <title>IAgora — Dossier Respire à la récré</title>
+  <style>{PAGE_STYLES}</style>
 </head>
 <body>
-<main>
-  <h1>POC « Respire à la récré »</h1>
+{render_site_header("detail", "../../")}
+<main id="contenu" class="report-shell">
+  <nav class="breadcrumbs no-print" aria-label="Fil d’Ariane"><a href="../../index.html">Clermont-Ferrand</a> / <a href="../../education/index.html">Éducation</a> / Respire à la récré</nav>
+  <section class="content-card" aria-labelledby="titre-dossier">
+    <p class="eyebrow">Dossier détaillé · Méthode, périmètres et preuves</p>
+    <h1 id="titre-dossier" class="page-title">Respire à la récré</h1>
+    <p class="lede">La vue imprimable du programme étudié, construite à partir du même passeport de connaissance que le tableau de bord.</p>
+    <div class="actions no-print"><a class="button button--secondary" href="../../education/index.html">Retour à l’éducation</a><button class="button" type="button" onclick="window.print()">Imprimer le dossier</button></div>
+  </section>
   <div class="banner" role="status">
     <strong>Prototype local — publication bloquée.</strong>
     Ce rendu démontre la traçabilité technique. Il ne conclut ni à la réalisation de la promesse, ni à un impact sur la ville.
   </div>
+  <section aria-labelledby="synthese">
+    <h2 id="synthese">Synthèse multidimensionnelle</h2>
+    <p>Chaque dimension reste séparée : documenter une action ou une dépense ne suffit pas à prouver l’accomplissement global ni l’impact.</p>
+    {render_multidimensional_summary()}
+  </section>
+  <section aria-labelledby="filiation">
+    <div class="theme-card__top"><h2 id="filiation">Filiation de la politique publique</h2><span class="tag tag--pending">Indéterminable</span></div>
+    <p>La séquence est documentée sans attribuer automatiquement le programme à la promesse et sans affirmer qu’il est inédit ou hérité.</p>
+    {render_policy_timeline(passport)}
+  </section>
   <section aria-labelledby="engagement">
     <h2 id="engagement">Engagement de campagne retrouvé</h2>
     <p>La page de campagne archivée présente la proposition <q>{html.escape(passport['campaign_commitment']['wording'])}</q>.</p>
-    <p><a href="{html.escape(passport['provenance']['campaign_artifact']['archive_url'], quote=True)}" rel="external noreferrer">Consulter la capture archivée</a>. Le fragment ne précise ni nombre de cours, ni échéance, ni budget. Son rapprochement avec « Respire à la récré » reste à valider.</p>
+    <p><a href="{html.escape(passport['provenance']['campaign_artifact']['archive_url'], quote=True)}" rel="external noreferrer">Consulter la capture archivée</a>. Le fragment ne précise ni nombre de cours, ni échéance, ni budget.</p>
+  </section>
+  <section aria-labelledby="correspondance">
+    <h2 id="correspondance">Pourquoi le rapprochement avec « Respire à la récré » est proposé</h2>
+    <p>IAgora conserve un seul composant essentiel : <strong>végétaliser des cours d’école</strong>. Ajouter une quantité, une échéance, une couverture de tous les quartiers ou les objectifs plus détaillés du programme réécrirait la promesse d’origine.</p>
+    <p>La proposition de correspondance s’appuie sur le même territoire municipal, un objet compatible et le {milestone_link("evidence-pev-respire-definition-2023", "projet éducatif adopté")}. Le programme est toutefois plus large que la formulation de campagne et aucune pièce conservée n’établit encore directement leur continuité.</p>
+    <p><strong>État de revue :</strong> proposition assistée par IA, en attente d’une revue méthodologique et d’autorité indépendante. Elle ne constitue ni une preuve ni une conclusion de réalisation.</p>
+    <div class="table-wrap" tabindex="0" aria-label="Tableau défilable comparant la promesse et le programme municipal">
+      <table>
+        <caption>Comparaison explicite des périmètres</caption>
+        <thead><tr><th scope="col">Dimension</th><th scope="col">Promesse primaire</th><th scope="col">Programme municipal</th><th scope="col">Lecture proposée</th></tr></thead>
+        <tbody>{mapping_rows}</tbody>
+      </table>
+    </div>
+    <p><strong>Conséquence :</strong> la correspondance reste proposée et le respect de la promesse demeure <strong>non vérifiable</strong>.</p>
   </section>
   <section aria-labelledby="conclusion">
     <h2 id="conclusion">Ce que l’on peut conclure</h2>
@@ -775,6 +1040,7 @@ def render_html(passport: dict[str, Any]) -> str:
     <p>Le fichier <code>passport.json</code> fournit la version machine-readable équivalente.</p>
   </section>
 </main>
+{render_footer()}
 </body>
 </html>
 """
@@ -784,10 +1050,16 @@ def build(output_dir: Path, root: Path = ROOT) -> tuple[Path, Path]:
     passport = build_passport(root)
     output_dir.mkdir(parents=True, exist_ok=True)
     passport_path = output_dir / "passport.json"
-    html_path = output_dir / "index.html"
+    dashboard_path = output_dir / "index.html"
+    education_path = output_dir / "education" / "index.html"
+    report_path = output_dir / "programmes" / "respire-a-la-recre" / "index.html"
+    education_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.parent.mkdir(parents=True, exist_ok=True)
     passport_path.write_text(
         json.dumps(passport, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    html_path.write_text(render_html(passport), encoding="utf-8")
-    return passport_path, html_path
+    dashboard_path.write_text(render_dashboard_html(passport), encoding="utf-8")
+    education_path.write_text(render_education_html(passport), encoding="utf-8")
+    report_path.write_text(render_html(passport), encoding="utf-8")
+    return passport_path, dashboard_path

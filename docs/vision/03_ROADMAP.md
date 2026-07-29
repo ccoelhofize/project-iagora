@@ -14,7 +14,7 @@ The initial decision foundation is merged. A local, non-public vertical slice no
 
 ### Current repository evidence
 
-- ADR-0001 through ADR-0009 are accepted.
+- ADR-0001 through ADR-0010 are accepted; ADR-0010 now has a bounded local product projection, while its generalized field-level contracts remain incomplete.
 - Every document in the target documentation map is present.
 - Project Intent and the Architect Playbook are accepted.
 - The Manifesto and contribution guide are accepted.
@@ -22,12 +22,13 @@ The initial decision foundation is merged. A local, non-public vertical slice no
 - All architecture specifications, the remaining development guides, and the remaining governance specifications remain drafts.
 - The product scope is accepted and the three case studies are confirmed through an active source inventory.
 - The exact EUPL-1.2 text, artifact-class notice, and third-party notice are present.
-- Six pre-stable executable schemas cover source profiles, campaign artifacts, acquisition events, administrative evidence, pilot snapshots, and Knowledge Passports, with a standard-library validator.
-- A deterministic local transformation, accessible HTML projection, and initial contract and methodology guardrail tests exist.
+- Seven pre-stable executable schemas cover source profiles, campaign artifacts, commitment mappings, acquisition events, administrative evidence, pilot snapshots, and Knowledge Passports, with a standard-library validator.
+- A deterministic local transformation, three-level static HTML product projection, and initial contract, methodology, and presentation guardrail tests exist.
 - One exact bounded API response and acquisition event exist; no production connector, general immutable raw store, database, network service, public API, deployment, or public service exists.
 - Ten metadata-only municipal document versions establish a partial administrative chain without conflating adopted policy, programme finance, reported delivery, and funding forecasts.
 - A minimal read-only CI workflow runs deterministic validation, tests, and the local build on Python 3.11.
-- A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata; its mapping, procurement and competent-completion evidence, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
+- A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata. Its one-component mapping to the later programme is now an explicit AI-assisted proposal, but independent methodological and authority review, procurement and competent-completion evidence, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
+- A local Clermont-Ferrand home, bounded Education dashboard, evidence-linked timeline, and printable programme dossier now demonstrate the target navigation. The macro view remains an explicit missing-data placeholder, and no real city-wide macro series, generalized indicator explorer, production report service, or SaaS deployment exists.
 
 ### Exit criteria
 
@@ -46,6 +47,7 @@ Define the minimum governance and domain model needed for the “Respire à la r
 
 - canonical glossary;
 - campaign commitment, implementation, fulfillment, and impact-assessment methodology;
+- multidimensional public-accountability and policy-lineage methodology;
 - Source of Truth and Source of Evidence rules;
 - assertion, evidence, conflict, and temporal model;
 - provenance and lineage requirements;
@@ -60,6 +62,7 @@ Define the minimum governance and domain model needed for the “Respire à la r
 - authority is determined per fact type rather than by a global source ranking;
 - campaign commitments can be linked to public actions without treating later municipal communication as the original promise;
 - fulfillment summaries can be reproduced from visible atomic states and rules;
+- financial stages and policy-lineage claims remain inspectable and cannot substitute for fulfillment or impact;
 - outputs, outcomes, and attributed impacts remain distinguishable;
 - material conflicts remain representable;
 - enforceable rules have deterministic validation criteria;
@@ -76,10 +79,11 @@ Implement one end-to-end path for the programme and three selected school case s
 - one exact six-UAI API response, acquisition event, and deterministic raw-to-normalized equality check;
 - normalized six-record open-data subset for the three accepted cases;
 - ten metadata-only municipal document versions forming a partial administrative chain;
+- one explicit, review-pending commitment-mapping proposal with a seven-dimension scope comparison and fail-closed output constraints;
 - deterministic validation and transformation;
 - row-level evidence locators and source attribution;
 - versioned Knowledge Passport JSON;
-- accessible static HTML review view;
+- static Clermont-Ferrand home, Education dashboard, and detailed printable review dossier generated from the same passport;
 - publication gate that fails closed on known blockers;
 - initial automated tests for contracts, scope separation, evidence coverage, determinism, and unsupported conclusions;
 - minimal CI execution of validation, tests, and deterministic build on Python 3.11.
@@ -91,7 +95,9 @@ Implement one end-to-end path for the programme and three selected school case s
 - parsing, validation, and canonical transformation;
 - source-fragment citations and transformation lineage;
 - generalized immutable raw source versions and governed acquisition events beyond the single bounded prototype;
-- inspectable commitment-to-action and action-to-impact pathways backed by the remaining authoritative records;
+- independent review of the proposed commitment-to-action mapping and action-to-impact pathways backed by the remaining authoritative records;
+- browser, responsive-layout, print, and assistive-technology review of the product-shaped navigation prototype;
+- generalized field-level implementation of the ADR-0010 assessment and policy-lineage model beyond the bounded dossier;
 - reviewed accessible plain-language exploration;
 - contract, lineage, accessibility, and security tests;
 - observability for acquisition and publication failures.
@@ -111,6 +117,7 @@ Evaluate usefulness, methodological integrity, and operating cost before expandi
 ### Proposed outcomes
 
 - structured review by citizens, journalists, domain specialists, and accessibility testers;
+- usability review of territory, theme, indicator, evidence, and print navigation without requiring users to understand the underlying data model;
 - analysis of missing evidence and false certainty risks;
 - measurement of acquisition reliability and review effort;
 - corrections to the canonical model through specifications and, when necessary, superseding ADRs;
@@ -122,6 +129,8 @@ Expand only when pilot evidence supports it.
 
 Possible directions include additional municipal programmes, additional public-record classes, or another territory. Each expansion requires explicit scope, source, governance, legal, accessibility, and operating-cost assessment.
 
+Thematic expansion may add education, finance, culture, public safety, or other policy domains only when each domain has a governed question, source inventory, indicator definitions, privacy and rights posture, and responsible reviewer. A navigation placeholder is not evidence that a theme is ready for publication.
+
 ## Deferred decisions
 
 The roadmap does not yet select:
@@ -130,6 +139,8 @@ The roadmap does not yet select:
 - production service-level objectives;
 - automated AI model or provider;
 - public launch date;
-- multi-territory deployment plan.
+- multi-territory deployment plan;
+- the macro Clermont-Ferrand visualization and primary indicator set for each theme;
+- SaaS tenancy, authentication, billing, and public-versus-maintainer workspace boundaries.
 
 These choices would be premature before the pilot contracts and workload are understood.

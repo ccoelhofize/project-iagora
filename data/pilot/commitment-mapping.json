@@ -1,0 +1,255 @@
+{
+  "contract_id": "iagora.commitment-mapping",
+  "contract_version": "1.0.0",
+  "mapping_id": "mapping-campaign-schoolyards-to-respire-001",
+  "mapping_version": "0.1.0",
+  "lifecycle_state": "proposed_review_pending",
+  "observation_cutoff": "2025-12-31",
+  "created_at": "2026-07-29T18:08:18Z",
+  "territory": "fr-63113-clermont-ferrand",
+  "method": {
+    "method_id": "iagora.commitment-mapping",
+    "method_version": "adr-0004-1.0",
+    "governing_adrs": ["ADR-0002", "ADR-0003", "ADR-0004"],
+    "proposal_origin": "ai_assisted"
+  },
+  "original_commitment": {
+    "commitment_id": "commitment-schoolyard-regreening-2020",
+    "source_id": "src-campaign-2020-primary",
+    "artifact_version_id": "campaign-naturellement-clermont-schoolyards-wayback-20191128144201",
+    "evidence_id": "evidence-campaign-schoolyards-2020",
+    "wording": "Végétalisation des cours d’école",
+    "attribution": {
+      "actor": "Olivier Bianchi",
+      "campaign_list": "Naturellement Clermont",
+      "election_context": "2020 Clermont-Ferrand municipal election",
+      "territory": "fr-63113-clermont-ferrand"
+    },
+    "source_verification": "primary_source_authenticated_with_limitations",
+    "specificity": {
+      "quantity_state": "not_stated",
+      "deadline_state": "not_stated",
+      "budget_state": "not_stated",
+      "broader_geographic_claim_state": "absent_from_primary_fragment"
+    },
+    "scope_limits": [
+      "The primary fragment states no number or share of schoolyards.",
+      "The primary fragment states no deadline or mandate-end condition.",
+      "The primary fragment states no budget, target population, or measured outcome.",
+      "The broader all-neighbourhood formulation appears only in supporting interview evidence and is not imported into this commitment."
+    ]
+  },
+  "components": [
+    {
+      "component_id": "component-vegetate-schoolyards-001",
+      "component_version": "0.1.0",
+      "sequence": 1,
+      "original_span": "Végétalisation des cours d’école",
+      "component_type": "action",
+      "essentiality": "essential",
+      "canonical_subject": "municipal_action_in_clermont_ferrand",
+      "action": "vegetate",
+      "object": "schoolyards",
+      "territorial_scope": "fr-63113-clermont-ferrand",
+      "responsible_competence": {
+        "state": "municipal_context_review_pending",
+        "candidate_institution": "Ville de Clermont-Ferrand",
+        "rationale": "The proposal appears in an authenticated Clermont-Ferrand municipal campaign context, but the competence link remains subject to evidence and methodological review."
+      },
+      "quantity": {"state": "not_stated", "value": null, "unit": null},
+      "deadline": {"state": "not_stated", "value": null},
+      "implementation_state": "unknown",
+      "implementation_state_rationale": "The candidate programme mapping is unreviewed, the original scope and deadline are unstated, and competent completion evidence is incomplete.",
+      "decomposition_rationale": "The primary wording expresses one independently assessable action. Splitting cooling, permeability, inclusion, co-design, site counts, or neighbourhood coverage into campaign components would import details from later sources and alter the original commitment.",
+      "limitations": [
+        "Plural wording establishes more than one schoolyard only at a linguistic level; it does not define a numerical target.",
+        "No mandate-end deadline is inferred from the fragment.",
+        "Programme outputs, outcomes, and impacts remain separate from this campaign component."
+      ]
+    }
+  ],
+  "target_programme": {
+    "programme_id": "programme-respire-a-la-recre",
+    "name": "Respire à la récré",
+    "institution": "Ville de Clermont-Ferrand",
+    "target_assertion_id": "assertion-respire-schoolyard-transformation-policy-2023",
+    "definition_evidence_id": "evidence-pev-respire-definition-2023",
+    "adoption_evidence_id": "evidence-pev-adoption-2023"
+  },
+  "mapping": {
+    "component_id": "component-vegetate-schoolyards-001",
+    "target_assertion_id": "assertion-respire-schoolyard-transformation-policy-2023",
+    "relationship_role": "implements",
+    "state": "proposed_review_pending",
+    "candidate_conclusion": "candidate_evidence_found_review_incomplete",
+    "scope_comparison": [
+      {
+        "dimension": "territory",
+        "commitment_scope": "Clermont-Ferrand municipal campaign",
+        "programme_scope": "Ville de Clermont-Ferrand municipal policy",
+        "comparison_result": "compatible",
+        "rationale": "Both records concern municipal action in Clermont-Ferrand. Compatibility does not by itself prove programme continuity."
+      },
+      {
+        "dimension": "action_and_object",
+        "commitment_scope": "Vegetation of schoolyards",
+        "programme_scope": "Ecological, cooler, permeable, inclusive, and co-designed transformation of schoolyards",
+        "comparison_result": "compatible_with_broader_programme",
+        "rationale": "The adopted programme includes schoolyard greening but defines a broader transformation. Its additional properties are not retroactively attributed to the campaign wording."
+      },
+      {
+        "dimension": "quantity",
+        "commitment_scope": "No number, proportion, or denominator stated",
+        "programme_scope": "Later programme targets exist in separate sources but are not used as campaign targets",
+        "comparison_result": "indeterminate",
+        "rationale": "No compatible campaign denominator exists, so a delivery ratio or numerical fulfillment test cannot be constructed."
+      },
+      {
+        "dimension": "deadline",
+        "commitment_scope": "No deadline stated",
+        "programme_scope": "The adopted education project covers 2022–2025",
+        "comparison_result": "not_comparable",
+        "rationale": "A later policy period cannot silently become the campaign commitment deadline."
+      },
+      {
+        "dimension": "geographic_extent",
+        "commitment_scope": "Plural schoolyards; no all-neighbourhood or complete-city coverage in the primary fragment",
+        "programme_scope": "Municipal programme with multiple school sites",
+        "comparison_result": "indeterminate",
+        "rationale": "The sources share a municipal setting, but the primary wording provides no compatible site universe or geographic denominator."
+      },
+      {
+        "dimension": "institutional_continuity",
+        "commitment_scope": "Proposal attributed to Olivier Bianchi and Naturellement Clermont",
+        "programme_scope": "Policy adopted and implemented by the Ville de Clermont-Ferrand",
+        "comparison_result": "pending_additional_evidence",
+        "rationale": "Campaign attribution and municipal policy adoption are evidenced separately, but a first-class evidence fragment directly documenting continuity remains to be acquired or reviewed."
+      },
+      {
+        "dimension": "temporal_sequence",
+        "commitment_scope": "Campaign page captured in 2019 before the 2020 municipal election",
+        "programme_scope": "Later programme action and adopted policy records",
+        "comparison_result": "compatible",
+        "rationale": "The sequence is compatible with implementation, but chronology alone does not establish that the programme implements the promise."
+      }
+    ],
+    "rationale": "The authenticated campaign proposal and adopted policy concern compatible schoolyard-greening action in the same municipal territory. The adopted programme is broader and later. This supports a candidate implementation mapping only; direct continuity, complete scope equivalence, delivery, fulfillment, outcomes, and impact remain unverified.",
+    "evidence_ids": [
+      "evidence-campaign-schoolyards-2020",
+      "evidence-pev-respire-definition-2023",
+      "evidence-pev-adoption-2023"
+    ],
+    "counterevidence": {
+      "state": "none_identified_in_bounded_corpus",
+      "evidence_ids": [],
+      "limitations": [
+        "The bounded corpus is not exhaustive, so no identified counterevidence is not evidence that none exists.",
+        "Differently scoped programme targets are not treated as contradictions with an unquantified primary fragment."
+      ]
+    },
+    "limitations": [
+      "Shared subject matter is insufficient by itself; institutional continuity still requires review.",
+      "The mapping does not establish that every programme activity derives from the campaign proposal.",
+      "The mapping does not establish a numerical target, deadline, delivery state, fulfillment conclusion, outcome, or causal impact."
+    ]
+  },
+  "evidence_references": [
+    {
+      "evidence_id": "evidence-campaign-schoolyards-2020",
+      "role": "original_commitment",
+      "relationship": "supports",
+      "artifact_version_id": "campaign-naturellement-clermont-schoolyards-wayback-20191128144201",
+      "locator": "HTML content block under the heading “Végétalisation” on the archived “Une ville nature” page",
+      "source_url": "https://web.archive.org/web/20191128144201id_/https://olivierbianchi2020.fr/une-ville-nature/"
+    },
+    {
+      "evidence_id": "evidence-pev-respire-definition-2023",
+      "role": "programme_definition",
+      "relationship": "contextualizes",
+      "artifact_version_id": "artifact-pev-2023-adopted-annex",
+      "locator": "printed page 25, Respire à la récré inset",
+      "source_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004_annexe_0.pdf"
+    },
+    {
+      "evidence_id": "evidence-pev-adoption-2023",
+      "role": "policy_adoption",
+      "relationship": "supports",
+      "artifact_version_id": "artifact-pev-2023-final-deliberation",
+      "locator": "page 2 of 3, decision paragraph",
+      "source_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004.pdf"
+    }
+  ],
+  "uncertainty": [
+    {
+      "dimension": "semantic_alignment",
+      "state": "compatible_with_limitations",
+      "explanation": "The programme includes schoolyard greening but also contains broader design and policy objectives absent from the campaign fragment."
+    },
+    {
+      "dimension": "direct_continuity_evidence",
+      "state": "insufficient",
+      "explanation": "No retained first-class fragment directly states that Respire à la récré implements this campaign proposal."
+    },
+    {
+      "dimension": "scope_equivalence",
+      "state": "indeterminate",
+      "explanation": "The campaign fragment has no numerical, population, neighbourhood, or deadline scope suitable for complete comparison."
+    },
+    {
+      "dimension": "temporal_continuity",
+      "state": "plausible_not_directly_evidenced",
+      "explanation": "The chronology is compatible with continuity, but chronological sequence is not direct mapping evidence."
+    },
+    {
+      "dimension": "competent_completion",
+      "state": "not_located",
+      "explanation": "Competent works-acceptance records have not been located for the selected sites or complete programme scope."
+    }
+  ],
+  "review": {
+    "state": "pending_independent_methodological_review",
+    "required_reviews": ["methodological_reviewer", "evidence_authority_reviewer"],
+    "completed_reviews": [],
+    "reviewer_separation_required": true,
+    "final_decision": null,
+    "notes": [
+      "Maintainer approval authorized preparation of this bounded proposal; it did not constitute methodological acceptance.",
+      "A reviewer must decide whether the converging context is sufficient or whether direct continuity evidence is required before accepting the mapping.",
+      "Any accepted review must record role, decision, timestamp, rationale, reviewed version, counterevidence, and limitations."
+    ]
+  },
+  "output_constraints": {
+    "fulfillment_conclusion": "not_verifiable",
+    "publication_eligible": false,
+    "prohibited_inferences": [
+      "Do not infer a numerical target or completion ratio.",
+      "Do not attribute the all-neighbourhood formulation to the primary fragment.",
+      "Do not treat later programme objectives as original campaign wording.",
+      "Do not assign a public fulfillment conclusion from this proposed mapping.",
+      "Do not infer outcomes or causal impact from programme delivery evidence."
+    ]
+  },
+  "lineage": {
+    "generator": {
+      "kind": "ai_assisted",
+      "provider": "OpenAI",
+      "model_identifier": "Codex GPT-5 family",
+      "exact_deployment_identifier_available": false,
+      "task_version": "iagora.commitment-mapping.proposal/0.1.0",
+      "generated_at": "2026-07-29T18:08:18Z",
+      "human_review_required": true
+    },
+    "inputs": [
+      {
+        "local_path": "data/pilot/campaign-artifact.json",
+        "sha256": "afa6405a147185bf979eb995a12f32fe4258631f970f21f7875908ea31744308",
+        "role": "original_commitment_evidence"
+      },
+      {
+        "local_path": "data/pilot/administrative-evidence.json",
+        "sha256": "2bf39dec8876f133eefc98dd8ec6956386df134e54f2281acc1b6edf720f87d9",
+        "role": "administrative_mapping_evidence"
+      }
+    ]
+  }
+}

@@ -154,7 +154,7 @@ The pilot is ready for evaluation when:
 
 ## Remaining validation gates
 
-- Review the mapping from the authenticated, unquantified campaign fragment to “Respire à la récré,” and obtain a qualified rights assessment. The source is now authenticated with limitations, but fulfillment remains `not verifiable`.
+- Independently review the explicit AI-assisted mapping proposal from the authenticated, unquantified campaign fragment to “Respire à la récré,” and obtain a qualified rights assessment. The proposal preserves one essential component and compares seven scope dimensions, but it is not accepted and fulfillment remains `not verifiable`.
 - Select outcome indicators only after their definitions, baselines, authority, quality, privacy, and generalization limits pass review.
 - Complete the source-class retention schedule, privacy assessment, threat model, and qualified legal and security review before production acquisition or public release.
 - Define operational reviewer roles, correction handling, and challenges before a public methodological conclusion.

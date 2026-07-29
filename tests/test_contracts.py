@@ -7,6 +7,7 @@ import unittest
 from iagora.contracts import ContractViolation, load_json, validate
 from iagora.pilot import (
     ADMINISTRATIVE_EVIDENCE,
+    COMMITMENT_MAPPING,
     CONTRACTS,
     SOURCE_PROFILES,
     SNAPSHOT,
@@ -24,6 +25,7 @@ class ContractTests(unittest.TestCase):
             acquisition_event,
             raw_dataset,
             administrative_evidence,
+            commitment_mapping,
         ) = validate_inputs()
         self.assertEqual(17, len(profiles["sources"]))
         self.assertEqual("2025-12-31", snapshot["observation_cutoff"])
@@ -36,6 +38,8 @@ class ContractTests(unittest.TestCase):
         self.assertTrue(snapshot["source_dataset"]["raw_bytes_preserved"])
         self.assertEqual(10, len(administrative_evidence["documents"]))
         self.assertFalse(administrative_evidence["raw_bytes_preserved"])
+        self.assertEqual("proposed_review_pending", commitment_mapping["lifecycle_state"])
+        self.assertEqual(1, len(commitment_mapping["components"]))
 
     def test_acquisition_event_and_raw_artifact_validate(self) -> None:
         event_path = (
@@ -114,6 +118,31 @@ class ContractTests(unittest.TestCase):
             for scope_id in document["scope"]["ids"]
         }
         self.assertEqual(expected_cases, actual_cases)
+
+    def test_commitment_mapping_preserves_primary_scope_and_review_gate(self) -> None:
+        mapping = load_json(COMMITMENT_MAPPING)
+        schema = load_json(CONTRACTS / "commitment-mapping.schema.json")
+        validate(mapping, schema)
+        component = mapping["components"][0]
+        self.assertEqual("Végétalisation des cours d’école", component["original_span"])
+        self.assertEqual("essential", component["essentiality"])
+        self.assertEqual("action", component["component_type"])
+        self.assertEqual({"state": "not_stated", "value": None, "unit": None}, component["quantity"])
+        self.assertEqual({"state": "not_stated", "value": None}, component["deadline"])
+        self.assertEqual("unknown", component["implementation_state"])
+        self.assertEqual("ai_assisted", mapping["method"]["proposal_origin"])
+        self.assertEqual([], mapping["review"]["completed_reviews"])
+        self.assertIsNone(mapping["review"]["final_decision"])
+        self.assertEqual("not_verifiable", mapping["output_constraints"]["fulfillment_conclusion"])
+        self.assertFalse(mapping["output_constraints"]["publication_eligible"])
+
+    def test_generated_mapping_cannot_claim_completed_review(self) -> None:
+        mapping = load_json(COMMITMENT_MAPPING)
+        schema = load_json(CONTRACTS / "commitment-mapping.schema.json")
+        invalid = copy.deepcopy(mapping)
+        invalid["review"]["state"] = "accepted"
+        with self.assertRaisesRegex(ContractViolation, "expected constant"):
+            validate(invalid, schema)
 
     def test_missing_required_source_field_is_rejected(self) -> None:
         profiles = load_json(SOURCE_PROFILES)
