@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## How to read this roadmap
 
@@ -22,10 +22,10 @@ The initial decision foundation is merged. A local, non-public vertical slice no
 - All architecture specifications, the remaining development guides, and the remaining governance specifications remain drafts.
 - The product scope is accepted and the three case studies are confirmed through an active source inventory.
 - The exact EUPL-1.2 text, artifact-class notice, and third-party notice are present.
-- Pre-stable executable source-profile, pilot-snapshot, and Knowledge Passport schemas exist with a standard-library validator.
+- Pre-stable executable source-profile, campaign-artifact, pilot-snapshot, and Knowledge Passport schemas exist with a standard-library validator.
 - A deterministic local transformation, accessible HTML projection, and initial contract and methodology guardrail tests exist.
-- No production connector, immutable raw store, database, network service, public API, deployment, or public service exists.
-- The primary campaign artifact, exact administrative chains, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
+- One exact bounded API response and acquisition event exist; no production connector, general immutable raw store, database, network service, public API, deployment, or public service exists.
+- A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata; its mapping, exact administrative chains, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
 
 ### Exit criteria
 
@@ -70,6 +70,8 @@ Implement one end-to-end path for the programme and three selected school case s
 ### Current prototype evidence
 
 - bounded source profiles and rights states;
+- fingerprinted metadata and a precise short fragment from an authenticated archived campaign page, while restricted raw HTML remains excluded;
+- one exact six-UAI API response, acquisition event, and deterministic raw-to-normalized equality check;
 - normalized six-record open-data subset for the three accepted cases;
 - deterministic validation and transformation;
 - row-level evidence locators and source attribution;
@@ -84,8 +86,8 @@ Implement one end-to-end path for the programme and three selected school case s
 - immutable raw evidence with recovery and governed redaction behavior;
 - parsing, validation, and canonical transformation;
 - source-fragment citations and transformation lineage;
-- immutable raw source versions and governed acquisition events;
-- inspectable commitment-to-action and action-to-impact pathways backed by the missing authoritative records;
+- generalized immutable raw source versions and governed acquisition events beyond the single bounded prototype;
+- inspectable commitment-to-action and action-to-impact pathways backed by the remaining authoritative records;
 - reviewed accessible plain-language exploration;
 - contract, lineage, accessibility, and security tests;
 - observability for acquisition and publication failures.

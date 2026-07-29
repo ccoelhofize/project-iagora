@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Purpose
 
@@ -96,19 +96,25 @@ Detailed evidence-conflict comparison and resolution behavior still requires a n
 | [`../THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md) | Active | Runtime dependency and third-party boundary inventory |
 | [`../contracts/README.md`](../contracts/README.md) | Pre-stable implementation | Contract lifecycle and local validation instructions |
 | [`../contracts/v1/source-profiles.schema.json`](../contracts/v1/source-profiles.schema.json) | Executable prototype | Source-registration contract |
+| [`../contracts/v1/campaign-artifact.schema.json`](../contracts/v1/campaign-artifact.schema.json) | Executable prototype | Rights-aware archived campaign evidence metadata |
+| [`../contracts/v1/acquisition-event.schema.json`](../contracts/v1/acquisition-event.schema.json) | Executable prototype | Bounded exact-response acquisition metadata and invariants |
 | [`../contracts/v1/pilot-snapshot.schema.json`](../contracts/v1/pilot-snapshot.schema.json) | Executable prototype | Bounded POC configuration and publication gate |
 | [`../contracts/v1/knowledge-passport.schema.json`](../contracts/v1/knowledge-passport.schema.json) | Executable prototype | Minimum POC passport projection |
 | [`../data/sources/source-profiles.json`](../data/sources/source-profiles.json) | Active prototype data | Machine-readable source inventory |
+| [`../data/pilot/campaign-artifact.json`](../data/pilot/campaign-artifact.json) | Authenticated with limitations | Fingerprint, citation, authenticity basis, rights, and non-retention reason for the archived campaign page |
+| [`../data/pilot/pilot-snapshot-0.1.json`](../data/pilot/pilot-snapshot-0.1.json) | Historical prototype input | Preserved state before the primary campaign fragment was located |
 | [`../data/pilot/pilot-snapshot.json`](../data/pilot/pilot-snapshot.json) | Versioned prototype input | Accepted case set, cut-off, fingerprint, and blockers |
 | [`../data/pilot/open-data-subset.json`](../data/pilot/open-data-subset.json) | Third-party normalized prototype data | Six licensed City open-data records for the selected cases |
+| [`../data/raw/respire-a-la-recre/2026-07-29/records-selected.json`](../data/raw/respire-a-la-recre/2026-07-29/records-selected.json) | Immutable prototype evidence | Exact 3,189-byte bounded API response under Licence Ouverte 2.0 |
+| [`../data/raw/respire-a-la-recre/2026-07-29/acquisition-event.json`](../data/raw/respire-a-la-recre/2026-07-29/acquisition-event.json) | Validated prototype metadata | Request, fingerprint, rights, privacy minimization, security result, and limitations |
 | [`../src/iagora/`](../src/iagora/) | Local prototype | Deterministic validation, transformation, passport, and HTML projection |
 | [`../tests/`](../tests/) | Executable tests | Contract, evidence, scope, replay, publication, and accessibility guardrails |
 
 ## Planned capabilities and absent artifacts
 
-The repository now contains a bounded local prototype, three executable contract schemas, an active source inventory, a normalized six-record source subset, and an initial test suite. It does not contain a production source connector, exact raw evidence store, quarantine or parser sandbox, database, backend service, public API, approved frontend, AI service, search index, production security control set, telemetry stack, CI workflow, release, or deployment.
+The repository now contains a bounded local prototype, five executable contract schemas, an active source inventory, authenticated campaign-artifact metadata, one exact bounded API response with acquisition metadata, a validated six-record normalization, and an initial test suite. It does not contain a production source connector, general raw-evidence store, quarantine or parser sandbox, database, backend service, public API, approved frontend, AI service, search index, production security control set, telemetry stack, CI workflow, release, or deployment.
 
-The primary 2020 campaign artifact, general dataset manifest contract, retention schedule, privacy assessment, threat model, incident plan, qualified legal and security reviews, adopted-record chain, executed financial evidence, outcome indicators, and production source inventory remain absent or incomplete.
+The primary 2020 campaign fragment is authenticated with limitations, but its full raw HTML remains absent for rights reasons and its mapping has not completed methodological review. The general dataset manifest contract, retention schedule, privacy assessment, threat model, incident plan, qualified legal and security reviews, adopted-record chain, executed financial evidence, outcome indicators, and production source inventory remain absent or incomplete.
 
 ## Recommended reading path
 

@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Purpose
 
@@ -34,4 +34,6 @@ The Knowledge Passport exposes the source and acquisition context needed for ins
 
 ## Current implementation
 
-The pilot source registry and normalized open-data subset record publisher, URLs, acquisition and source-modification times, rights, retention class, and a local content fingerprint. Exact raw HTTP bytes are explicitly not preserved in this prototype, which is a publication blocker rather than a hidden omission. General acquisition-event and artifact-version contracts remain absent.
+The pilot source registry and normalized open-data subset record publisher, URLs, acquisition and source-modification times, rights, retention class, and a local content fingerprint. One bounded official API response is now preserved byte-for-byte with a validated [acquisition event](../../contracts/v1/acquisition-event.schema.json), request parameters, size, media type, SHA-256 fingerprint, rights, privacy minimization, security result, and immutable relative path. The normalized six-record file must reproduce the selected raw fields exactly.
+
+The archived campaign artifact separately records the original and archive URLs, Wayback capture time, acquisition time, media type, byte size, replay fingerprint, precise fragment, authenticity basis, rights notice, and governed non-retention reason. Its raw HTML is not stored because the archived notice restricts redistribution. General production acquisition, custody, quarantine, and artifact-version contracts remain incomplete.

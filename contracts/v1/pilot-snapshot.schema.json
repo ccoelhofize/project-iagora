@@ -12,7 +12,7 @@
   ],
   "properties": {
     "contract_id": {"const": "iagora.pilot-snapshot"},
-    "contract_version": {"const": "1.0.0"},
+    "contract_version": {"enum": ["1.0.0", "1.1.0"]},
     "snapshot_id": {"const": "pilot-respire-recre-2025"},
     "snapshot_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "observation_cutoff": {"const": "2025-12-31"},
@@ -32,9 +32,27 @@
       "additionalProperties": false,
       "required": ["verification_state", "fulfillment_conclusion", "blocking_reason"],
       "properties": {
-        "verification_state": {"const": "primary_source_unverified"},
+        "verification_state": {
+          "enum": ["primary_source_unverified", "primary_source_authenticated_with_limitations"]
+        },
         "fulfillment_conclusion": {"const": "not_verifiable"},
-        "blocking_reason": {"const": "primary_campaign_artifact_missing"}
+        "blocking_reason": {
+          "enum": [
+            "primary_campaign_artifact_missing",
+            "commitment_mapping_and_methodological_review_incomplete"
+          ]
+        }
+      }
+    },
+    "campaign_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "artifact_version_id", "local_path", "sha256"],
+      "properties": {
+        "source_id": {"const": "src-campaign-2020-primary"},
+        "artifact_version_id": {"type": "string", "minLength": 1},
+        "local_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
       }
     },
     "source_dataset": {
@@ -50,7 +68,11 @@
         "acquired_at": {"type": "string", "format": "date-time"},
         "source_modified_at": {"type": "string", "format": "date-time"},
         "license_id": {"const": "etalab-2.0"},
-        "raw_bytes_preserved": {"const": false}
+        "raw_bytes_preserved": {"type": "boolean"},
+        "raw_artifact_version_id": {"type": "string", "minLength": 1},
+        "raw_local_path": {"type": "string", "minLength": 1},
+        "raw_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "raw_acquisition_event_path": {"type": "string", "minLength": 1}
       }
     },
     "case_studies": {

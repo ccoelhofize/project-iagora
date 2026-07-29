@@ -20,14 +20,45 @@ class PilotSliceTests(unittest.TestCase):
         self.assertEqual("mixed_by_school_unit", self.cases["Pierre-et-Marie-Curie"]["reported_summary"])
 
     def test_every_source_row_has_precise_evidence(self) -> None:
-        self.assertEqual(6, len(self.passport["evidence"]))
-        self.assertTrue(all("records[uai=" in item["locator"] for item in self.passport["evidence"]))
+        self.assertEqual(7, len(self.passport["evidence"]))
+        school_evidence = [
+            item
+            for item in self.passport["evidence"]
+            if item["evidence_id"] != "evidence-campaign-schoolyards-2020"
+        ]
+        self.assertEqual(6, len(school_evidence))
+        self.assertTrue(all("records[uai=" in item["locator"] for item in school_evidence))
+        self.assertEqual(
+            "Végétalisation des cours d’école",
+            self.passport["campaign_commitment"]["wording"],
+        )
 
     def test_unsupported_conclusions_are_blocked(self) -> None:
         self.assertFalse(self.passport["publication"]["eligible"])
         self.assertEqual("not_verifiable", self.passport["assertion"]["fulfillment_conclusion"])
         self.assertEqual("causal_status_not_verifiable", self.passport["assertion"]["causal_claim_class"])
-        self.assertIn("primary_campaign_artifact_missing", self.passport["publication"]["blockers"])
+        self.assertNotIn("primary_campaign_artifact_missing", self.passport["publication"]["blockers"])
+        self.assertIn(
+            "commitment_mapping_and_methodological_review_incomplete",
+            self.passport["publication"]["blockers"],
+        )
+        self.assertEqual(
+            "primary_source_authenticated_with_limitations",
+            self.passport["campaign_commitment"]["verification_state"],
+        )
+
+    def test_reported_permeable_share_matches_reported_surfaces(self) -> None:
+        checked = 0
+        for case in self.passport["case_studies"]:
+            for record in case["records"]:
+                surface = record["existing_surface_m2"]
+                deimpermeabilized = record["deimpermeabilized_surface_m2"]
+                reported_share = record["permeable_share_percent"]
+                if surface is None or deimpermeabilized is None or reported_share is None:
+                    continue
+                checked += 1
+                self.assertAlmostEqual(100 * deimpermeabilized / surface, reported_share)
+        self.assertEqual(4, checked)
 
     def test_build_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as first, tempfile.TemporaryDirectory() as second:
@@ -44,6 +75,8 @@ class PilotSliceTests(unittest.TestCase):
         self.assertIn("<main>", rendered)
         self.assertEqual(3, rendered.count("<caption>"))
         self.assertIn("Prototype local — publication bloquée", rendered)
+        self.assertIn("Engagement de campagne retrouvé", rendered)
+        self.assertIn("authentifié avec limites", rendered)
         self.assertIn("ni à un impact sur la ville", rendered)
 
 

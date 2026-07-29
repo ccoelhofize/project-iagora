@@ -4,7 +4,7 @@
 **Owner:** Maintainers  
 **Accepted:** 2026-07-28
 **Deciders:** Project maintainer
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Scope decision
 
@@ -35,7 +35,9 @@ The [active pilot source inventory](../governance/24_PILOT_SOURCE_INVENTORY.md) 
 
 Availability does not establish completeness, accuracy, or authority for every fact. Those properties must be assessed per assertion.
 
-A [contemporaneous campaign interview](https://www.clermontinfos63.fr/actualite-18339-olivier-bianchi-nous-voulons-instaurer-le-droit-de-petition.html) describes schoolyard regreening as a flagship measure of the successful list. This is evidence that the measure was presented during the campaign, but it does not replace the original programme, manifesto, profession of faith, or archived campaign publication. Acquiring at least one such primary campaign artifact is a pilot validation requirement.
+An [archived campaign page](https://web.archive.org/web/20191128144201id_/https://olivierbianchi2020.fr/une-ville-nature/) now provides the primary wording “Végétalisation des cours d’école.” Its [archived legal notice](https://web.archive.org/web/20191128144047id_/https://olivierbianchi2020.fr/mentions-legales/) attributes the site and publication responsibility to Olivier Bianchi, while a [contemporaneous campaign article](https://www.radioscoop.com/infos/municipales-olivier-bianchi-presente-sa-liste-et-son-programme_179428) links the same domain as the candidate site. This authenticates the short primary fragment with limitations; it does not establish a quantified target, a deadline, an all-neighbourhood scope, delivery, or impact.
+
+A separate [campaign interview](https://www.clermontinfos63.fr/actualite-18339-olivier-bianchi-nous-voulons-instaurer-le-droit-de-petition.html) supplies supporting evidence for the broader “dans tous les quartiers” formulation. That broader scope MUST NOT be silently attributed to the shorter primary fragment.
 
 ## Included scope
 
@@ -152,7 +154,7 @@ The pilot is ready for evaluation when:
 
 ## Remaining validation gates
 
-- Acquire and authenticate the primary 2020 campaign artifact. Until then, the campaign commitment remains primary-source unverified and any fulfillment conclusion is `not verifiable`.
+- Review the mapping from the authenticated, unquantified campaign fragment to “Respire à la récré,” and obtain a qualified rights assessment. The source is now authenticated with limitations, but fulfillment remains `not verifiable`.
 - Select outcome indicators only after their definitions, baselines, authority, quality, privacy, and generalization limits pass review.
 - Complete the source-class retention schedule, privacy assessment, threat model, and qualified legal and security review before production acquisition or public release.
 - Define operational reviewer roles, correction handling, and challenges before a public methodological conclusion.

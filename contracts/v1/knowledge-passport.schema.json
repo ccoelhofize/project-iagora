@@ -59,7 +59,25 @@
         "rule_version": {"const": "adr-0003-1.0"},
         "outcome": {"const": "authoritative_with_limitation"},
         "rationale": {"type": "string", "minLength": 1},
-        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "campaign_commitment": {"type": "object"}
+      }
+    },
+    "campaign_commitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verification_state", "wording", "source_scope", "quantification_state",
+        "mapping_state", "artifact_version_id", "evidence_id"
+      ],
+      "properties": {
+        "verification_state": {"const": "primary_source_authenticated_with_limitations"},
+        "wording": {"const": "Végétalisation des cours d’école"},
+        "source_scope": {"const": "Clermont-Ferrand municipal campaign"},
+        "quantification_state": {"const": "unquantified_in_primary_fragment"},
+        "mapping_state": {"const": "review_incomplete"},
+        "artifact_version_id": {"type": "string", "minLength": 1},
+        "evidence_id": {"const": "evidence-campaign-schoolyards-2020"}
       }
     },
     "evidence": {

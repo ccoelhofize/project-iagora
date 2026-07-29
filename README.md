@@ -184,11 +184,11 @@ IAgora has completed its initial documentation foundation and now has a **bounde
 - complete and cross-reference the architecture specifications;
 - stabilize the canonical data model and governance vocabulary;
 - document significant decisions as ADRs;
-- complete the missing primary campaign evidence and authoritative administrative chains for the accepted Clermont-Ferrand pilot;
+- review the authenticated primary campaign fragment and complete the authoritative administrative chains for the accepted Clermont-Ferrand pilot;
 - evolve the pre-stable executable contracts without weakening the accepted evidence, authority, lineage, rights, and publication invariants;
 - validate the local vertical slice with methodological, privacy, security, legal, and accessibility reviewers before any public release.
 
-The current implementation validates a six-record official open-data subset for Nestor-Perret, Pierre-et-Marie-Curie, and Jean-Zay, projects a versioned Knowledge Passport, and renders an accessible local HTML view. Its publication gate intentionally fails because the primary campaign artifact, raw acquisition, authoritative completion chain, outcome evidence, and production reviews are incomplete. The roadmap describes strategic milestones rather than guaranteed dates.
+The current implementation authenticates a short, unquantified schoolyard-regreening commitment from a 2019 archived campaign page, preserves one exact bounded official API response, validates its six-record normalization for Nestor-Perret, Pierre-et-Marie-Curie, and Jean-Zay, projects a versioned Knowledge Passport, and renders an accessible local HTML view. Its publication gate intentionally fails because the commitment-to-programme mapping, rights-restricted campaign-page retention, authoritative completion chain, outcome evidence, and production reviews are incomplete. The roadmap describes strategic milestones rather than guaranteed dates.
 
 ## Run the local proof of concept
 
@@ -234,7 +234,7 @@ IAgora may collect and explain legally accessible public information. It does no
 
 Contributions from software engineering, data engineering, design, journalism, public policy, law, accessibility, research, and civic communities are welcome.
 
-Follow the accepted [contribution guide](docs/development/CONTRIBUTING.md). Before a large change, open a discussion or issue explaining the problem, affected users, evidence requirements, architectural impact, alternatives, and validation approach. Exact repository licence notices and the contribution attestation process remain incomplete.
+Follow the accepted [contribution guide](docs/development/CONTRIBUTING.md). Before a large change, open a discussion or issue explaining the problem, affected users, evidence requirements, architectural impact, alternatives, and validation approach. The contribution attestation process and qualified licensing review remain incomplete.
 
 ## License
 

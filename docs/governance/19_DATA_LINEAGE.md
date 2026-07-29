@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Purpose
 
@@ -35,4 +35,4 @@ Changed, restricted, or removed inputs trigger an impact traversal. Dependent as
 
 ## Current state
 
-The local vertical slice emits deterministic normalization and publication-gate lineage events in its Knowledge Passport and verifies replay equality in tests. No persistent lineage store, general dependency traversal, restriction propagation, or production replay mechanism exists. Physical representation remains open.
+The local vertical slice emits bounded acquisition, campaign-artifact authentication, deterministic normalization, passport projection, and publication-gate lineage events. Tests bind the exact raw API fingerprint to the acquisition event, verify raw-to-normalized equality, and verify deterministic passport replay. No persistent lineage store, general dependency traversal, restriction propagation, or production replay mechanism exists. Physical representation remains open.

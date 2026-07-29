@@ -1,0 +1,60 @@
+{
+  "contract_id": "iagora.campaign-artifact",
+  "contract_version": "1.0.0",
+  "artifact_id": "campaign-naturellement-clermont-schoolyards",
+  "artifact_version_id": "campaign-naturellement-clermont-schoolyards-wayback-20191128144201",
+  "source_id": "src-campaign-2020-primary",
+  "original_url": "https://olivierbianchi2020.fr/une-ville-nature/",
+  "archive_url": "https://web.archive.org/web/20191128144201id_/https://olivierbianchi2020.fr/une-ville-nature/",
+  "archive_provider": "Internet Archive Wayback Machine",
+  "capture_at": "2019-11-28T14:42:01+00:00",
+  "acquired_at": "2026-07-29T12:40:13+00:00",
+  "media_type": "text/html; charset=UTF-8",
+  "byte_size": 44008,
+  "content_fingerprint_sha256": "6d2ebfb3e06e34db61f9b2540383fe27a878d29c9f4c6482db4ddfd1995451ac",
+  "raw_bytes_preserved": false,
+  "nonretention_reason": "third_party_rights_block_public_repository_storage",
+  "rights": {
+    "state": "restricted_by_archived_notice",
+    "redistribution": "blocked",
+    "notice_url": "https://web.archive.org/web/20191128144047id_/https://olivierbianchi2020.fr/mentions-legales/",
+    "review_state": "qualified_review_pending"
+  },
+  "evidence_fragment": {
+    "locator": "HTML content block under the heading “Végétalisation” on the archived “Une ville nature” page",
+    "quote": "Végétalisation des cours d’école",
+    "language": "fr",
+    "relationship": "supports"
+  },
+  "authenticity": {
+    "outcome": "authenticated_with_limitations",
+    "basis": [
+      {
+        "kind": "archived_campaign_page",
+        "url": "https://web.archive.org/web/20191128144201id_/https://olivierbianchi2020.fr/une-ville-nature/",
+        "observation": "The archived page presents the statement as a campaign proposal under #NaturellementClermont."
+      },
+      {
+        "kind": "archived_legal_notice",
+        "url": "https://web.archive.org/web/20191128144047id_/https://olivierbianchi2020.fr/mentions-legales/",
+        "observation": "The archived notice names Olivier Bianchi as site owner and publication manager and describes the site as candidate information."
+      },
+      {
+        "kind": "contemporaneous_external_link",
+        "url": "https://www.radioscoop.com/infos/municipales-olivier-bianchi-presente-sa-liste-et-son-programme_179428",
+        "observation": "A 17 January 2020 article links olivierbianchi2020.fr as the candidate campaign site."
+      },
+      {
+        "kind": "competent_election_archive",
+        "url": "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/municipales-2020/063/C2063113.php",
+        "observation": "The Ministry archive associates Olivier Bianchi with the Naturellement Clermont list in Clermont-Ferrand."
+      }
+    ],
+    "limitations": [
+      "The Wayback capture is not a digitally signed or legally certified profession of faith.",
+      "The page states no number of schoolyards, completion date, budget, or explicit all-neighbourhood scope.",
+      "The archive timestamp establishes capture availability, not the date on which every voter received the proposal.",
+      "Full archived HTML is not redistributed because the archived legal notice reserves reproduction rights."
+    ]
+  }
+}

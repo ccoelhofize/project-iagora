@@ -1,0 +1,66 @@
+{
+  "contract_id": "iagora.acquisition-event",
+  "contract_version": "1.0.0",
+  "event_id": "acquisition-respire-selected-20260729-001",
+  "source_id": "src-city-open-data-schools",
+  "artifact_version_id": "dataset-respire-selected-raw-20260729-001",
+  "requested_endpoint": "https://opendata.clermont-ferrand.fr/api/explore/v2.1/catalog/datasets/respire-a-la-recre-et-les-enfants-d-abord-vcf/records",
+  "resolved_url": "https://opendata.clermont-ferrand.fr/api/explore/v2.1/catalog/datasets/respire-a-la-recre-et-les-enfants-d-abord-vcf/records?select=uai%2cdenomination_ecole%2cnature%2cnombre_d_enfants_concernes%2cannee_vegetalisation%2cvegetalisation_terminee%2ccour_commune%2cnombre_de_cours_concernees%2csurface_de_la_cour_existante%2csurface_de_la_cour_apres_vegetalisation%2cnombre_d_arbres_existant%2cnb_arbres_plantes%2csurface_demineralisee_en_m2_surface_nette%2cpourcentage_de_surface_totale_de_la_cour_rendue_permeable&where=uai+in+%28%220630258N%22%2c%220630268Z%22%2c%220630303M%22%2c%220630307S%22%2c%220630992L%22%2c%220631845N%22%29&order_by=uai&limit=100",
+  "request": {
+    "selected_fields": [
+      "uai",
+      "denomination_ecole",
+      "nature",
+      "nombre_d_enfants_concernes",
+      "annee_vegetalisation",
+      "vegetalisation_terminee",
+      "cour_commune",
+      "nombre_de_cours_concernees",
+      "surface_de_la_cour_existante",
+      "surface_de_la_cour_apres_vegetalisation",
+      "nombre_d_arbres_existant",
+      "nb_arbres_plantes",
+      "surface_demineralisee_en_m2_surface_nette",
+      "pourcentage_de_surface_totale_de_la_cour_rendue_permeable"
+    ],
+    "uai": ["0630258N", "0630268Z", "0630303M", "0630307S", "0630992L", "0631845N"],
+    "order_by": "uai",
+    "limit": 100
+  },
+  "acquired_at": "2026-07-29T12:51:25+00:00",
+  "method": "https_get",
+  "response": {
+    "http_status": 200,
+    "media_type": "application/json; charset=utf-8",
+    "byte_size": 3189,
+    "record_count": 6
+  },
+  "raw_artifact": {
+    "local_path": "data/raw/respire-a-la-recre/2026-07-29/records-selected.json",
+    "sha256": "62f26237a39465942e18749aa1ba4957885fe7ca1d6979b0620067c99a2517ae",
+    "immutable": true,
+    "retention_class": "open_data_prototype"
+  },
+  "software": "curl 8.7.1 (SecureTransport)",
+  "authentication_class": "public_unauthenticated",
+  "rights": {
+    "license_id": "etalab-2.0",
+    "attribution": "Direction Enfance Jeunesse, Ville de Clermont-Ferrand",
+    "redistribution": "allowed_with_attribution"
+  },
+  "privacy": {
+    "classification": "public_school_level_aggregate",
+    "coordinates_excluded": true,
+    "image_metadata_excluded": true
+  },
+  "security": {
+    "risk_tier": "low",
+    "content_treated_as_untrusted": true,
+    "result": "accepted_after_contract_validation"
+  },
+  "limitations": [
+    "The source dataset was updated and acquired after the 2025 observation cut-off.",
+    "The bounded query preserves only fields approved for the three POC cases.",
+    "Response headers beyond status, media type, and size were not retained with the exact body acquisition."
+  ]
+}

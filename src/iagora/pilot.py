@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CONTRACTS = ROOT / "contracts" / "v1"
 SOURCE_PROFILES = ROOT / "data" / "sources" / "source-profiles.json"
 SNAPSHOT = ROOT / "data" / "pilot" / "pilot-snapshot.json"
+CAMPAIGN_ARTIFACT = ROOT / "data" / "pilot" / "campaign-artifact.json"
 
 
 def file_sha256(path: Path) -> str:
@@ -28,11 +29,62 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def validate_inputs(root: Path = ROOT) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+def normalize_raw_records(raw_dataset: dict[str, Any]) -> list[dict[str, Any]]:
+    """Map the bounded official API response to the source-agnostic POC fields."""
+    field_map = {
+        "uai": "uai",
+        "school_name": "denomination_ecole",
+        "school_unit": "nature",
+        "children_reported": "nombre_d_enfants_concernes",
+        "vegetation_year": "annee_vegetalisation",
+        "reported_completion": "vegetalisation_terminee",
+        "shared_courtyard": "cour_commune",
+        "courtyards_reported": "nombre_de_cours_concernees",
+        "existing_surface_m2": "surface_de_la_cour_existante",
+        "post_vegetation_surface_m2": "surface_de_la_cour_apres_vegetalisation",
+        "existing_trees": "nombre_d_arbres_existant",
+        "trees_planted": "nb_arbres_plantes",
+        "deimpermeabilized_surface_m2": "surface_demineralisee_en_m2_surface_nette",
+        "permeable_share_percent": (
+            "pourcentage_de_surface_totale_de_la_cour_rendue_permeable"
+        ),
+    }
+    results = raw_dataset.get("results")
+    if not isinstance(results, list):
+        raise ContractViolation("Raw open-data response must contain a results array")
+    return sorted(
+        [
+            {canonical: row.get(source) for canonical, source in field_map.items()}
+            for row in results
+        ],
+        key=lambda row: row["uai"],
+    )
+
+
+def validate_inputs(
+    root: Path = ROOT,
+) -> tuple[
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+]:
     profiles_path = root / SOURCE_PROFILES.relative_to(ROOT)
     snapshot_path = root / SNAPSHOT.relative_to(ROOT)
     profiles = validate_files(profiles_path, root / "contracts/v1/source-profiles.schema.json")
     snapshot = validate_files(snapshot_path, root / "contracts/v1/pilot-snapshot.schema.json")
+    campaign_path = root / snapshot["campaign_artifact"]["local_path"]
+    campaign_artifact = validate_files(
+        campaign_path, root / "contracts/v1/campaign-artifact.schema.json"
+    )
+    acquisition_path = root / snapshot["source_dataset"]["raw_acquisition_event_path"]
+    acquisition_event = validate_files(
+        acquisition_path, root / "contracts/v1/acquisition-event.schema.json"
+    )
+    raw_path = root / snapshot["source_dataset"]["raw_local_path"]
+    raw_dataset = load_json(raw_path)
     dataset_path = root / snapshot["source_dataset"]["local_path"]
     dataset = load_json(dataset_path)
 
@@ -43,16 +95,66 @@ def validate_inputs(root: Path = ROOT) -> tuple[dict[str, Any], dict[str, Any], 
             f"{dataset_path}: fingerprint mismatch; expected {expected_hash}, got {actual_hash}"
         )
 
+    campaign_metadata_hash = file_sha256(campaign_path)
+    expected_campaign_metadata_hash = snapshot["campaign_artifact"]["sha256"]
+    if campaign_metadata_hash != expected_campaign_metadata_hash:
+        raise ContractViolation(
+            f"{campaign_path}: fingerprint mismatch; expected "
+            f"{expected_campaign_metadata_hash}, got {campaign_metadata_hash}"
+        )
+
+    raw_hash = file_sha256(raw_path)
+    expected_raw_hash = snapshot["source_dataset"]["raw_sha256"]
+    if raw_hash != expected_raw_hash:
+        raise ContractViolation(
+            f"{raw_path}: fingerprint mismatch; expected {expected_raw_hash}, got {raw_hash}"
+        )
+    if raw_hash != acquisition_event["raw_artifact"]["sha256"]:
+        raise ContractViolation("Raw artifact fingerprint differs from its acquisition event")
+    if raw_path.stat().st_size != acquisition_event["response"]["byte_size"]:
+        raise ContractViolation("Raw artifact byte size differs from its acquisition event")
+    if acquisition_event["raw_artifact"]["local_path"] != str(raw_path.relative_to(root)):
+        raise ContractViolation("Raw artifact path differs from its acquisition event")
+    if (
+        acquisition_event["artifact_version_id"]
+        != snapshot["source_dataset"]["raw_artifact_version_id"]
+    ):
+        raise ContractViolation("Raw artifact version reference does not resolve")
+    if not snapshot["source_dataset"]["raw_bytes_preserved"]:
+        raise ContractViolation("Current official dataset snapshot must preserve exact raw bytes")
+
     source_index = {source["source_id"]: source for source in profiles["sources"]}
     selected_source = source_index.get(snapshot["source_dataset"]["source_id"])
     if not selected_source or selected_source["status"] != "approved_prototype":
         raise ContractViolation("Pilot dataset source is not approved for bounded prototype use")
+
+    campaign_source = source_index.get(snapshot["campaign_artifact"]["source_id"])
+    if not campaign_source or campaign_source["status"] != "link_only":
+        raise ContractViolation("Campaign artifact must remain metadata-only and link-only")
+    if campaign_source["rights"]["redistribution"] != "blocked":
+        raise ContractViolation("Campaign artifact redistribution must remain blocked")
+    if campaign_artifact["raw_bytes_preserved"]:
+        raise ContractViolation("Restricted campaign HTML must not be committed to the public repository")
+    if (
+        snapshot["campaign_commitment"]["verification_state"]
+        != "primary_source_authenticated_with_limitations"
+    ):
+        raise ContractViolation("Current snapshot must expose the authenticated primary source state")
+    if (
+        campaign_artifact["artifact_version_id"]
+        != snapshot["campaign_artifact"]["artifact_version_id"]
+    ):
+        raise ContractViolation("Campaign artifact version reference does not resolve")
 
     rows = dataset.get("records")
     if not isinstance(rows, list) or len(rows) != 6:
         raise ContractViolation("The bounded source snapshot must contain exactly six school-unit rows")
     if len({row.get("uai") for row in rows}) != len(rows):
         raise ContractViolation("Each school-unit record must have a unique UAI")
+    if raw_dataset.get("total_count") != acquisition_event["response"]["record_count"]:
+        raise ContractViolation("Raw response count differs from its acquisition event")
+    if normalize_raw_records(raw_dataset) != rows:
+        raise ContractViolation("Normalized school records do not reproduce the preserved raw response")
 
     expected_schools = {case["school_name"] for case in snapshot["case_studies"]}
     actual_schools = {row.get("school_name") for row in rows}
@@ -60,7 +162,7 @@ def validate_inputs(root: Path = ROOT) -> tuple[dict[str, Any], dict[str, Any], 
         raise ContractViolation(
             f"Bounded school set differs: expected {sorted(expected_schools)}, got {sorted(actual_schools)}"
         )
-    return profiles, snapshot, dataset
+    return profiles, snapshot, dataset, campaign_artifact, acquisition_event, raw_dataset
 
 
 def _reported_state(value: str) -> str:
@@ -76,7 +178,7 @@ def _reported_state(value: str) -> str:
 
 
 def build_passport(root: Path = ROOT) -> dict[str, Any]:
-    profiles, snapshot, dataset = validate_inputs(root)
+    profiles, snapshot, dataset, campaign_artifact, acquisition_event, _ = validate_inputs(root)
     source = next(
         item for item in profiles["sources"] if item["source_id"] == "src-city-open-data-schools"
     )
@@ -88,7 +190,15 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
         rows_by_school[row["school_name"]].append(transformed)
 
     case_studies = []
-    evidence = []
+    evidence = [
+        {
+            "evidence_id": "evidence-campaign-schoolyards-2020",
+            "relationship": campaign_artifact["evidence_fragment"]["relationship"],
+            "artifact_version_id": campaign_artifact["artifact_version_id"],
+            "locator": campaign_artifact["evidence_fragment"]["locator"],
+            "source_url": campaign_artifact["archive_url"],
+        }
+    ]
     for case in snapshot["case_studies"]:
         school_rows = sorted(rows_by_school[case["school_name"]], key=lambda row: row["uai"])
         states = sorted({row["reported_state"] for row in school_rows})
@@ -125,8 +235,9 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "asset_version": snapshot["snapshot_version"],
             "lifecycle_state": "internal_prototype",
             "plain_language_description": (
-                "Prototype local montrant comment relier une promesse encore non authentifiée "
-                "à des états scolaires rapportés, sans conclure à sa réalisation ni à son impact."
+                "Prototype local reliant une promesse de campagne archivée et authentifiée avec "
+                "limites à des états scolaires rapportés, sans conclure à sa réalisation ni à "
+                "son impact."
             ),
         },
         "scope": {
@@ -139,12 +250,22 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
         "assertion": {
             "epistemic_kind": "methodological_inference",
             "statement": (
-                "The available bounded evidence can demonstrate source-linked delivery states for "
-                "three school cases, but it cannot yet verify the original campaign commitment, a "
-                "public fulfillment conclusion, an observed outcome, or causal impact."
+                "The bounded evidence authenticates an unquantified primary campaign commitment "
+                "and demonstrates source-linked delivery states for three school cases, but the "
+                "commitment-to-programme mapping, public fulfillment conclusion, observed outcome, "
+                "and causal impact remain unverified."
             ),
             "fulfillment_conclusion": snapshot["campaign_commitment"]["fulfillment_conclusion"],
             "causal_claim_class": "causal_status_not_verifiable",
+        },
+        "campaign_commitment": {
+            "verification_state": snapshot["campaign_commitment"]["verification_state"],
+            "wording": campaign_artifact["evidence_fragment"]["quote"],
+            "source_scope": "Clermont-Ferrand municipal campaign",
+            "quantification_state": "unquantified_in_primary_fragment",
+            "mapping_state": "review_incomplete",
+            "artifact_version_id": campaign_artifact["artifact_version_id"],
+            "evidence_id": "evidence-campaign-schoolyards-2020",
         },
         "authority": {
             "fact_type": "reported_output_or_completion",
@@ -156,6 +277,16 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "fulfillment, outcomes, expenditure, or causal impact."
             ),
             "limitations": source["review"]["limitations"],
+            "campaign_commitment": {
+                "fact_type": "original_campaign_wording",
+                "source_id": campaign_artifact["source_id"],
+                "outcome": "authoritative_with_limitation",
+                "rationale": (
+                    "The archived campaign-controlled page is primary evidence for its own wording. "
+                    "It is not a certified profession of faith and does not establish delivery."
+                ),
+                "limitations": campaign_artifact["authenticity"]["limitations"],
+            },
         },
         "evidence": sorted(evidence, key=lambda item: item["evidence_id"]),
         "provenance": {
@@ -167,14 +298,64 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "artifact_version_id": snapshot["source_dataset"]["artifact_version_id"],
             "content_fingerprint_sha256": snapshot["source_dataset"]["sha256"],
             "raw_bytes_preserved": dataset["raw_bytes_preserved"],
+            "raw_artifact": {
+                "artifact_version_id": acquisition_event["artifact_version_id"],
+                "acquisition_event_id": acquisition_event["event_id"],
+                "local_path": acquisition_event["raw_artifact"]["local_path"],
+                "content_fingerprint_sha256": acquisition_event["raw_artifact"]["sha256"],
+                "byte_size": acquisition_event["response"]["byte_size"],
+                "acquired_at": acquisition_event["acquired_at"],
+                "media_type": acquisition_event["response"]["media_type"],
+            },
+            "campaign_artifact": {
+                "source_id": campaign_artifact["source_id"],
+                "original_url": campaign_artifact["original_url"],
+                "archive_url": campaign_artifact["archive_url"],
+                "capture_at": campaign_artifact["capture_at"],
+                "acquired_at": campaign_artifact["acquired_at"],
+                "artifact_version_id": campaign_artifact["artifact_version_id"],
+                "content_fingerprint_sha256": campaign_artifact[
+                    "content_fingerprint_sha256"
+                ],
+                "raw_bytes_preserved": campaign_artifact["raw_bytes_preserved"],
+                "nonretention_reason": campaign_artifact["nonretention_reason"],
+            },
         },
         "lineage": [
             {
+                "event_id": "lineage-authenticate-campaign-artifact-001",
+                "event_type": "evidence_authentication",
+                "input": snapshot["campaign_artifact"]["local_path"],
+                "input_sha256": snapshot["campaign_artifact"]["sha256"],
+                "archived_content_sha256": campaign_artifact["content_fingerprint_sha256"],
+                "review_outcome": campaign_artifact["authenticity"]["outcome"],
+                "deterministic": False,
+            },
+            {
+                "event_id": acquisition_event["event_id"],
+                "event_type": "acquisition",
+                "input": acquisition_event["resolved_url"],
+                "output": acquisition_event["raw_artifact"]["local_path"],
+                "output_sha256": acquisition_event["raw_artifact"]["sha256"],
+                "result": "accepted_after_contract_validation",
+                "deterministic": False,
+            },
+            {
                 "event_id": "lineage-normalize-open-data-subset-001",
                 "event_type": "normalization",
+                "input": acquisition_event["raw_artifact"]["local_path"],
+                "input_sha256": acquisition_event["raw_artifact"]["sha256"],
+                "rule_version": "iagora.pilot.normalize-open-data/0.2.0",
+                "output": snapshot["source_dataset"]["local_path"],
+                "output_sha256": snapshot["source_dataset"]["sha256"],
+                "deterministic": True,
+            },
+            {
+                "event_id": "lineage-project-knowledge-passport-001",
+                "event_type": "projection",
                 "input": snapshot["source_dataset"]["local_path"],
                 "input_sha256": snapshot["source_dataset"]["sha256"],
-                "rule_version": "iagora.pilot.transform/0.1.0",
+                "rule_version": "iagora.pilot.project-passport/0.2.0",
                 "output": "knowledge-passport",
                 "deterministic": True,
             },
@@ -196,13 +377,15 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             ],
             "fitness": "fit_for_local_prototype_only",
             "known_limitations": [
-                "Normalized subset is not preserved raw HTTP evidence.",
+                "The exact bounded open-data response is preserved, but broader source history is not.",
+                "Campaign HTML is fingerprinted but not retained because redistribution is blocked.",
                 "Source values have not been corroborated with competent completion records.",
                 "Dataset acquisition occurred after the historical observation cut-off.",
             ],
         },
         "conflicts_and_uncertainty": [
-            "The original 2020 campaign artifact remains missing.",
+            "The primary campaign fragment is unquantified and does not state a delivery date, budget, or number of schoolyards.",
+            "The all-neighbourhood scope appears in supporting interview evidence, not in the retained primary fragment.",
             "Pierre-et-Marie-Curie has different reported states for its maternelle and élémentaire units; this is a scope difference, not a resolved contradiction.",
             "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.",
         ],
@@ -212,6 +395,12 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "source_rights_apply": True,
             "retention_class": source["retention"]["class"],
             "production_review_required": True,
+            "campaign_artifact": {
+                "state": campaign_artifact["rights"]["state"],
+                "redistribution": campaign_artifact["rights"]["redistribution"],
+                "raw_bytes_preserved": campaign_artifact["raw_bytes_preserved"],
+                "nonretention_reason": campaign_artifact["nonretention_reason"],
+            },
         },
         "review": {
             "state": "prototype_maintainer_review_only",
@@ -307,9 +496,14 @@ def render_html(passport: dict[str, Any]) -> str:
     <strong>Prototype local — publication bloquée.</strong>
     Ce rendu démontre la traçabilité technique. Il ne conclut ni à la réalisation de la promesse, ni à un impact sur la ville.
   </div>
+  <section aria-labelledby="engagement">
+    <h2 id="engagement">Engagement de campagne retrouvé</h2>
+    <p>La page de campagne archivée présente la proposition <q>{html.escape(passport['campaign_commitment']['wording'])}</q>.</p>
+    <p><a href="{html.escape(passport['provenance']['campaign_artifact']['archive_url'], quote=True)}" rel="external noreferrer">Consulter la capture archivée</a>. Le fragment ne précise ni nombre de cours, ni échéance, ni budget. Son rapprochement avec « Respire à la récré » reste à valider.</p>
+  </section>
   <section aria-labelledby="conclusion">
     <h2 id="conclusion">Ce que l’on peut conclure</h2>
-    <p>La promesse de campagne reste <strong>non vérifiable</strong>, car son document primaire de 2020 n’a pas encore été authentifié. Les lignes ci-dessous sont des états déclarés par le jeu de données municipal, acquis après la date d’observation du 31 décembre 2025.</p>
+    <p>Le document primaire est <strong>authentifié avec limites</strong>. Le respect de la promesse reste néanmoins <strong>non vérifiable</strong>, car le rapprochement méthodologique et la chaîne administrative ne sont pas encore validés. Les lignes ci-dessous sont des états déclarés par le jeu de données municipal, acquis après la date d’observation du 31 décembre 2025.</p>
   </section>
   {''.join(sections)}
   <section aria-labelledby="limites">
