@@ -56,7 +56,7 @@ A programme or commitment view may include:
 - Knowledge Passport and machine-readable export;
 - correction and challenge route.
 
-The multidimensional semantics and policy-lineage method are governed by accepted [ADR-0010](../adr/ADR-0010-multidimensional-accountability-and-policy-lineage.md). This frontend specification remains a draft, and its components, routes, KPI selections, and interaction design are not implemented or accepted by the ADR alone.
+The multidimensional semantics and policy-lineage method are governed by accepted [ADR-0010](../adr/ADR-0010-multidimensional-accountability-and-policy-lineage.md). This frontend specification remains a draft. The current local routes and bounded KPI projection are implementation evidence, not acceptance of the complete interaction design or of future KPI selections.
 
 ## Visualizations
 
@@ -97,7 +97,13 @@ The target product is a hosted software service capable of supporting multiple t
 
 ## Current state
 
-The vertical slice generates one static French HTML review page with semantic headings, explicit text status, table captions, keyboard-scrollable tables, visible focus, and a machine-readable passport peer. It represents the programme or commitment-detail level only. No territory home, thematic dashboard, macro visualization, generalized indicator explorer, printable report generator, account system, public frontend, or SaaS deployment exists. Framework, component library, visualization toolkit, localization system, analytics provider, and production interaction design remain open.
+The vertical slice deterministically generates three static French HTML routes and one machine-readable passport from the same governed records:
+
+- a Clermont-Ferrand territory home with four visible themes, an explicit coverage state, and a macro-chart placeholder that does not turn missing series into zero;
+- an Education dashboard with bounded output counts, an accessible text-equivalent state chart, programme-stage financial observations, and an evidence-qualified policy timeline;
+- a detailed Respire programme dossier with the complete evidence tables, multidimensional summary, policy-lineage sequence, and print styles.
+
+This is a local product-shaped prototype, not an authorized public frontend. Only the Education path is data-backed, Finance is limited to one programme, and Culture and Public Safety are honest empty states. No real macro city series, generalized indicator explorer, production report service, account system, application server, deployment, or SaaS capability exists. Framework, component library, visualization toolkit, localization system, analytics provider, and production interaction design remain open. Automated semantic and content guardrails exist; browser, assistive-technology, contrast, responsive-layout, and print-output review remain to be performed.
 
 ## Related records
 

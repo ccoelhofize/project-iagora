@@ -14,7 +14,7 @@ The initial decision foundation is merged. A local, non-public vertical slice no
 
 ### Current repository evidence
 
-- ADR-0001 through ADR-0010 are accepted; ADR-0010's field-level contracts and product projections are not implemented.
+- ADR-0001 through ADR-0010 are accepted; ADR-0010 now has a bounded local product projection, while its generalized field-level contracts remain incomplete.
 - Every document in the target documentation map is present.
 - Project Intent and the Architect Playbook are accepted.
 - The Manifesto and contribution guide are accepted.
@@ -23,12 +23,12 @@ The initial decision foundation is merged. A local, non-public vertical slice no
 - The product scope is accepted and the three case studies are confirmed through an active source inventory.
 - The exact EUPL-1.2 text, artifact-class notice, and third-party notice are present.
 - Seven pre-stable executable schemas cover source profiles, campaign artifacts, commitment mappings, acquisition events, administrative evidence, pilot snapshots, and Knowledge Passports, with a standard-library validator.
-- A deterministic local transformation, accessible HTML projection, and initial contract and methodology guardrail tests exist.
+- A deterministic local transformation, three-level static HTML product projection, and initial contract, methodology, and presentation guardrail tests exist.
 - One exact bounded API response and acquisition event exist; no production connector, general immutable raw store, database, network service, public API, deployment, or public service exists.
 - Ten metadata-only municipal document versions establish a partial administrative chain without conflating adopted policy, programme finance, reported delivery, and funding forecasts.
 - A minimal read-only CI workflow runs deterministic validation, tests, and the local build on Python 3.11.
 - A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata. Its one-component mapping to the later programme is now an explicit AI-assisted proposal, but independent methodological and authority review, procurement and competent-completion evidence, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
-- The draft frontend architecture now describes a territory dashboard, thematic drill-down, indicator and programme detail, and printable reports. No territory home, macro visualization, generalized indicator explorer, report generator, or SaaS deployment exists.
+- A local Clermont-Ferrand home, bounded Education dashboard, evidence-linked timeline, and printable programme dossier now demonstrate the target navigation. The macro view remains an explicit missing-data placeholder, and no real city-wide macro series, generalized indicator explorer, production report service, or SaaS deployment exists.
 
 ### Exit criteria
 
@@ -83,7 +83,7 @@ Implement one end-to-end path for the programme and three selected school case s
 - deterministic validation and transformation;
 - row-level evidence locators and source attribution;
 - versioned Knowledge Passport JSON;
-- accessible static HTML review view;
+- static Clermont-Ferrand home, Education dashboard, and detailed printable review dossier generated from the same passport;
 - publication gate that fails closed on known blockers;
 - initial automated tests for contracts, scope separation, evidence coverage, determinism, and unsupported conclusions;
 - minimal CI execution of validation, tests, and deterministic build on Python 3.11.
@@ -96,8 +96,8 @@ Implement one end-to-end path for the programme and three selected school case s
 - source-fragment citations and transformation lineage;
 - generalized immutable raw source versions and governed acquisition events beyond the single bounded prototype;
 - independent review of the proposed commitment-to-action mapping and action-to-impact pathways backed by the remaining authoritative records;
-- a product-shaped navigation prototype from a bounded territory or education summary to the existing evidence detail, using only validated indicators and honest empty states;
-- an accessible evidence-linked policy-lineage timeline and printable-report projection governed by ADR-0010;
+- browser, responsive-layout, print, and assistive-technology review of the product-shaped navigation prototype;
+- generalized field-level implementation of the ADR-0010 assessment and policy-lineage model beyond the bounded dossier;
 - reviewed accessible plain-language exploration;
 - contract, lineage, accessibility, and security tests;
 - observability for acquisition and publication failures.
