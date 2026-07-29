@@ -36,7 +36,7 @@ Open-source code does not make input evidence or output datasets open. When anal
 
 ## Implementation status
 
-The exact official English EUPL-1.2 text is present in the root [`LICENSE`](../../LICENSE). [`NOTICE.md`](../../NOTICE.md) records the CC-BY-4.0 documentation notice and artifact-class exclusions. [`THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) records that the current prototype has no third-party runtime dependency, and the bounded open-data subset carries source-specific attribution and Licence Ouverte 2.0 metadata under [`data/`](../../data/README.md).
+The exact official English EUPL-1.2 text is present in the root [`LICENSE`](../../LICENSE). [`NOTICE.md`](../../NOTICE.md) records the CC-BY-4.0 documentation notice and artifact-class exclusions. [`THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) records that the current prototype has no third-party runtime dependency and inventories the two MIT-licensed, revision-pinned CI actions. The bounded open-data subset carries source-specific attribution and Licence Ouverte 2.0 metadata under [`data/`](../../data/README.md).
 
 Dataset manifest generalization, automated SPDX checks, qualified ownership and compatibility review, and a formal contributor-attestation workflow remain incomplete. The presence of these notices does not relicense third-party evidence or establish legal compliance.
 
