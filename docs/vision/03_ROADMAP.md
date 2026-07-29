@@ -22,10 +22,12 @@ The initial decision foundation is merged. A local, non-public vertical slice no
 - All architecture specifications, the remaining development guides, and the remaining governance specifications remain drafts.
 - The product scope is accepted and the three case studies are confirmed through an active source inventory.
 - The exact EUPL-1.2 text, artifact-class notice, and third-party notice are present.
-- Pre-stable executable source-profile, campaign-artifact, pilot-snapshot, and Knowledge Passport schemas exist with a standard-library validator.
+- Six pre-stable executable schemas cover source profiles, campaign artifacts, acquisition events, administrative evidence, pilot snapshots, and Knowledge Passports, with a standard-library validator.
 - A deterministic local transformation, accessible HTML projection, and initial contract and methodology guardrail tests exist.
 - One exact bounded API response and acquisition event exist; no production connector, general immutable raw store, database, network service, public API, deployment, or public service exists.
-- A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata; its mapping, exact administrative chains, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
+- Ten metadata-only municipal document versions establish a partial administrative chain without conflating adopted policy, programme finance, reported delivery, and funding forecasts.
+- A minimal read-only CI workflow runs deterministic validation, tests, and the local build on Python 3.11.
+- A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata; its mapping, procurement and competent-completion evidence, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
 
 ### Exit criteria
 
@@ -73,12 +75,14 @@ Implement one end-to-end path for the programme and three selected school case s
 - fingerprinted metadata and a precise short fragment from an authenticated archived campaign page, while restricted raw HTML remains excluded;
 - one exact six-UAI API response, acquisition event, and deterministic raw-to-normalized equality check;
 - normalized six-record open-data subset for the three accepted cases;
+- ten metadata-only municipal document versions forming a partial administrative chain;
 - deterministic validation and transformation;
 - row-level evidence locators and source attribution;
 - versioned Knowledge Passport JSON;
 - accessible static HTML review view;
 - publication gate that fails closed on known blockers;
-- initial automated tests for contracts, scope separation, evidence coverage, determinism, and unsupported conclusions.
+- initial automated tests for contracts, scope separation, evidence coverage, determinism, and unsupported conclusions;
+- minimal CI execution of validation, tests, and deterministic build on Python 3.11.
 
 ### Remaining outcomes
 

@@ -32,6 +32,12 @@ Every public assertion must have precise evidence; every assessment must retain 
 
 Test commands, environments, seeds, dependencies, and expected results must be recorded. Nondeterministic tests require bounded assertions and must not mask intermittent failures.
 
+## Continuous integration
+
+The [minimal CI workflow](../../.github/workflows/ci.yml) runs the documented validation, standard-library test, and deterministic build commands on Python 3.11 for every pull request and every push to `main`. It uses read-only repository permissions, no project secrets, and official actions pinned to exact revisions.
+
+This workflow is a development control for the bounded prototype. A passing run does not authorize publication or prove civic facts, methodological validity, accessibility, privacy, security, or legal compliance.
+
 ## Current state
 
-The first standard-library test suite covers contract rejection, source-snapshot integrity, school-unit scope separation, precise evidence locators, deterministic replay, fail-closed publication, unsupported fulfillment and causal conclusions, and basic semantic HTML structure. No CI workflow, coverage baseline, browser assistive-technology run, security test harness, production integration test, or recovery environment exists.
+The first standard-library test suite covers contract rejection, source-snapshot integrity, school-unit scope separation, precise evidence locators, deterministic replay, fail-closed publication, unsupported fulfillment and causal conclusions, and basic semantic HTML structure. The minimal CI workflow executes these local controls on GitHub-hosted infrastructure. No coverage baseline, browser assistive-technology run, security test harness, production integration test, or recovery environment exists.

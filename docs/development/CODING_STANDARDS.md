@@ -42,4 +42,4 @@ PYTHONPATH=src python3 -m iagora validate
 PYTHONPATH=src python3 -m unittest discover -s tests -v
 ```
 
-Formatting, linting, static type checking, dependency scanning, and continuous integration remain to be selected before the prototype becomes a distributed service. The current Python choice is a reversible prototype implementation, not an accepted platform-language decision.
+The [minimal CI workflow](../../.github/workflows/ci.yml) runs these controls and builds the deterministic review artifact on Python 3.11. Formatting, linting, static type checking, and dependency scanning remain to be selected before the prototype becomes a distributed service. The current Python choice is a reversible prototype implementation, not an accepted platform-language decision.
