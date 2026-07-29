@@ -1,0 +1,210 @@
+{
+  "contract_id": "iagora.administrative-evidence",
+  "contract_version": "1.0.0",
+  "bundle_id": "administrative-evidence-respire-recre-2025",
+  "bundle_version": "0.1.0",
+  "observation_cutoff": "2025-12-31",
+  "assembled_at": "2026-07-29T14:52:03+00:00",
+  "territory": "fr-63113-clermont-ferrand",
+  "raw_bytes_preserved": false,
+  "documents": [
+    {
+      "artifact_version_id": "artifact-pev-2023-final-deliberation",
+      "source_id": "src-city-education-project-2023",
+      "title": "Final deliberation adopting the 2022–2025 municipal education project",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004.pdf",
+      "issued_at": "2023-05-05",
+      "document_role": "final_deliberation",
+      "scope": {"level": "programme", "ids": ["programme-respire-a-la-recre"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:36:59+00:00", "media_type": "application/pdf", "byte_size": 69977, "sha256": "1f72cab17360abc856be80f17cfada0702c8f3b22eaf0f9012255422ab4266d7", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "adopted_policy", "outcome": "authoritative", "basis": "The municipal council final deliberation records adoption of the attached 2022–2025 education project.", "limitations": ["Adoption of the policy does not by itself prove continuity from the campaign commitment, implementation, or impact."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-pev-adoption-2023", "relationship": "supports", "locator": "page 2 of 3, decision paragraph", "statement": "The council adopted the 2022–2025 municipal education project unanimously.", "stage": "adopted_policy"}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-pev-2023-adopted-annex",
+      "source_id": "src-city-education-project-2023",
+      "title": "Adopted 2022–2025 municipal education project annex",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004_annexe_0.pdf",
+      "issued_at": "2023-05-05",
+      "document_role": "adopted_annex",
+      "scope": {"level": "programme", "ids": ["programme-respire-a-la-recre"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:37:00+00:00", "media_type": "application/pdf", "byte_size": 3639456, "sha256": "939b51ddc99be3408819dffdf974298d1c7b5012ea4333e8b3e62064cc70e24c", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "adopted_policy", "outcome": "authoritative_with_limitation", "basis": "The annex adopted with the final deliberation defines the municipal Respire à la récré policy context.", "limitations": ["The annex is candidate mapping evidence because its objectives align with the campaign subject, but a reviewer must still validate the commitment-to-programme relationship."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-pev-respire-definition-2023", "relationship": "contextualizes", "locator": "printed page 25, Respire à la récré inset", "statement": "The adopted policy identifies Respire à la récré as the transformation of schoolyards toward ecological, cooler, permeable, inclusive, and co-designed spaces.", "stage": "adopted_policy"}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-apcp-respire-2022-update",
+      "source_id": "src-city-apcp-2022",
+      "title": "29 June 2022 update of programme authorizations",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/docs/delib/CM29062022/CM29062022_011.pdf",
+      "issued_at": "2022-06-29",
+      "document_role": "final_deliberation",
+      "scope": {"level": "programme", "ids": ["programme-respire-a-la-recre"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:37:02+00:00", "media_type": "application/pdf", "byte_size": 110022, "sha256": "fdf8e63552d2fa93052214896ba7d158691f54245ccb0f1f5a1addf064d6e01c", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "budget_amendment", "outcome": "authoritative", "basis": "The final council record unanimously validates the updated programme authorizations and payment-credit phasing.", "limitations": ["Programme authorization and payment-credit phasing do not establish a procurement obligation, school allocation, payment, or delivery."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-apcp-respire-rephasing-2022", "relationship": "supports", "locator": "pages 3–4 of 6, item 4", "statement": "The decision rephased 350,000 euros of 2022 Respire payment credits to 2023 because works were delayed.", "stage": "budget_authorization", "amount": {"value": 350000, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "authorized_annual", "scope": "programme"}},
+        {"evidence_id": "evidence-apcp-respire-total-2022", "relationship": "supports", "locator": "page 4 of 6, 2021-RESPIRE table", "statement": "The updated programme authorization total is 4,070,000 euros.", "stage": "budget_authorization", "amount": {"value": 4070000, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "authorized_programme", "scope": "programme"}}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-budget-2023-final-deliberation",
+      "source_id": "src-city-budget-2023-adopted",
+      "title": "Final deliberation adopting the 2023 initial budget",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/docs/delib/CM14122022/CM14122022_008.pdf",
+      "issued_at": "2022-12-14",
+      "document_role": "final_deliberation",
+      "scope": {"level": "programme", "ids": ["programme-respire-a-la-recre"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:51:25+00:00", "media_type": "application/pdf", "byte_size": 257063, "sha256": "61fc0eacc82c1bc7df2dd433946d05ff8a73f15b7ab701f7a696153d924d2de5", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "initial_budget_authorization", "outcome": "authoritative", "basis": "The final deliberation records majority adoption of the 2023 initial budget and its annexes.", "limitations": ["The adopted budget authorizes forecasts; it is not a final account or proof of school-level expenditure."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-budget-2023-respire-authorization", "relationship": "supports", "locator": "page 18 of 22, investment expenditure presentation", "statement": "The adopted 2023 budget presents 810,000 euros for schoolyard regreening and related uses.", "stage": "budget_authorization", "amount": {"value": 810000, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "authorized_annual", "scope": "programme"}}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-budget-2023-apcp-annex",
+      "source_id": "src-city-budget-2023-adopted",
+      "title": "2023 initial budget AP/CP annex",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/docs/delib/CM14122022/CM14122022_008_A2.pdf",
+      "issued_at": "2022-12-14",
+      "document_role": "budget_annex",
+      "scope": {"level": "programme", "ids": ["programme-respire-a-la-recre"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:37:01+00:00", "media_type": "application/pdf", "byte_size": 2964227, "sha256": "81d5f9e860c85fad872bdab37a1f5b0e562908087136e95df0eef9960f29ea01", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "initial_budget_authorization", "outcome": "authoritative_with_limitation", "basis": "The annex adopted with the 2023 budget distinguishes total authorization, cumulative prior mandates, current credits, and later financing.", "limitations": ["The figures are programme aggregates and cannot be assigned to a selected school without a more granular accounting record."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-budget-2023-ap-total", "relationship": "supports", "locator": "printed page 199, 2021-RESPIRE row", "statement": "The annex records a total Respire programme authorization of 4,070,000 euros.", "stage": "budget_authorization", "amount": {"value": 4070000, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "authorized_programme", "scope": "programme"}},
+        {"evidence_id": "evidence-budget-2023-prior-mandates", "relationship": "supports", "locator": "printed page 199, 2021-RESPIRE row and footnote 1", "statement": "The annex records 1,939,810.63 euros in cumulative effective realizations corresponding to mandates issued before 1 January 2023.", "stage": "executed_expenditure", "amount": {"value": 1939810.63, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "executed_cumulative", "scope": "programme"}},
+        {"evidence_id": "evidence-budget-2023-cp-opened", "relationship": "supports", "locator": "printed page 199, 2021-RESPIRE row", "statement": "The annex records 810,000 euros in payment credits opened for 2023.", "stage": "budget_authorization", "amount": {"value": 810000, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "authorized_annual", "scope": "programme"}}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-account-2022-final-deliberation",
+      "source_id": "src-city-account-2022",
+      "title": "Final deliberation adopting the 2022 administrative account",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/docs/delib/CM23062023/CM23062023_005.pdf",
+      "issued_at": "2023-06-23",
+      "document_role": "approved_account",
+      "scope": {"level": "programme", "ids": ["programme-respire-a-la-recre"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:36:59+00:00", "media_type": "application/pdf", "byte_size": 133354, "sha256": "16f3cdea4ed0f95735c70b8bd21823678bd1b66f9c91fecec3cfbd7e1ee0a42d", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "executed_expenditure", "outcome": "authoritative_with_limitation", "basis": "The approved 2022 administrative account reports annual investment expenditure for schoolyard regreening.", "limitations": ["The rounded annual programme amount is not a transaction ledger, procurement record, or school allocation."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-account-2022-respire-expenditure", "relationship": "supports", "locator": "page 15 of 16, investment expenditure list", "statement": "The approved account reports 1.09 million euros of 2022 investment expenditure for schoolyard regreening.", "stage": "executed_expenditure", "amount": {"value": 1090000, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "executed_annual", "scope": "programme"}}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-transition-report-2022-nestor",
+      "source_id": "src-city-transition-report-2023",
+      "title": "2022 City transition progress report",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/docs/delib/CM23062023/CM23062023_003_A2.pdf",
+      "issued_at": "2023-06-23",
+      "document_role": "administrative_report",
+      "scope": {"level": "school_case", "ids": ["case-nestor-perret"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:37:02+00:00", "media_type": "application/pdf", "byte_size": 20921548, "sha256": "7bdbead102de3d2241827bf9dc79bc86bb4fc88196b7b7f05c7472aac26b8048", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "reported_output_or_completion", "outcome": "authoritative_with_limitation", "basis": "The official administrative report is authoritative for the City's dated report of schoolyard use and inauguration.", "limitations": ["The report is not a competent works-acceptance record and does not prove outcome or causal impact."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-transition-nestor-reported-use", "relationship": "supports", "locator": "printed page 15, Respire progress section", "statement": "The report states that Nestor-Perret pupils had used the new recreation space since September 2022 and that it was inaugurated in April 2023.", "stage": "reported_delivery"}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-pierre-curie-press-2024",
+      "source_id": "src-city-pierre-curie-2024",
+      "title": "Pierre-et-Marie-Curie schoolyard press release",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/sites/default/files/2024-02/CP_0224_respire%20%C3%A0%20la%20r%C3%A9cr%C3%A9%20cour%20pierre%20et%20marie%20curie.pdf",
+      "issued_at": "2024-02-09",
+      "document_role": "official_communication",
+      "scope": {"level": "school_case", "ids": ["case-pierre-marie-curie"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:41:38+00:00", "media_type": "application/pdf", "byte_size": 160919, "sha256": "7884d90870ab7349ecdf89ee6aa21c742d4d745679f3ca208d1e67f0cc33f603", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "reported_output_or_completion", "outcome": "authoritative_with_limitation", "basis": "The official communication records what the City reported about the maternal-schoolyard work and its cost.", "limitations": ["It is not a contract, payment record, acceptance certificate, or evidence for the elementary unit.", "The PDF contains press-contact personal data and is not retained in the repository."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-pierre-curie-reported-delivery", "relationship": "supports", "locator": "page 1, schoolyard section", "statement": "The City reported that the maternal schoolyard was remodelled after work beginning in autumn 2023.", "stage": "reported_delivery"},
+        {"evidence_id": "evidence-pierre-curie-reported-cost", "relationship": "supports", "locator": "page 1, schoolyard cost line", "statement": "The City reported a 20,000-euro schoolyard-remodelling cost financed by the City.", "stage": "reported_delivery", "amount": {"value": 20000, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "reported_site_cost", "scope": "school_case"}}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-jean-zay-funding-plan-2025",
+      "source_id": "src-city-jean-zay-funding-2025",
+      "title": "Jean-Zay schoolyards funding plan",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/sites/default/files/2025-06/PLAN%20DE%20FINANCEMENT%201%20AFFICHE_0.pdf",
+      "issued_at": "2025-06-27",
+      "document_role": "funding_plan",
+      "scope": {"level": "school_case", "ids": ["case-jean-zay"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:41:37+00:00", "media_type": "application/pdf", "byte_size": 331843, "sha256": "316f552f0a4d958cc79941eac424b060e326592193720f7e863ce2f76165893f", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "funding_forecast", "outcome": "authoritative_with_limitation", "basis": "The published plan records the City's stated forecast cost and subsidy amount for the Jean-Zay project.", "limitations": ["The plan does not identify a grant award, payment, procurement obligation, executed expenditure, or completion."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-jean-zay-forecast-cost", "relationship": "supports", "locator": "page 1, project-cost line", "statement": "The plan states a forecast project cost of 210,000 euros excluding tax.", "stage": "funding_forecast", "amount": {"value": 210000, "currency": "EUR", "tax_basis": "HT", "financial_stage": "forecast_site_cost", "scope": "school_case"}},
+        {"evidence_id": "evidence-jean-zay-subsidy-amount", "relationship": "supports", "locator": "page 1, subsidy line", "statement": "The plan displays a subsidy amount of 55,000 euros without establishing award or payment status.", "stage": "funding_forecast", "amount": {"value": 55000, "currency": "EUR", "tax_basis": "not_stated", "financial_stage": "reported_subsidy_amount", "scope": "school_case"}}
+      ]
+    },
+    {
+      "artifact_version_id": "artifact-jean-zay-publication-attestation-2025",
+      "source_id": "src-city-jean-zay-funding-2025",
+      "title": "Jean-Zay funding-plan publication attestation",
+      "publisher": "Ville de Clermont-Ferrand",
+      "canonical_url": "https://clermont-ferrand.fr/sites/default/files/2025-06/Attestation%20publication%20du%2027%2006%202025.pdf",
+      "issued_at": "2025-06-27",
+      "document_role": "publication_attestation",
+      "scope": {"level": "school_case", "ids": ["case-jean-zay"]},
+      "acquisition": {"acquired_at": "2026-07-29T14:41:35+00:00", "media_type": "application/pdf", "byte_size": 76411, "sha256": "181ed96726bfa5df01afd3867ec899f3a4f92bc132b24a0f323aaad8f4b1ae5a", "raw_bytes_preserved": false, "nonretention_reason": "third_party_rights_and_privacy_review_pending"},
+      "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
+      "authority": {"fact_type": "publication_event", "outcome": "authoritative", "basis": "The attestation establishes that the City published the funding plan on 27 June 2025.", "limitations": ["Publication of the plan does not establish grant award, payment, delivery, or completion."]},
+      "evidence_fragments": [
+        {"evidence_id": "evidence-jean-zay-plan-publication", "relationship": "contextualizes", "locator": "page 1, publication declaration", "statement": "The City attested that it published the Jean-Zay funding plan on 27 June 2025.", "stage": "publication_only"}
+      ]
+    }
+  ],
+  "procurement_searches": [
+    {
+      "search_id": "search-city-market-decisions-2023",
+      "searched_at": "2026-07-29T14:46:45+00:00",
+      "method": "Manual review of the official list of municipal market decisions for May through August 2023.",
+      "source_urls": ["https://clermont-ferrand.fr/docs/delib/CM06102023/CM06102023_020.pdf"],
+      "query_scope": "Respire, schoolyard regreening, and the three selected school cases.",
+      "outcome": "no_unambiguous_record_identified",
+      "interpretation": "not_evidence_of_absence",
+      "limitations": ["The period is incomplete for the programme lifecycle.", "Pierre-et-Marie-Curie boiler works and Nestor-Perret interior works were excluded because their object does not establish a Respire schoolyard contract."]
+    },
+    {
+      "search_id": "search-national-decp-city-buyer-2026",
+      "searched_at": "2026-07-29T14:45:00+00:00",
+      "method": "Bounded query of the official national essential-public-procurement-data datasets using the City buyer SIRET and programme or school terms.",
+      "source_urls": ["https://data.economie.gouv.fr/explore/dataset/decp-2022-marches-valides/", "https://data.economie.gouv.fr/explore/dataset/decp-v3-marches-valides/information/"],
+      "query_scope": "Buyer SIRET 21630113500010; Respire, schoolyard regreening, Nestor-Perret, Pierre-et-Marie-Curie, and Jean-Zay.",
+      "outcome": "no_matching_record_returned",
+      "interpretation": "not_evidence_of_absence",
+      "limitations": ["Dataset completeness, publication thresholds, historical coverage, and buyer-identifier quality were not established.", "The search was performed after the observation cut-off and does not prove that no relevant contract exists."]
+    }
+  ],
+  "chain_summary": {
+    "commitment_mapping": "candidate_evidence_found_review_incomplete",
+    "policy_adoption": "evidenced",
+    "budget_authorization": "evidenced_at_programme_level",
+    "executed_expenditure": "evidenced_at_programme_level",
+    "procurement": "not_located",
+    "competent_completion": "not_located",
+    "outcome_evidence": "missing",
+    "causal_impact": "missing",
+    "fulfillment_conclusion": "not_verifiable"
+  }
+}

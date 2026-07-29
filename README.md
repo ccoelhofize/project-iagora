@@ -184,11 +184,11 @@ IAgora has completed its initial documentation foundation and now has a **bounde
 - complete and cross-reference the architecture specifications;
 - stabilize the canonical data model and governance vocabulary;
 - document significant decisions as ADRs;
-- review the authenticated primary campaign fragment and complete the authoritative administrative chains for the accepted Clermont-Ferrand pilot;
+- complete methodological review of the candidate campaign-to-programme mapping and locate the missing procurement and competent-completion records for the accepted Clermont-Ferrand pilot;
 - evolve the pre-stable executable contracts without weakening the accepted evidence, authority, lineage, rights, and publication invariants;
 - validate the local vertical slice with methodological, privacy, security, legal, and accessibility reviewers before any public release.
 
-The current implementation authenticates a short, unquantified schoolyard-regreening commitment from a 2019 archived campaign page, preserves one exact bounded official API response, validates its six-record normalization for Nestor-Perret, Pierre-et-Marie-Curie, and Jean-Zay, projects a versioned Knowledge Passport, and renders an accessible local HTML view. Its publication gate intentionally fails because the commitment-to-programme mapping, rights-restricted campaign-page retention, authoritative completion chain, outcome evidence, and production reviews are incomplete. The roadmap describes strategic milestones rather than guaranteed dates.
+The current implementation authenticates a short, unquantified schoolyard-regreening commitment from a 2019 archived campaign page, preserves one exact bounded official API response, and validates its six-record normalization for Nestor-Perret, Pierre-et-Marie-Curie, and Jean-Zay. It also fingerprints and cites ten metadata-only municipal documents that establish adopted policy, programme-level budget authorization and expenditure, reported site delivery, and funding forecasts without conflating those stages. The Knowledge Passport and accessible local HTML expose the resulting partial administrative chain. Publication remains blocked because the commitment mapping has not completed methodological review, procurement and competent-completion records remain missing, administrative-document rights remain pending, and no reviewed outcome or causal-impact evidence exists. The roadmap describes strategic milestones rather than guaranteed dates.
 
 ## Run the local proof of concept
 

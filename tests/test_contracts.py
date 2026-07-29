@@ -5,7 +5,13 @@ import hashlib
 import unittest
 
 from iagora.contracts import ContractViolation, load_json, validate
-from iagora.pilot import CONTRACTS, SOURCE_PROFILES, SNAPSHOT, validate_inputs
+from iagora.pilot import (
+    ADMINISTRATIVE_EVIDENCE,
+    CONTRACTS,
+    SOURCE_PROFILES,
+    SNAPSHOT,
+    validate_inputs,
+)
 
 
 class ContractTests(unittest.TestCase):
@@ -17,8 +23,9 @@ class ContractTests(unittest.TestCase):
             campaign_artifact,
             acquisition_event,
             raw_dataset,
+            administrative_evidence,
         ) = validate_inputs()
-        self.assertEqual(11, len(profiles["sources"]))
+        self.assertEqual(17, len(profiles["sources"]))
         self.assertEqual("2025-12-31", snapshot["observation_cutoff"])
         self.assertEqual(6, len(dataset["records"]))
         self.assertEqual(
@@ -27,6 +34,8 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(6, raw_dataset["total_count"])
         self.assertEqual(3189, acquisition_event["response"]["byte_size"])
         self.assertTrue(snapshot["source_dataset"]["raw_bytes_preserved"])
+        self.assertEqual(10, len(administrative_evidence["documents"]))
+        self.assertFalse(administrative_evidence["raw_bytes_preserved"])
 
     def test_acquisition_event_and_raw_artifact_validate(self) -> None:
         event_path = (
@@ -68,6 +77,43 @@ class ContractTests(unittest.TestCase):
         self.assertFalse(campaign["raw_bytes_preserved"])
         self.assertEqual("blocked", campaign["rights"]["redistribution"])
         self.assertRegex(campaign["content_fingerprint_sha256"], r"^[a-f0-9]{64}$")
+
+    def test_administrative_evidence_preserves_financial_stages(self) -> None:
+        bundle = load_json(ADMINISTRATIVE_EVIDENCE)
+        schema = load_json(CONTRACTS / "administrative-evidence.schema.json")
+        validate(bundle, schema)
+        amounts = [
+            fragment["amount"]
+            for document in bundle["documents"]
+            for fragment in document["evidence_fragments"]
+            if "amount" in fragment
+        ]
+        stages = {amount["financial_stage"] for amount in amounts}
+        self.assertIn("authorized_programme", stages)
+        self.assertIn("authorized_annual", stages)
+        self.assertIn("executed_annual", stages)
+        self.assertIn("executed_cumulative", stages)
+        self.assertIn("forecast_site_cost", stages)
+        self.assertTrue(
+            all(
+                search["interpretation"] == "not_evidence_of_absence"
+                for search in bundle["procurement_searches"]
+            )
+        )
+        self.assertTrue(
+            all(
+                not document["acquisition"]["raw_bytes_preserved"]
+                for document in bundle["documents"]
+            )
+        )
+        expected_cases = {"case-nestor-perret", "case-pierre-marie-curie", "case-jean-zay"}
+        actual_cases = {
+            scope_id
+            for document in bundle["documents"]
+            if document["scope"]["level"] == "school_case"
+            for scope_id in document["scope"]["ids"]
+        }
+        self.assertEqual(expected_cases, actual_cases)
 
     def test_missing_required_source_field_is_rejected(self) -> None:
         profiles = load_json(SOURCE_PROFILES)

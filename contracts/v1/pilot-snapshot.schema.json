@@ -12,7 +12,7 @@
   ],
   "properties": {
     "contract_id": {"const": "iagora.pilot-snapshot"},
-    "contract_version": {"enum": ["1.0.0", "1.1.0"]},
+    "contract_version": {"enum": ["1.0.0", "1.1.0", "1.2.0"]},
     "snapshot_id": {"const": "pilot-respire-recre-2025"},
     "snapshot_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "observation_cutoff": {"const": "2025-12-31"},
@@ -53,6 +53,18 @@
         "artifact_version_id": {"type": "string", "minLength": 1},
         "local_path": {"type": "string", "minLength": 1},
         "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "administrative_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundle_id", "bundle_version", "local_path", "sha256", "raw_bytes_preserved"],
+      "properties": {
+        "bundle_id": {"const": "administrative-evidence-respire-recre-2025"},
+        "bundle_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "local_path": {"const": "data/pilot/administrative-evidence.json"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "raw_bytes_preserved": {"const": false}
       }
     },
     "source_dataset": {

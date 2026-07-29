@@ -21,7 +21,7 @@ def main() -> int:
         build_passport()
         print(
             "Validated source profiles, campaign artifact metadata, pilot snapshot, "
-            "evidence subset, and Knowledge Passport."
+            "administrative evidence, open-data subset, and Knowledge Passport."
         )
         return 0
 

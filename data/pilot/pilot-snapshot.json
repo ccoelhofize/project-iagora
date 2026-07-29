@@ -1,10 +1,10 @@
 {
   "contract_id": "iagora.pilot-snapshot",
-  "contract_version": "1.1.0",
+  "contract_version": "1.2.0",
   "snapshot_id": "pilot-respire-recre-2025",
-  "snapshot_version": "0.2.0",
+  "snapshot_version": "0.3.0",
   "observation_cutoff": "2025-12-31",
-  "generated_at": "2026-07-29T12:40:13+00:00",
+  "generated_at": "2026-07-29T14:57:09+00:00",
   "territory": "fr-63113-clermont-ferrand",
   "programme": {
     "programme_id": "programme-respire-a-la-recre",
@@ -20,6 +20,13 @@
     "artifact_version_id": "campaign-naturellement-clermont-schoolyards-wayback-20191128144201",
     "local_path": "data/pilot/campaign-artifact.json",
     "sha256": "afa6405a147185bf979eb995a12f32fe4258631f970f21f7875908ea31744308"
+  },
+  "administrative_evidence": {
+    "bundle_id": "administrative-evidence-respire-recre-2025",
+    "bundle_version": "0.1.0",
+    "local_path": "data/pilot/administrative-evidence.json",
+    "sha256": "2bf39dec8876f133eefc98dd8ec6956386df134e54f2281acc1b6edf720f87d9",
+    "raw_bytes_preserved": false
   },
   "source_dataset": {
     "source_id": "src-city-open-data-schools",
@@ -59,6 +66,7 @@
       "commitment_mapping_and_methodological_review_incomplete",
       "campaign_artifact_raw_bytes_not_preserved_for_rights",
       "methodological_review_incomplete",
+      "procurement_and_competent_completion_evidence_missing",
       "outcome_and_impact_evidence_missing",
       "production_privacy_security_and_retention_review_incomplete"
     ]
