@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Purpose
 
@@ -22,10 +22,12 @@ This dictionary maps canonical record names to their responsibility. Detailed se
 | `CommitmentMapping` | Reviewed link from promise to later public action | Text similarity |
 | `FinancialObservation` | Amount at a defined accounting stage and scope | Generic “cost” |
 | `FulfillmentAssessment` | Versioned method result at a cut-off | Political score or impact |
+| `PolicyLineageAssessment` | Versioned relationship to earlier or concurrent public action | Chronology, causation, ownership, or political credit |
 | `IndicatorDefinition` | Complete semantics of a measure | A display label |
 | `OutcomeObservation` | Measured condition or change | Causal attribution |
 | `ImpactAssessment` | Bounded causal or contribution conclusion | Chronological association |
 | `KnowledgePassport` | Public projection of governance records | Independent truth store |
+| `PublicationProjection` | Dashboard, detail, or report view referencing governed record versions | A parallel indicator, assessment, or evidence record |
 
 ## Shared value-state rules
 
@@ -37,4 +39,4 @@ A source-specific field MAY map to a canonical record as an explicitly named ext
 
 ## Current state
 
-This is a logical dictionary. Field names, datatypes, identifiers, controlled vocabularies, and schemas remain to be implemented as versioned contracts.
+This remains the logical dictionary. Pre-stable pilot contracts implement selected fields for source profiles, campaign artifacts, commitment mappings, acquisition events, administrative evidence, snapshots, and Knowledge Passports. They do not complete or stabilize the canonical model, identifier system, controlled vocabularies, or public API.

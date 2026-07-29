@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Purpose
 
@@ -34,6 +34,7 @@ This specification organizes the logical records accepted in ADR-0002. It does n
 - `FinancialObservation` preserves amount, stage, period, institution, scope, and source.
 - `Milestone` records evidenced progress without implying completion.
 - `FulfillmentAssessment` preserves component states and the accepted summary method.
+- `PolicyLineageAssessment` preserves reviewed relationships between public action across time without treating chronology as political credit.
 
 ### Outcomes and impact
 
@@ -48,13 +49,15 @@ This specification organizes the logical records accepted in ADR-0002. It does n
 - `RetentionDecision`, `RestrictionDecision`, `RedactionRecord`, and `RemovalTombstone` govern evidence lifecycle.
 - `KnowledgePassport` is a versioned projection, not a second truth store.
 
+Territory dashboards, thematic views, indicator pages, and printable reports are publication projections. They reference canonical record and method versions; they do not create parallel indicator, assessment, or evidence records.
+
 ## Cross-cutting fields
 
 Every applicable record requires stable identity, version, lifecycle state, creation and review time, temporal validity, territorial and institutional scope, provenance, lineage links, rights state, access class, and supersession relationships.
 
 ## Invariants
 
-Original claims survive decomposition. Assertions do not prove themselves. Authority and evidence remain separate. Versions are appended, not overwritten. Assessment summaries retain atomic inputs. Generated artifacts are labeled and cannot serve as evidence.
+Original claims survive decomposition. Assertions do not prove themselves. Authority and evidence remain separate. Versions are appended, not overwritten. Assessment summaries retain atomic inputs. Policy chronology does not prove novelty, continuity, or credit. Generated artifacts are labeled and cannot serve as evidence.
 
 ## Open implementation choices
 
@@ -65,3 +68,4 @@ Identifier encoding, physical schemas, indexing, persistence, graph traversal, e
 - [Canonical dictionary](07_CANONICAL_DATA_DICTIONARY.md)
 - [Glossary](../governance/22_GLOSSARY.md)
 - [ADR-0002](../adr/ADR-0002-canonical-assertion-and-evidence-model.md)
+- [ADR-0010](../adr/ADR-0010-multidimensional-accountability-and-policy-lineage.md)

@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-07-29
 
 ## Purpose
 
@@ -22,7 +22,7 @@ IAgora begins as a modular monolith. Modules share one deployable boundary initi
 6. **Governance:** contracts, provenance, lineage, quality, review, retention, redaction, and rights decisions.
 7. **Publication:** Knowledge Passport projection and publication eligibility.
 8. **Discovery:** lexical, structured, and optional semantic retrieval over publishable assets.
-9. **Experience:** accessible editorial pages, exploration, visualization, and evidence-linked explanations.
+9. **Experience:** accessible territory and thematic dashboards, indicator and evidence drill-down, visualization, printable-report projections, and evidence-linked explanations.
 10. **Operations:** identity, authorization, audit, monitoring, recovery, and incident response.
 
 ## Dependency direction
