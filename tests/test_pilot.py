@@ -6,6 +6,11 @@ import unittest
 from pathlib import Path
 
 from iagora.pilot import build, build_passport, render_html
+from iagora.presentation import (
+    dashboard_metrics,
+    render_dashboard_html,
+    render_education_html,
+)
 
 
 class PilotSliceTests(unittest.TestCase):
@@ -108,15 +113,63 @@ class PilotSliceTests(unittest.TestCase):
             second_passport, second_html = build(Path(second))
             self.assertEqual(first_passport.read_bytes(), second_passport.read_bytes())
             self.assertEqual(first_html.read_bytes(), second_html.read_bytes())
+            self.assertEqual(
+                (Path(first) / "education/index.html").read_bytes(),
+                (Path(second) / "education/index.html").read_bytes(),
+            )
+            self.assertEqual(
+                (Path(first) / "programmes/respire-a-la-recre/index.html").read_bytes(),
+                (Path(second) / "programmes/respire-a-la-recre/index.html").read_bytes(),
+            )
             parsed = json.loads(first_passport.read_text(encoding="utf-8"))
             self.assertEqual("iagora.knowledge-passport", parsed["contract_id"])
+
+    def test_dashboard_metrics_keep_financial_stages_separate(self) -> None:
+        metrics = dashboard_metrics(self.passport)
+        self.assertEqual(6, metrics["school_units"])
+        self.assertEqual(3, metrics["case_studies"])
+        self.assertEqual(3, metrics["state_counts"]["reported_complete"])
+        self.assertEqual(2, metrics["state_counts"]["reported_in_progress"])
+        self.assertEqual(1, metrics["state_counts"]["reported_not_complete"])
+        self.assertEqual(3237, metrics["reported_surface_m2"])
+        self.assertEqual(41, metrics["reported_trees"])
+        self.assertEqual(4_070_000, metrics["finance"]["programme_authorization"])
+        self.assertEqual(1_090_000, metrics["finance"]["executed_2022"])
+
+    def test_city_dashboard_exposes_coverage_without_inventing_macro_kpis(self) -> None:
+        rendered = render_dashboard_html(self.passport)
+        self.assertIn("Trajectoire de Clermont-Ferrand", rendered)
+        self.assertIn("Données insuffisantes pour une comparaison macro", rendered)
+        self.assertIn("1/4", rendered)
+        self.assertIn("Éducation", rendered)
+        self.assertIn("Finances", rendered)
+        self.assertIn("Culture", rendered)
+        self.assertIn("Sécurité", rendered)
+        self.assertIn("Les pointillés signalent une série à définir", rendered)
+
+    def test_education_dashboard_uses_bounded_kpis_and_accessible_chart(self) -> None:
+        rendered = render_education_html(self.passport)
+        self.assertIn("Tableau de bord thématique", rendered)
+        self.assertIn("3\u202f237", rendered)
+        self.assertIn(">41<", rendered)
+        self.assertIn(
+            'aria-label="3 unités déclarées achevées, 2 en cours et 1 non achevée"',
+            rendered,
+        )
+        self.assertIn("Filiation actuellement indéterminable", rendered)
+        self.assertIn("4,07 M€", rendered)
+        self.assertIn("1\u202f939\u202f810,63 €", rendered)
+        self.assertIn("Ces chiffres ne décrivent pas l’ensemble des écoles", rendered)
 
     def test_html_has_accessible_structure_and_explicit_warning(self) -> None:
         rendered = render_html(self.passport)
         self.assertIn('<html lang="fr">', rendered)
-        self.assertIn("<main>", rendered)
+        self.assertIn('<main id="contenu" class="report-shell">', rendered)
         self.assertEqual(5, rendered.count("<caption>"))
         self.assertIn("Prototype local — publication bloquée", rendered)
+        self.assertIn("Synthèse multidimensionnelle", rendered)
+        self.assertIn("Filiation de la politique publique", rendered)
+        self.assertIn("Imprimer le dossier", rendered)
         self.assertIn("Engagement de campagne retrouvé", rendered)
         self.assertIn("Pourquoi le rapprochement avec", rendered)
         self.assertIn("proposition assistée par IA", rendered)

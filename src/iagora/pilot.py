@@ -12,6 +12,15 @@ from pathlib import Path
 from typing import Any
 
 from .contracts import ContractViolation, load_json, validate, validate_files
+from .presentation import (
+    PAGE_STYLES,
+    render_dashboard_html,
+    render_education_html,
+    render_footer,
+    render_multidimensional_summary,
+    render_policy_timeline,
+    render_site_header,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -953,28 +962,34 @@ def render_html(passport: dict[str, Any]) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IAgora — POC Respire à la récré</title>
-  <style>
-    :root {{ color-scheme: light; font-family: system-ui, sans-serif; line-height: 1.55; }}
-    body {{ margin: 0; color: #17211b; background: #f5f7f5; }}
-    main {{ max-width: 68rem; margin: auto; padding: 2rem 1rem 4rem; }}
-    .banner {{ border: .25rem solid #6c4514; background: #fff4dc; padding: 1rem; }}
-    section {{ background: white; margin-top: 1.5rem; padding: 1.25rem; border: 1px solid #c7d0ca; }}
-    table {{ width: 100%; border-collapse: collapse; }}
-    caption {{ text-align: left; font-weight: 700; padding-bottom: .5rem; }}
-    th, td {{ padding: .6rem; border: 1px solid #9eaaa2; text-align: left; }}
-    .table-wrap {{ overflow-x: auto; }}
-    a {{ color: #004f3d; text-decoration-thickness: .12em; }}
-    :focus-visible {{ outline: .2rem solid #7a2e00; outline-offset: .2rem; }}
-  </style>
+  <meta name="description" content="Dossier détaillé et traçable du programme Respire à la récré dans le prototype local IAgora.">
+  <title>IAgora — Dossier Respire à la récré</title>
+  <style>{PAGE_STYLES}</style>
 </head>
 <body>
-<main>
-  <h1>POC « Respire à la récré »</h1>
+{render_site_header("detail", "../../")}
+<main id="contenu" class="report-shell">
+  <nav class="breadcrumbs no-print" aria-label="Fil d’Ariane"><a href="../../index.html">Clermont-Ferrand</a> / <a href="../../education/index.html">Éducation</a> / Respire à la récré</nav>
+  <section class="content-card" aria-labelledby="titre-dossier">
+    <p class="eyebrow">Dossier détaillé · Méthode, périmètres et preuves</p>
+    <h1 id="titre-dossier" class="page-title">Respire à la récré</h1>
+    <p class="lede">La vue imprimable du programme étudié, construite à partir du même passeport de connaissance que le tableau de bord.</p>
+    <div class="actions no-print"><a class="button button--secondary" href="../../education/index.html">Retour à l’éducation</a><button class="button" type="button" onclick="window.print()">Imprimer le dossier</button></div>
+  </section>
   <div class="banner" role="status">
     <strong>Prototype local — publication bloquée.</strong>
     Ce rendu démontre la traçabilité technique. Il ne conclut ni à la réalisation de la promesse, ni à un impact sur la ville.
   </div>
+  <section aria-labelledby="synthese">
+    <h2 id="synthese">Synthèse multidimensionnelle</h2>
+    <p>Chaque dimension reste séparée : documenter une action ou une dépense ne suffit pas à prouver l’accomplissement global ni l’impact.</p>
+    {render_multidimensional_summary()}
+  </section>
+  <section aria-labelledby="filiation">
+    <div class="theme-card__top"><h2 id="filiation">Filiation de la politique publique</h2><span class="tag tag--pending">Indéterminable</span></div>
+    <p>La séquence est documentée sans attribuer automatiquement le programme à la promesse et sans affirmer qu’il est inédit ou hérité.</p>
+    {render_policy_timeline(passport)}
+  </section>
   <section aria-labelledby="engagement">
     <h2 id="engagement">Engagement de campagne retrouvé</h2>
     <p>La page de campagne archivée présente la proposition <q>{html.escape(passport['campaign_commitment']['wording'])}</q>.</p>
@@ -1025,6 +1040,7 @@ def render_html(passport: dict[str, Any]) -> str:
     <p>Le fichier <code>passport.json</code> fournit la version machine-readable équivalente.</p>
   </section>
 </main>
+{render_footer()}
 </body>
 </html>
 """
@@ -1034,10 +1050,16 @@ def build(output_dir: Path, root: Path = ROOT) -> tuple[Path, Path]:
     passport = build_passport(root)
     output_dir.mkdir(parents=True, exist_ok=True)
     passport_path = output_dir / "passport.json"
-    html_path = output_dir / "index.html"
+    dashboard_path = output_dir / "index.html"
+    education_path = output_dir / "education" / "index.html"
+    report_path = output_dir / "programmes" / "respire-a-la-recre" / "index.html"
+    education_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.parent.mkdir(parents=True, exist_ok=True)
     passport_path.write_text(
         json.dumps(passport, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    html_path.write_text(render_html(passport), encoding="utf-8")
-    return passport_path, html_path
+    dashboard_path.write_text(render_dashboard_html(passport), encoding="utf-8")
+    education_path.write_text(render_education_html(passport), encoding="utf-8")
+    report_path.write_text(render_html(passport), encoding="utf-8")
+    return passport_path, dashboard_path
