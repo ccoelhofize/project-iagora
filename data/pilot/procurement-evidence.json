@@ -1,0 +1,287 @@
+{
+  "contract_id": "iagora.procurement-evidence",
+  "contract_version": "1.0.0",
+  "bundle_id": "procurement-evidence-respire-recre-2025",
+  "bundle_version": "0.1.0",
+  "observation_cutoff": "2025-12-31",
+  "assembled_at": "2026-07-30T12:24:19Z",
+  "territory": "fr-63113-clermont-ferrand",
+  "city_dataset_acquisition": {
+    "source_id": "src-city-procurement-open-data",
+    "artifact_version_id": "dataset-city-procurement-selected-raw-20260730-001",
+    "acquisition_event_path": "data/raw/procurement/city-contracts/2026-07-30/acquisition-event.json",
+    "raw_local_path": "data/raw/procurement/city-contracts/2026-07-30/records-selected.json",
+    "raw_sha256": "ef4c012dfd2dc971ddd01d338f5c1269c652c37351c335907f0d9a17478daaac",
+    "record_count": 8,
+    "source_modified_at": "2026-07-08T08:09:53+00:00"
+  },
+  "boamp_acquisition": {
+    "source_id": "src-boamp-schoolyard-regreening-2025",
+    "artifact_version_id": "boamp-notices-25-110034-and-26-4348-metadata-20260730",
+    "requested_endpoint": "https://www.boamp.fr/api/explore/v2.1/catalog/datasets/boamp/records",
+    "record_ids": ["25-110034", "26-4348"],
+    "acquired_at": "2026-07-30T12:24:19Z",
+    "response_byte_size": 29026,
+    "response_sha256": "824ff09cca96c131c6d599738b5f8a54840dae7f14fd405038cec5bc65132fa7",
+    "raw_bytes_preserved": false,
+    "nonretention_reason": "dataset_license_not_stated_in_official_catalog_metadata",
+    "rights_state": "qualified_review_pending"
+  },
+  "records": [
+    {
+      "record_id": "procurement-city-study-2020",
+      "evidence_id": "evidence-procurement-city-study-2020",
+      "source_ids": ["src-city-procurement-open-data"],
+      "title": "Study on schoolyard regreening and urban cool islands",
+      "role": "study_service_contract",
+      "authority": {
+        "fact_type": "procurement_contract_metadata",
+        "outcome": "authoritative_with_limitation",
+        "basis": "The City procurement dataset is competent for the contract metadata it publishes and labels the amount field as a fixed or estimated maximum amount excluding tax.",
+        "limitations": [
+          "The record establishes a study service contract, not a works contract.",
+          "The dataset does not establish invoice, payment, delivery, outcome, causal impact, or campaign-to-programme continuity."
+        ]
+      },
+      "scope": {
+        "level": "citywide_schoolyard_regreening",
+        "candidate_programme_id": "programme-respire-a-la-recre",
+        "relationship_to_programme": "candidate_relevant_object_not_directly_named",
+        "school_groups": [],
+        "pilot_case_ids": []
+      },
+      "dates": {
+        "notice_publication": null,
+        "response_deadline": null,
+        "notification": "2020-11-27",
+        "award": null,
+        "issue": null
+      },
+      "duration_months": 12,
+      "amount": {
+        "value": 45750,
+        "currency": "EUR",
+        "tax_basis": "HT",
+        "financial_stage": "contracted_service_value",
+        "aggregation_rule": "Use the value once for procurement identifier 20202012301."
+      },
+      "lots": [],
+      "source_locators": [
+        "data/raw/procurement/city-contracts/2026-07-30/records-selected.json#results[marche_id=20202012301]"
+      ],
+      "observation_state": "eligible_historical_evidence",
+      "establishes": [
+        "The City dataset reports procurement identifier 20202012301 for a schoolyard-regreening study notified on 27 November 2020.",
+        "The published contract value is EUR 45,750 excluding tax at the procurement-service stage."
+      ],
+      "does_not_establish": [
+        "Attributable schoolyard works",
+        "School-level expenditure or payment",
+        "Competent completion",
+        "Outcome or causal impact",
+        "Direct fulfillment of the campaign commitment"
+      ]
+    },
+    {
+      "record_id": "procurement-boamp-competition-25-110034",
+      "evidence_id": "evidence-procurement-boamp-competition-25-110034",
+      "source_ids": ["src-boamp-schoolyard-regreening-2025"],
+      "title": "Schoolyard-regreening design and user-assistance competition",
+      "role": "competition_notice",
+      "authority": {
+        "fact_type": "procurement_competition",
+        "outcome": "authoritative_with_limitation",
+        "basis": "The official BOAMP notice is competent for the published competition, procedure dates, and lot scopes.",
+        "limitations": [
+          "The notice establishes a competition for services, not a contract award, works, payment, or completion.",
+          "The official catalog does not state a dataset licence, so only governed metadata and the response fingerprint are retained."
+        ]
+      },
+      "scope": {
+        "level": "multi_school_groups",
+        "candidate_programme_id": "programme-respire-a-la-recre",
+        "relationship_to_programme": "candidate_relevant_object_not_directly_named",
+        "school_groups": ["Alphonse-Daudet", "Edgard-Quinet", "Paul-Bert", "Pierre-et-Marie-Curie"],
+        "pilot_case_ids": ["case-pierre-marie-curie"]
+      },
+      "dates": {
+        "notice_publication": "2025-10-05",
+        "response_deadline": "2025-11-03T10:00:00+00:00",
+        "notification": null,
+        "award": null,
+        "issue": null
+      },
+      "duration_months": 60,
+      "amount": null,
+      "lots": [
+        {
+          "lot_id": "LOT-0001",
+          "school_groups": ["Edgard-Quinet", "Paul-Bert"],
+          "contract_reference": null,
+          "holder": null,
+          "issue_date": null,
+          "amount": null
+        },
+        {
+          "lot_id": "LOT-0002",
+          "school_groups": ["Alphonse-Daudet", "Pierre-et-Marie-Curie"],
+          "contract_reference": null,
+          "holder": null,
+          "issue_date": null,
+          "amount": null
+        }
+      ],
+      "source_locators": [
+        "https://www.boamp.fr/pages/avis/?q=idweb:25-110034",
+        "record[idweb=25-110034].donnees.EFORMS.ContractNotice.cac:ProcurementProjectLot"
+      ],
+      "observation_state": "eligible_historical_evidence",
+      "establishes": [
+        "BOAMP published a two-lot competition on 5 October 2025 for schoolyard-regreening design and user-assistance services.",
+        "Lot 2 jointly covers Pierre-et-Marie-Curie and Alphonse-Daudet."
+      ],
+      "does_not_establish": [
+        "An award or contractual obligation",
+        "A school-specific allocation within a multi-school lot",
+        "Attributable schoolyard works",
+        "Payment, competent completion, outcome, or impact",
+        "A relationship to the Pierre-et-Marie-Curie maternal courtyard reported in 2023"
+      ]
+    },
+    {
+      "record_id": "procurement-boamp-award-26-4348",
+      "evidence_id": "evidence-procurement-boamp-award-26-4348",
+      "source_ids": ["src-boamp-schoolyard-regreening-2025", "src-city-procurement-open-data"],
+      "title": "Award of schoolyard-regreening design and user-assistance services",
+      "role": "award_notice",
+      "authority": {
+        "fact_type": "procurement_award",
+        "outcome": "authoritative_with_limitation",
+        "basis": "The BOAMP award notice reports the award decisions, lot-to-contract mapping, awardees, and values; the City dataset independently reports the same contract references and values and labels its amount field as excluding tax.",
+        "limitations": [
+          "The award notice was published on 15 January 2026 and the contracts were issued in January 2026, after the observation cut-off.",
+          "The records concern design and user-assistance services, not works, payment, or completion.",
+          "The Pierre-et-Marie-Curie lot also covers Alphonse-Daudet and cannot be allocated to one school without a more granular record."
+        ]
+      },
+      "scope": {
+        "level": "multi_school_groups",
+        "candidate_programme_id": "programme-respire-a-la-recre",
+        "relationship_to_programme": "candidate_relevant_object_not_directly_named",
+        "school_groups": ["Alphonse-Daudet", "Edgard-Quinet", "Paul-Bert", "Pierre-et-Marie-Curie"],
+        "pilot_case_ids": ["case-pierre-marie-curie"]
+      },
+      "dates": {
+        "notice_publication": "2026-01-15",
+        "response_deadline": null,
+        "notification": null,
+        "award": "2025-11-26",
+        "issue": null
+      },
+      "duration_months": 60,
+      "amount": {
+        "value": 158300,
+        "currency": "EUR",
+        "tax_basis": "HT",
+        "financial_stage": "published_award_value",
+        "aggregation_rule": "Sum the two unique lot contract values once; never sum repeated City holder-grain rows."
+      },
+      "lots": [
+        {
+          "lot_id": "LOT-0001",
+          "school_groups": ["Edgard-Quinet", "Paul-Bert"],
+          "contract_reference": "25-119",
+          "holder": "SAS ATELIER DU ROUGET SIMON TEYSSOU & ASSOCIÉS",
+          "issue_date": "2026-01-06",
+          "amount": {"value": 81500, "currency": "EUR", "tax_basis": "HT"}
+        },
+        {
+          "lot_id": "LOT-0002",
+          "school_groups": ["Alphonse-Daudet", "Pierre-et-Marie-Curie"],
+          "contract_reference": "25-120",
+          "holder": "SAS SUO PAYSAGE ET TERRITOIRE",
+          "issue_date": "2026-01-05",
+          "amount": {"value": 76800, "currency": "EUR", "tax_basis": "HT"}
+        }
+      ],
+      "source_locators": [
+        "https://www.boamp.fr/pages/avis/?q=idweb:26-4348",
+        "record[idweb=26-4348].donnees.EFORMS.ContractAwardNotice.ext:UBLExtensions.ext:UBLExtension.ext:ExtensionContent.efext:EformsExtension.efac:NoticeResult",
+        "data/raw/procurement/city-contracts/2026-07-30/records-selected.json#results[marche_id in (25-119,25-120)]"
+      ],
+      "observation_state": "post_cutoff_publication_historical_event",
+      "establishes": [
+        "The notice reports two service awards dated 26 November 2025.",
+        "The published values are EUR 81,500 for contract 25-119 and EUR 76,800 for contract 25-120.",
+        "The City dataset independently reports the same contract references and values at holder grain."
+      ],
+      "does_not_establish": [
+        "A contemporaneously published award record at the 2025 cut-off",
+        "A school-specific allocation within either multi-school lot",
+        "Attributable schoolyard works",
+        "Invoice, payment, competent completion, outcome, or impact",
+        "A relationship to the Pierre-et-Marie-Curie maternal courtyard reported in 2023"
+      ]
+    }
+  ],
+  "quality_findings": [
+    {
+      "finding_id": "quality-holder-grain-duplication",
+      "severity": "high",
+      "confidence": "high",
+      "finding": "The City response contains eight holder-grain rows for three procurement identifiers and repeats each contract amount for every listed holder or role.",
+      "evidence": "Contract 25-119 appears four times at EUR 81,500 and contract 25-120 appears three times at EUR 76,800. Summing raw rows produces EUR 602,150; deduplicating by procurement identifier produces EUR 204,050 including the 2020 study.",
+      "impact": "A row-level sum would overstate the selected published contract values by EUR 398,100 and could mislead financial reporting.",
+      "remediation": "Use procurement identifier as the amount grain, preserve holders as a separate repeating dimension, and add a no-double-counting invariant."
+    },
+    {
+      "finding_id": "quality-city-field-semantic-drift",
+      "severity": "medium",
+      "confidence": "high",
+      "finding": "The marche_nature and marche_type values change semantic position between the selected 2020 and 2025-labelled records.",
+      "evidence": "The 2020 row reports marche_nature=Marché and marche_type=Services; the 2025-labelled rows report marche_nature=Services and marche_type=Marché.",
+      "impact": "A single field mapping across years could reverse contract nature and service type.",
+      "remediation": "Normalize record by record using controlled values and corroborate the 2025 procedure with BOAMP instead of trusting one portal column globally."
+    },
+    {
+      "finding_id": "quality-post-cutoff-award-publication",
+      "severity": "high",
+      "confidence": "high",
+      "finding": "The award event is dated before the observation cut-off, but the award notice and contract issue dates are after it.",
+      "evidence": "Award date: 26 November 2025; contract issue dates: 5 and 6 January 2026; award-notice publication: 15 January 2026.",
+      "impact": "Treating the later publication as contemporaneous 2025 evidence would create time-travel in the historical snapshot.",
+      "remediation": "Expose it as post-cut-off historical evidence and do not silently recompute the 2025 fulfillment conclusion."
+    },
+    {
+      "finding_id": "quality-pierre-scope-mismatch",
+      "severity": "high",
+      "confidence": "high",
+      "finding": "The lot naming Pierre-et-Marie-Curie also covers Alphonse-Daudet and does not identify the maternal or elementary school unit.",
+      "evidence": "BOAMP LOT-0002 names both school groups; the current pilot separately reports the Pierre maternal unit completed in 2023 and the elementary unit forthcoming.",
+      "impact": "The lot value and award cannot be assigned to the 2023 maternal delivery or to one school without unsupported allocation.",
+      "remediation": "Require a scope-bearing contract annex, purchase order, invoice, or accounting record before linking the award to a pilot school unit."
+    },
+    {
+      "finding_id": "quality-boamp-rights-unresolved",
+      "severity": "medium",
+      "confidence": "high",
+      "finding": "The official BOAMP catalog metadata does not state a dataset licence.",
+      "evidence": "The catalog returned null for both license and license_url on 30 July 2026.",
+      "impact": "Repository redistribution of the 29,026-byte raw response cannot be approved under the current rights rule.",
+      "remediation": "Retain the fingerprint and minimal governed metadata only until qualified rights review establishes the reuse basis."
+    }
+  ],
+  "chain_summary": {
+    "procurement": "partial_candidate_services_evidence",
+    "attributable_works_procurement": "not_located",
+    "competent_completion": "not_located",
+    "school_level_accounting": "not_located",
+    "fulfillment_conclusion": "not_verifiable"
+  },
+  "limitations": [
+    "The bundle documents candidate study, competition, and award evidence for services only; the source records do not name the Respire à la récré programme.",
+    "No record in this bundle establishes attributable schoolyard works, transaction-level payment, competent acceptance, outcome, causal impact, or fulfillment.",
+    "The award notice is post-cut-off evidence about a reported pre-cut-off award date and remains excluded from contemporaneous 2025 publication claims.",
+    "The public prototype must not allocate multi-school lot values to one school or sum holder-grain duplicates."
+  ]
+}

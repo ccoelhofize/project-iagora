@@ -1,10 +1,10 @@
 {
   "contract_id": "iagora.pilot-snapshot",
-  "contract_version": "1.3.0",
+  "contract_version": "1.4.0",
   "snapshot_id": "pilot-respire-recre-2025",
-  "snapshot_version": "0.4.0",
+  "snapshot_version": "0.5.0",
   "observation_cutoff": "2025-12-31",
-  "generated_at": "2026-07-29T18:08:18Z",
+  "generated_at": "2026-07-30T12:24:19Z",
   "territory": "fr-63113-clermont-ferrand",
   "programme": {
     "programme_id": "programme-respire-a-la-recre",
@@ -34,6 +34,12 @@
     "local_path": "data/pilot/administrative-evidence.json",
     "sha256": "2bf39dec8876f133eefc98dd8ec6956386df134e54f2281acc1b6edf720f87d9",
     "raw_bytes_preserved": false
+  },
+  "procurement_evidence": {
+    "bundle_id": "procurement-evidence-respire-recre-2025",
+    "bundle_version": "0.1.0",
+    "local_path": "data/pilot/procurement-evidence.json",
+    "sha256": "496b7544a7391b426966f4aa8841b56b516b851246577107e359e6fa40c9601f"
   },
   "source_dataset": {
     "source_id": "src-city-open-data-schools",
@@ -73,7 +79,7 @@
       "commitment_mapping_and_methodological_review_incomplete",
       "campaign_artifact_raw_bytes_not_preserved_for_rights",
       "methodological_review_incomplete",
-      "procurement_and_competent_completion_evidence_missing",
+      "attributable_works_procurement_and_competent_completion_evidence_missing",
       "outcome_and_impact_evidence_missing",
       "production_privacy_security_and_retention_review_incomplete"
     ]

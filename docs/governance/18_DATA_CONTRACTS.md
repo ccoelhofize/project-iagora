@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-07-30
 
 ## Purpose
 
@@ -37,6 +37,6 @@ Source profile, acquisition event, artifact version, evidence fragment, assertio
 
 ## Current state
 
-Pre-stable executable contracts now exist for [source profiles](../../contracts/v1/source-profiles.schema.json), [archived campaign-artifact metadata](../../contracts/v1/campaign-artifact.schema.json), a [bounded acquisition event](../../contracts/v1/acquisition-event.schema.json), the [bounded pilot snapshot](../../contracts/v1/pilot-snapshot.schema.json), and the [Knowledge Passport prototype](../../contracts/v1/knowledge-passport.schema.json). A deterministic standard-library validator and contract tests implement the keywords used by those schemas. The campaign contract records fingerprinted metadata and a governed non-retention reason rather than copying rights-restricted HTML. The acquisition contract is intentionally limited to the selected six-UAI official API response and does not yet generalize retry, quarantine, or custody behavior.
+Pre-stable executable contracts now exist for [source profiles](../../contracts/v1/source-profiles.schema.json), [archived campaign-artifact metadata](../../contracts/v1/campaign-artifact.schema.json), [commitment mapping](../../contracts/v1/commitment-mapping.schema.json), [administrative evidence](../../contracts/v1/administrative-evidence.schema.json), [bounded procurement evidence](../../contracts/v1/procurement-evidence.schema.json), [bounded acquisition events](../../contracts/v1/acquisition-event.schema.json), the [bounded pilot snapshot](../../contracts/v1/pilot-snapshot.schema.json), and the [Knowledge Passport prototype](../../contracts/v1/knowledge-passport.schema.json). A deterministic standard-library validator and contract tests implement the keywords used by those schemas. The campaign contract records fingerprinted metadata and a governed non-retention reason rather than copying rights-restricted HTML. The acquisition contract currently supports two selected-field City API responses and does not yet generalize retry, quarantine, or custody behavior. The procurement contract preserves candidate rather than asserted programme relationships, service-versus-works scope, post-cut-off publication state, multi-school lots, and one-value-per-procurement-identifier aggregation.
 
 The remaining contract families listed above are still absent. The current schemas are local prototype contracts, not a stable public API.

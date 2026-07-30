@@ -1,0 +1,64 @@
+{
+  "contract_id": "iagora.acquisition-event",
+  "contract_version": "1.1.0",
+  "event_id": "acquisition-city-procurement-selected-20260730-001",
+  "source_id": "src-city-procurement-open-data",
+  "artifact_version_id": "dataset-city-procurement-selected-raw-20260730-001",
+  "requested_endpoint": "https://opendata.clermont-ferrand.fr/api/explore/v2.1/catalog/datasets/marches-publics-a-partir-de-2020-vcf/records",
+  "resolved_url": "https://opendata.clermont-ferrand.fr/api/explore/v2.1/catalog/datasets/marches-publics-a-partir-de-2020-vcf/records?select=marche_id%2cannee_de_reference%2cmarche_nature%2cmarche_type%2cmarche_objet%2cprocedure%2cduree_mois%2cnotification_date%2cmontant%2cprix_forme%2ctitulaires_denomination&where=marche_id%3d%2220202012301%22+OR+marche_id%3d%2225-119%22+OR+marche_id%3d%2225-120%22&order_by=marche_id%2ctitulaires_denomination&limit=100",
+  "request": {
+    "selected_fields": [
+      "marche_id",
+      "annee_de_reference",
+      "marche_nature",
+      "marche_type",
+      "marche_objet",
+      "procedure",
+      "duree_mois",
+      "notification_date",
+      "montant",
+      "prix_forme",
+      "titulaires_denomination"
+    ],
+    "market_ids": ["20202012301", "25-119", "25-120"],
+    "order_by": "marche_id,titulaires_denomination",
+    "limit": 100
+  },
+  "acquired_at": "2026-07-30T12:22:37Z",
+  "method": "https_get",
+  "response": {
+    "http_status": 200,
+    "media_type": "application/json; charset=utf-8",
+    "byte_size": 4253,
+    "record_count": 8
+  },
+  "raw_artifact": {
+    "local_path": "data/raw/procurement/city-contracts/2026-07-30/records-selected.json",
+    "sha256": "ef4c012dfd2dc971ddd01d338f5c1269c652c37351c335907f0d9a17478daaac",
+    "immutable": true,
+    "retention_class": "open_data_prototype"
+  },
+  "software": "curl with Opendatasoft Explore API v2.1",
+  "authentication_class": "public_unauthenticated",
+  "rights": {
+    "license_id": "etalab-2.0",
+    "attribution": "Direction des Actions Juridiques et des Achats, Ville de Clermont-Ferrand",
+    "redistribution": "allowed_with_attribution"
+  },
+  "privacy": {
+    "classification": "public_non_personal_procurement",
+    "coordinates_excluded": true,
+    "image_metadata_excluded": true
+  },
+  "security": {
+    "risk_tier": "low",
+    "content_treated_as_untrusted": true,
+    "result": "accepted_after_contract_validation"
+  },
+  "limitations": [
+    "The bounded response contains eight holder-grain rows for three procurement identifiers; repeated contract values must not be summed across holders.",
+    "The source field semantics for marche_nature and marche_type are inconsistent between the 2020 and 2025-labelled records.",
+    "Records 25-119 and 25-120 have January 2026 notification dates and do not enter the 2025 snapshot as contemporaneous evidence.",
+    "The dataset documents study and design services, not schoolyard works, payment, competent acceptance, outcomes, or impact."
+  ]
+}

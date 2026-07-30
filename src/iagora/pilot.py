@@ -30,6 +30,7 @@ SNAPSHOT = ROOT / "data" / "pilot" / "pilot-snapshot.json"
 CAMPAIGN_ARTIFACT = ROOT / "data" / "pilot" / "campaign-artifact.json"
 COMMITMENT_MAPPING = ROOT / "data" / "pilot" / "commitment-mapping.json"
 ADMINISTRATIVE_EVIDENCE = ROOT / "data" / "pilot" / "administrative-evidence.json"
+PROCUREMENT_EVIDENCE = ROOT / "data" / "pilot" / "procurement-evidence.json"
 
 
 def file_sha256(path: Path) -> str:
@@ -83,6 +84,9 @@ def validate_inputs(
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
 ]:
     profiles_path = root / SOURCE_PROFILES.relative_to(ROOT)
     snapshot_path = root / SNAPSHOT.relative_to(ROOT)
@@ -100,12 +104,26 @@ def validate_inputs(
     administrative_evidence = validate_files(
         administrative_path, root / "contracts/v1/administrative-evidence.schema.json"
     )
+    procurement_path = root / snapshot["procurement_evidence"]["local_path"]
+    procurement_evidence = validate_files(
+        procurement_path, root / "contracts/v1/procurement-evidence.schema.json"
+    )
     acquisition_path = root / snapshot["source_dataset"]["raw_acquisition_event_path"]
     acquisition_event = validate_files(
         acquisition_path, root / "contracts/v1/acquisition-event.schema.json"
     )
     raw_path = root / snapshot["source_dataset"]["raw_local_path"]
     raw_dataset = load_json(raw_path)
+    procurement_acquisition_path = (
+        root / procurement_evidence["city_dataset_acquisition"]["acquisition_event_path"]
+    )
+    procurement_acquisition_event = validate_files(
+        procurement_acquisition_path, root / "contracts/v1/acquisition-event.schema.json"
+    )
+    procurement_raw_path = (
+        root / procurement_evidence["city_dataset_acquisition"]["raw_local_path"]
+    )
+    procurement_raw = load_json(procurement_raw_path)
     dataset_path = root / snapshot["source_dataset"]["local_path"]
     dataset = load_json(dataset_path)
 
@@ -132,6 +150,14 @@ def validate_inputs(
             f"{expected_administrative_hash}, got {administrative_hash}"
         )
 
+    procurement_hash = file_sha256(procurement_path)
+    expected_procurement_hash = snapshot["procurement_evidence"]["sha256"]
+    if procurement_hash != expected_procurement_hash:
+        raise ContractViolation(
+            f"{procurement_path}: fingerprint mismatch; expected "
+            f"{expected_procurement_hash}, got {procurement_hash}"
+        )
+
     raw_hash = file_sha256(raw_path)
     expected_raw_hash = snapshot["source_dataset"]["raw_sha256"]
     if raw_hash != expected_raw_hash:
@@ -144,6 +170,19 @@ def validate_inputs(
         raise ContractViolation("Raw artifact byte size differs from its acquisition event")
     if acquisition_event["raw_artifact"]["local_path"] != str(raw_path.relative_to(root)):
         raise ContractViolation("Raw artifact path differs from its acquisition event")
+    if acquisition_event["source_id"] != "src-city-open-data-schools":
+        raise ContractViolation("School acquisition source reference does not resolve")
+    if acquisition_event["request"].get("uai") != [
+        "0630258N",
+        "0630268Z",
+        "0630303M",
+        "0630307S",
+        "0630992L",
+        "0631845N",
+    ]:
+        raise ContractViolation("School acquisition must remain bounded to the six accepted UAIs")
+    if acquisition_event["request"]["order_by"] != "uai":
+        raise ContractViolation("School acquisition ordering changed unexpectedly")
     if (
         acquisition_event["artifact_version_id"]
         != snapshot["source_dataset"]["raw_artifact_version_id"]
@@ -152,10 +191,64 @@ def validate_inputs(
     if not snapshot["source_dataset"]["raw_bytes_preserved"]:
         raise ContractViolation("Current official dataset snapshot must preserve exact raw bytes")
 
+    procurement_raw_hash = file_sha256(procurement_raw_path)
+    expected_procurement_raw_hash = procurement_evidence["city_dataset_acquisition"][
+        "raw_sha256"
+    ]
+    if procurement_raw_hash != expected_procurement_raw_hash:
+        raise ContractViolation(
+            "Raw procurement artifact fingerprint differs from its evidence bundle"
+        )
+    if procurement_raw_hash != procurement_acquisition_event["raw_artifact"]["sha256"]:
+        raise ContractViolation(
+            "Raw procurement artifact fingerprint differs from its acquisition event"
+        )
+    if (
+        procurement_raw_path.stat().st_size
+        != procurement_acquisition_event["response"]["byte_size"]
+    ):
+        raise ContractViolation(
+            "Raw procurement artifact byte size differs from its acquisition event"
+        )
+    if procurement_acquisition_event["raw_artifact"]["local_path"] != str(
+        procurement_raw_path.relative_to(root)
+    ):
+        raise ContractViolation(
+            "Raw procurement artifact path differs from its acquisition event"
+        )
+    if procurement_acquisition_event["request"].get("market_ids") != [
+        "20202012301",
+        "25-119",
+        "25-120",
+    ]:
+        raise ContractViolation(
+            "Procurement acquisition must remain bounded to the three reviewed identifiers"
+        )
+    if (
+        procurement_acquisition_event["request"]["order_by"]
+        != "marche_id,titulaires_denomination"
+    ):
+        raise ContractViolation("Procurement acquisition ordering changed unexpectedly")
+
     source_index = {source["source_id"]: source for source in profiles["sources"]}
     selected_source = source_index.get(snapshot["source_dataset"]["source_id"])
     if not selected_source or selected_source["status"] != "approved_prototype":
         raise ContractViolation("Pilot dataset source is not approved for bounded prototype use")
+
+    procurement_source = source_index.get(
+        procurement_evidence["city_dataset_acquisition"]["source_id"]
+    )
+    if not procurement_source or procurement_source["status"] != "approved_prototype":
+        raise ContractViolation(
+            "City procurement source is not approved for bounded prototype use"
+        )
+    boamp_source = source_index.get(procurement_evidence["boamp_acquisition"]["source_id"])
+    if not boamp_source or boamp_source["status"] != "link_only":
+        raise ContractViolation("BOAMP evidence must remain metadata-only and link-only")
+    if boamp_source["rights"]["redistribution"] != "blocked":
+        raise ContractViolation("BOAMP raw response redistribution must remain blocked")
+    if procurement_evidence["boamp_acquisition"]["raw_bytes_preserved"]:
+        raise ContractViolation("Rights-pending BOAMP response bytes must not be committed")
 
     campaign_source = source_index.get(snapshot["campaign_artifact"]["source_id"])
     if not campaign_source or campaign_source["status"] != "link_only":
@@ -341,6 +434,94 @@ def validate_inputs(
         if search["interpretation"] != "not_evidence_of_absence":
             raise ContractViolation("Procurement search gaps must not become evidence of absence")
 
+    procurement_ref = snapshot["procurement_evidence"]
+    if procurement_evidence["bundle_id"] != procurement_ref["bundle_id"]:
+        raise ContractViolation("Procurement evidence bundle reference does not resolve")
+    if procurement_evidence["bundle_version"] != procurement_ref["bundle_version"]:
+        raise ContractViolation("Procurement evidence bundle version reference does not resolve")
+    city_acquisition = procurement_evidence["city_dataset_acquisition"]
+    if procurement_acquisition_event["source_id"] != city_acquisition["source_id"]:
+        raise ContractViolation("Procurement acquisition source reference does not resolve")
+    if (
+        procurement_acquisition_event["artifact_version_id"]
+        != city_acquisition["artifact_version_id"]
+    ):
+        raise ContractViolation("Procurement artifact version reference does not resolve")
+    if procurement_acquisition_event["response"]["record_count"] != city_acquisition[
+        "record_count"
+    ]:
+        raise ContractViolation("Procurement record count differs from its acquisition event")
+
+    procurement_rows = procurement_raw.get("results")
+    if (
+        procurement_raw.get("total_count") != 8
+        or not isinstance(procurement_rows, list)
+        or len(procurement_rows) != 8
+    ):
+        raise ContractViolation("The bounded procurement response must contain eight rows")
+    selected_procurement_fields = set(
+        procurement_acquisition_event["request"]["selected_fields"]
+    )
+    if not all(set(row) == selected_procurement_fields for row in procurement_rows):
+        raise ContractViolation("Raw procurement rows differ from the selected field contract")
+    procurement_rows_by_id: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in procurement_rows:
+        procurement_rows_by_id[row["marche_id"]].append(row)
+    expected_procurement_row_counts = {"20202012301": 1, "25-119": 4, "25-120": 3}
+    actual_procurement_row_counts = {
+        market_id: len(items) for market_id, items in procurement_rows_by_id.items()
+    }
+    if actual_procurement_row_counts != expected_procurement_row_counts:
+        raise ContractViolation("Procurement holder-grain row counts changed unexpectedly")
+    expected_procurement_amounts = {"20202012301": 45750, "25-119": 81500, "25-120": 76800}
+    for market_id, items in procurement_rows_by_id.items():
+        amounts = {item["montant"] for item in items}
+        if amounts != {expected_procurement_amounts[market_id]}:
+            raise ContractViolation(
+                f"Procurement amount drift for {market_id}: {sorted(amounts)}"
+            )
+    row_level_sum = sum(row["montant"] for row in procurement_rows)
+    unique_contract_sum = sum(expected_procurement_amounts.values())
+    if row_level_sum != 602150 or unique_contract_sum != 204050:
+        raise ContractViolation("Procurement duplicate-grain guard values changed")
+
+    procurement_records = procurement_evidence["records"]
+    procurement_record_ids = [record["record_id"] for record in procurement_records]
+    if len(procurement_record_ids) != len(set(procurement_record_ids)):
+        raise ContractViolation("Procurement record identifiers must be unique")
+    procurement_evidence_ids = [record["evidence_id"] for record in procurement_records]
+    if len(procurement_evidence_ids) != len(set(procurement_evidence_ids)):
+        raise ContractViolation("Procurement evidence identifiers must be unique")
+    for record in procurement_records:
+        if not set(record["source_ids"]).issubset(source_index):
+            raise ContractViolation("Procurement evidence references an unknown source")
+    award_record = next(
+        record for record in procurement_records if record["role"] == "award_notice"
+    )
+    if award_record["observation_state"] != "post_cutoff_publication_historical_event":
+        raise ContractViolation("Post-cutoff award publication must remain explicitly gated")
+    if award_record["dates"]["notice_publication"] <= snapshot["observation_cutoff"]:
+        raise ContractViolation("Expected the award notice publication to post-date the cut-off")
+    if award_record["amount"]["value"] != 158300:
+        raise ContractViolation("Published award total must equal the two unique lot values")
+    if sum(lot["amount"]["value"] for lot in award_record["lots"]) != 158300:
+        raise ContractViolation("Award lot values do not reconcile to the published total")
+    if (
+        procurement_evidence["chain_summary"]["procurement"]
+        != "partial_candidate_services_evidence"
+    ):
+        raise ContractViolation("Located service procurement must remain a partial chain state")
+    if any(
+        record["scope"]["relationship_to_programme"]
+        != "candidate_relevant_object_not_directly_named"
+        for record in procurement_records
+    ):
+        raise ContractViolation(
+            "Procurement records must not silently claim a direct Respire programme relationship"
+        )
+    if procurement_evidence["chain_summary"]["fulfillment_conclusion"] != "not_verifiable":
+        raise ContractViolation("Procurement evidence cannot establish fulfillment")
+
     rows = dataset.get("records")
     if not isinstance(rows, list) or len(rows) != 6:
         raise ContractViolation("The bounded source snapshot must contain exactly six school-unit rows")
@@ -366,6 +547,9 @@ def validate_inputs(
         raw_dataset,
         administrative_evidence,
         commitment_mapping,
+        procurement_evidence,
+        procurement_acquisition_event,
+        procurement_raw,
     )
 
 
@@ -391,10 +575,14 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
         _,
         administrative_evidence,
         commitment_mapping,
+        procurement_evidence,
+        procurement_acquisition_event,
+        _,
     ) = validate_inputs(root)
     source = next(
         item for item in profiles["sources"] if item["source_id"] == "src-city-open-data-schools"
     )
+    source_index = {item["source_id"]: item for item in profiles["sources"]}
     rows_by_school: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in dataset["records"]:
         transformed = dict(row)
@@ -412,6 +600,27 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "source_url": campaign_artifact["archive_url"],
         }
     ]
+    for record in procurement_evidence["records"]:
+        if record["role"] == "study_service_contract":
+            artifact_version_id = procurement_evidence["city_dataset_acquisition"][
+                "artifact_version_id"
+            ]
+            source_url = source_index["src-city-procurement-open-data"]["canonical_url"]
+        else:
+            artifact_version_id = procurement_evidence["boamp_acquisition"][
+                "artifact_version_id"
+            ]
+            notice_id = "25-110034" if record["role"] == "competition_notice" else "26-4348"
+            source_url = f"https://www.boamp.fr/pages/avis/?q=idweb:{notice_id}"
+        evidence.append(
+            {
+                "evidence_id": record["evidence_id"],
+                "relationship": "supports",
+                "artifact_version_id": artifact_version_id,
+                "locator": record["source_locators"][0],
+                "source_url": source_url,
+            }
+        )
     administrative_milestones = []
     administrative_evidence_by_case: dict[str, list[str]] = defaultdict(list)
     for document in administrative_evidence["documents"]:
@@ -471,7 +680,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
 
     passport = {
         "contract_id": "iagora.knowledge-passport",
-        "contract_version": "1.1.0",
+        "contract_version": "1.2.0",
         "passport_id": "passport-pilot-respire-recre-2025",
         "passport_version": snapshot["snapshot_version"],
         "asset": {
@@ -497,8 +706,10 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "statement": (
                 "The bounded evidence authenticates an unquantified primary campaign commitment "
                 "and documents adopted policy, programme-level authorization and expenditure, and "
-                "source-linked delivery states for three school cases. The commitment mapping, "
-                "procurement and competent completion chain, public fulfillment conclusion, "
+                "source-linked delivery states for three school cases. It also documents partial "
+                "candidate procurement evidence for study and design services whose source "
+                "records do not directly name the programme. The commitment mapping, "
+                "attributable works procurement and competent completion chain, public fulfillment conclusion, "
                 "observed outcome, and causal impact remain unverified."
             ),
             "fulfillment_conclusion": snapshot["campaign_commitment"]["fulfillment_conclusion"],
@@ -508,6 +719,9 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "verification_state": snapshot["campaign_commitment"]["verification_state"],
             "wording": campaign_artifact["evidence_fragment"]["quote"],
             "source_scope": "Clermont-Ferrand municipal campaign",
+            "attribution": commitment_mapping["original_commitment"]["attribution"],
+            "specificity": commitment_mapping["original_commitment"]["specificity"],
+            "scope_limits": commitment_mapping["original_commitment"]["scope_limits"],
             "quantification_state": "unquantified_in_primary_fragment",
             "mapping_state": "review_incomplete",
             "mapping_evidence_state": "candidate_evidence_found",
@@ -565,7 +779,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "policy_adoption": administrative_evidence["chain_summary"]["policy_adoption"],
             "budget_authorization": administrative_evidence["chain_summary"]["budget_authorization"],
             "executed_expenditure": administrative_evidence["chain_summary"]["executed_expenditure"],
-            "procurement": administrative_evidence["chain_summary"]["procurement"],
+            "procurement": procurement_evidence["chain_summary"]["procurement"],
             "competent_completion": administrative_evidence["chain_summary"]["competent_completion"],
             "outcome_evidence": administrative_evidence["chain_summary"]["outcome_evidence"],
             "causal_impact": administrative_evidence["chain_summary"]["causal_impact"],
@@ -577,6 +791,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "Reported or forecast site cost is not a contract or payment."
             ],
             "procurement_searches": administrative_evidence["procurement_searches"],
+            "procurement_records": procurement_evidence["records"],
             "milestones": sorted(
                 administrative_milestones, key=lambda item: item["evidence_id"]
             ),
@@ -613,6 +828,20 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "raw_bytes_preserved": campaign_artifact["raw_bytes_preserved"],
                 "nonretention_reason": campaign_artifact["nonretention_reason"],
             },
+            "supporting_context_sources": [
+                {
+                    "source_id": item["source_id"],
+                    "title": item["title"],
+                    "publisher": item["publisher"],
+                    "source_class": item["source_class"],
+                    "source_url": item["canonical_url"],
+                    "authority_state": item["review"]["authority_state"],
+                    "rights_state": item["rights"]["state"],
+                    "limitations": item["review"]["limitations"],
+                }
+                for item in profiles["sources"]
+                if item["source_id"] == "src-campaign-2020-interview"
+            ],
             "administrative_evidence": {
                 "bundle_id": administrative_evidence["bundle_id"],
                 "bundle_version": administrative_evidence["bundle_version"],
@@ -621,6 +850,21 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "assembled_at": administrative_evidence["assembled_at"],
                 "document_count": len(administrative_evidence["documents"]),
                 "raw_bytes_preserved": administrative_evidence["raw_bytes_preserved"],
+            },
+            "procurement_evidence": {
+                "bundle_id": procurement_evidence["bundle_id"],
+                "bundle_version": procurement_evidence["bundle_version"],
+                "local_path": snapshot["procurement_evidence"]["local_path"],
+                "content_fingerprint_sha256": snapshot["procurement_evidence"]["sha256"],
+                "assembled_at": procurement_evidence["assembled_at"],
+                "record_count": len(procurement_evidence["records"]),
+                "city_raw_bytes_preserved": True,
+                "boamp_raw_bytes_preserved": procurement_evidence["boamp_acquisition"][
+                    "raw_bytes_preserved"
+                ],
+                "boamp_nonretention_reason": procurement_evidence["boamp_acquisition"][
+                    "nonretention_reason"
+                ],
             },
             "commitment_mapping": {
                 "mapping_id": commitment_mapping["mapping_id"],
@@ -682,11 +926,33 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "deterministic": False,
             },
             {
+                "event_id": procurement_acquisition_event["event_id"],
+                "event_type": "acquisition",
+                "input": procurement_acquisition_event["resolved_url"],
+                "output": procurement_acquisition_event["raw_artifact"]["local_path"],
+                "output_sha256": procurement_acquisition_event["raw_artifact"]["sha256"],
+                "result": "accepted_after_contract_validation",
+                "deterministic": False,
+            },
+            {
+                "event_id": "lineage-review-procurement-evidence-001",
+                "event_type": "evidence_review",
+                "inputs": [
+                    procurement_evidence["city_dataset_acquisition"]["raw_local_path"],
+                    procurement_evidence["boamp_acquisition"]["requested_endpoint"],
+                ],
+                "rule_version": "iagora.procurement-evidence/0.1.0",
+                "output": snapshot["procurement_evidence"]["local_path"],
+                "output_sha256": snapshot["procurement_evidence"]["sha256"],
+                "result": "partial_candidate_services_evidence",
+                "deterministic": False,
+            },
+            {
                 "event_id": "lineage-project-knowledge-passport-001",
                 "event_type": "projection",
                 "input": snapshot["source_dataset"]["local_path"],
                 "input_sha256": snapshot["source_dataset"]["sha256"],
-                "rule_version": "iagora.pilot.project-passport/0.4.0",
+                "rule_version": "iagora.pilot.project-passport/0.5.0",
                 "output": "knowledge-passport",
                 "deterministic": True,
             },
@@ -715,14 +981,18 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "Administrative PDF bytes are fingerprinted but not retained pending rights and privacy review.",
                 "Programme-level financial records cannot be allocated to individual schools from the reviewed evidence.",
                 "The commitment mapping is an AI-assisted proposal awaiting independent methodological and authority review.",
+                *procurement_evidence["limitations"],
             ],
+            "procurement_findings": procurement_evidence["quality_findings"],
         },
         "conflicts_and_uncertainty": [
             "The primary campaign fragment is unquantified and does not state a delivery date, budget, or number of schoolyards.",
             "The all-neighbourhood scope appears in supporting interview evidence, not in the retained primary fragment.",
             "Pierre-et-Marie-Curie has different reported states for its maternelle and élémentaire units; this is a scope difference, not a resolved contradiction.",
             "The 1.09 million euros reported for 2022 and 1,939,810.63 euros of cumulative mandates before 2023 have different periods and precision; they must not be treated as contradictory or interchangeable.",
-            "No unambiguous Respire procurement record was found in the bounded searches; this is a search gap, not evidence that no contract exists.",
+            "The located procurement records cover study, design, and user-assistance services but do not directly name the Respire programme; they remain candidate evidence and do not establish attributable schoolyard works or competent completion.",
+            "The 2025 design awards were published and issued after the observation cut-off and therefore remain post-cut-off historical evidence.",
+            "The Pierre-et-Marie-Curie design lot also covers Alphonse-Daudet and cannot be allocated to one school or linked to the reported 2023 maternal delivery.",
             "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.",
         ],
         "rights": {
@@ -742,6 +1012,20 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "redistribution": "blocked",
                 "raw_bytes_preserved": administrative_evidence["raw_bytes_preserved"],
                 "retention_class": "metadata_only",
+            },
+            "procurement_evidence": {
+                "city_dataset": {
+                    "state": source_index["src-city-procurement-open-data"]["rights"]["state"],
+                    "license_id": source_index["src-city-procurement-open-data"]["rights"]["license_id"],
+                    "redistribution": source_index["src-city-procurement-open-data"]["rights"]["redistribution"],
+                    "raw_bytes_preserved": True,
+                },
+                "boamp": {
+                    "state": source_index["src-boamp-schoolyard-regreening-2025"]["rights"]["state"],
+                    "redistribution": source_index["src-boamp-schoolyard-regreening-2025"]["rights"]["redistribution"],
+                    "raw_bytes_preserved": procurement_evidence["boamp_acquisition"]["raw_bytes_preserved"],
+                    "nonretention_reason": procurement_evidence["boamp_acquisition"]["nonretention_reason"],
+                },
             },
         },
         "review": {
@@ -781,9 +1065,19 @@ def render_html(passport: dict[str, Any]) -> str:
     milestones = {
         item["evidence_id"]: item for item in passport["administrative_chain"]["milestones"]
     }
+    evidence_by_id = {
+        item["evidence_id"]: item for item in passport["evidence"]
+    }
 
     def milestone_link(evidence_id: str, label: str) -> str:
         item = milestones[evidence_id]
+        return (
+            f'<a href="{html.escape(item["source_url"], quote=True)}" '
+            f'rel="external noreferrer">{html.escape(label)}</a>'
+        )
+
+    def evidence_link(evidence_id: str, label: str) -> str:
+        item = evidence_by_id[evidence_id]
         return (
             f'<a href="{html.escape(item["source_url"], quote=True)}" '
             f'rel="external noreferrer">{html.escape(label)}</a>'
@@ -874,8 +1168,12 @@ def render_html(passport: dict[str, Any]) -> str:
         ),
         (
             "Marchés publics",
-            "Aucune pièce non ambiguë localisée dans la recherche bornée",
-            "Lacune de recherche — ce n’est pas une preuve d’absence",
+            "Étude et conception candidates par leur objet ; le programme n’est pas nommé, les travaux et la réception ne sont pas localisés",
+            evidence_link("evidence-procurement-city-study-2020", "Étude notifiée en 2020")
+            + " ; "
+            + evidence_link("evidence-procurement-boamp-competition-25-110034", "Consultation 2025")
+            + " ; "
+            + evidence_link("evidence-procurement-boamp-award-26-4348", "Attributions publiées en 2026"),
         ),
         (
             "Livraison et réception",
@@ -936,7 +1234,7 @@ def render_html(passport: dict[str, Any]) -> str:
         "commitment_mapping_and_methodological_review_incomplete": "La correspondance entre la promesse et le programme attend une revue méthodologique indépendante.",
         "campaign_artifact_raw_bytes_not_preserved_for_rights": "La page de campagne complète n’est pas conservée dans le dépôt en raison des droits de reproduction.",
         "methodological_review_incomplete": "La revue méthodologique globale du POC reste incomplète.",
-        "procurement_and_competent_completion_evidence_missing": "Les marchés et les pièces de réception compétente n’ont pas été localisés.",
+        "attributable_works_procurement_and_competent_completion_evidence_missing": "Les marchés de travaux attribuables et les pièces de réception compétente n’ont pas été localisés.",
         "outcome_and_impact_evidence_missing": "Les preuves de résultats et d’impact restent absentes.",
         "production_privacy_security_and_retention_review_incomplete": "Les revues de confidentialité, de sécurité et de conservation nécessaires à la production restent incomplètes.",
     }
@@ -945,7 +1243,9 @@ def render_html(passport: dict[str, Any]) -> str:
         "The all-neighbourhood scope appears in supporting interview evidence, not in the retained primary fragment.": "La portée « tous les quartiers » apparaît dans un entretien de soutien, pas dans le fragment primaire retenu.",
         "Pierre-et-Marie-Curie has different reported states for its maternelle and élémentaire units; this is a scope difference, not a resolved contradiction.": "Pierre-et-Marie-Curie présente des états déclarés différents pour la maternelle et l’élémentaire ; il s’agit d’une différence de périmètre, pas d’une contradiction résolue.",
         "The 1.09 million euros reported for 2022 and 1,939,810.63 euros of cumulative mandates before 2023 have different periods and precision; they must not be treated as contradictory or interchangeable.": "Les 1,09 M€ déclarés pour 2022 et les 1 939 810,63 € de mandats cumulés avant 2023 couvrent des périodes et des précisions différentes ; ils ne sont ni contradictoires ni interchangeables par défaut.",
-        "No unambiguous Respire procurement record was found in the bounded searches; this is a search gap, not evidence that no contract exists.": "Aucun marché Respire non ambigu n’a été trouvé dans les recherches bornées ; cette lacune n’est pas une preuve d’absence de marché.",
+        "The located procurement records cover study, design, and user-assistance services but do not directly name the Respire programme; they remain candidate evidence and do not establish attributable schoolyard works or competent completion.": "Les marchés localisés couvrent des prestations d’étude, de conception et d’assistance à maîtrise d’usage sans nommer directement le programme Respire ; ils restent des preuves candidates et n’établissent ni les travaux attribuables ni leur réception compétente.",
+        "The 2025 design awards were published and issued after the observation cut-off and therefore remain post-cut-off historical evidence.": "Les attributions de conception de 2025 ont été publiées et contractualisées après la date d’observation ; elles restent donc des preuves historiques postérieures à cette date.",
+        "The Pierre-et-Marie-Curie design lot also covers Alphonse-Daudet and cannot be allocated to one school or linked to the reported 2023 maternal delivery.": "Le lot de conception mentionnant Pierre-et-Marie-Curie couvre aussi Alphonse-Daudet ; son montant ne peut être attribué à une seule école ni relié à la livraison maternelle déclarée en 2023.",
         "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.": "Aucune référence initiale, aucun indicateur de résultat, contrefactuel ou examen de contribution n’a été validé.",
     }
     blockers = "".join(
@@ -1011,7 +1311,7 @@ def render_html(passport: dict[str, Any]) -> str:
   </section>
   <section aria-labelledby="conclusion">
     <h2 id="conclusion">Ce que l’on peut conclure</h2>
-    <p>Le document primaire est <strong>authentifié avec limites</strong>. La chaîne administrative est maintenant partiellement documentée, mais le respect de la promesse reste <strong>non vérifiable</strong> : le rapprochement méthodologique n’est pas validé et les marchés, réceptions, résultats et impacts restent incomplets. Les états scolaires ci-dessous proviennent d’un jeu de données municipal acquis après la date d’observation du 31 décembre 2025.</p>
+    <p>Le document primaire est <strong>authentifié avec limites</strong>. La chaîne administrative est maintenant partiellement documentée, mais le respect de la promesse reste <strong>non vérifiable</strong> : le rapprochement méthodologique n’est pas validé ; les marchés localisés portent sur des études et de la conception, tandis que les travaux attribuables, les réceptions, les résultats et les impacts restent incomplets. Les états scolaires ci-dessous proviennent d’un jeu de données municipal acquis après la date d’observation du 31 décembre 2025.</p>
   </section>
   <section aria-labelledby="chaine">
     <h2 id="chaine">Croisement avec les décisions et les finances municipales</h2>
@@ -1037,6 +1337,7 @@ def render_html(passport: dict[str, Any]) -> str:
     <h2 id="source">Source et passeport</h2>
     <p><a href="{source_url}" rel="external noreferrer">Jeu de données de la Ville de Clermont-Ferrand</a>, Licence Ouverte 2.0.</p>
     <p>Les dix PDF administratifs sont enregistrés sous forme de métadonnées, empreintes et citations précises ; leurs octets ne sont pas redistribués avant la revue des droits et de la vie privée.</p>
+    <p>La réponse bornée du jeu de marchés de la Ville est conservée sous Licence Ouverte 2.0. Pour BOAMP, seuls les identifiants, métadonnées minimales et l’empreinte de la réponse sont conservés tant que la base de réutilisation n’est pas qualifiée.</p>
     <p>Le fichier <code>passport.json</code> fournit la version machine-readable équivalente.</p>
   </section>
 </main>

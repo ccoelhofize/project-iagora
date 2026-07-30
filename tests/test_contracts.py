@@ -9,6 +9,7 @@ from iagora.pilot import (
     ADMINISTRATIVE_EVIDENCE,
     COMMITMENT_MAPPING,
     CONTRACTS,
+    PROCUREMENT_EVIDENCE,
     SOURCE_PROFILES,
     SNAPSHOT,
     validate_inputs,
@@ -26,8 +27,11 @@ class ContractTests(unittest.TestCase):
             raw_dataset,
             administrative_evidence,
             commitment_mapping,
+            procurement_evidence,
+            procurement_acquisition_event,
+            procurement_raw,
         ) = validate_inputs()
-        self.assertEqual(17, len(profiles["sources"]))
+        self.assertEqual(19, len(profiles["sources"]))
         self.assertEqual("2025-12-31", snapshot["observation_cutoff"])
         self.assertEqual(6, len(dataset["records"]))
         self.assertEqual(
@@ -40,6 +44,12 @@ class ContractTests(unittest.TestCase):
         self.assertFalse(administrative_evidence["raw_bytes_preserved"])
         self.assertEqual("proposed_review_pending", commitment_mapping["lifecycle_state"])
         self.assertEqual(1, len(commitment_mapping["components"]))
+        self.assertEqual(
+            "partial_candidate_services_evidence",
+            procurement_evidence["chain_summary"]["procurement"],
+        )
+        self.assertEqual(8, procurement_acquisition_event["response"]["record_count"])
+        self.assertEqual(8, len(procurement_raw["results"]))
 
     def test_acquisition_event_and_raw_artifact_validate(self) -> None:
         event_path = (
@@ -118,6 +128,34 @@ class ContractTests(unittest.TestCase):
             for scope_id in document["scope"]["ids"]
         }
         self.assertEqual(expected_cases, actual_cases)
+
+    def test_procurement_evidence_prevents_double_counting_and_scope_conflation(self) -> None:
+        bundle = load_json(PROCUREMENT_EVIDENCE)
+        schema = load_json(CONTRACTS / "procurement-evidence.schema.json")
+        validate(bundle, schema)
+        raw_path = SNAPSHOT.parents[1] / bundle["city_dataset_acquisition"]["raw_local_path"].removeprefix("data/")
+        raw = load_json(raw_path)
+        rows = raw["results"]
+        self.assertEqual(602_150, sum(row["montant"] for row in rows))
+        unique_values = {
+            row["marche_id"]: row["montant"]
+            for row in rows
+        }
+        self.assertEqual(204_050, sum(unique_values.values()))
+        self.assertEqual(
+            "post_cutoff_publication_historical_event",
+            next(record for record in bundle["records"] if record["role"] == "award_notice")["observation_state"],
+        )
+        self.assertFalse(bundle["boamp_acquisition"]["raw_bytes_preserved"])
+        self.assertEqual("not_located", bundle["chain_summary"]["attributable_works_procurement"])
+        self.assertEqual("not_verifiable", bundle["chain_summary"]["fulfillment_conclusion"])
+        self.assertTrue(
+            all(
+                record["scope"]["relationship_to_programme"]
+                == "candidate_relevant_object_not_directly_named"
+                for record in bundle["records"]
+            )
+        )
 
     def test_commitment_mapping_preserves_primary_scope_and_review_gate(self) -> None:
         mapping = load_json(COMMITMENT_MAPPING)

@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-07-30
 
 ## How to read this roadmap
 
@@ -22,12 +22,12 @@ The initial decision foundation is merged. A local, non-public vertical slice no
 - All architecture specifications, the remaining development guides, and the remaining governance specifications remain drafts.
 - The product scope is accepted and the three case studies are confirmed through an active source inventory.
 - The exact EUPL-1.2 text, artifact-class notice, and third-party notice are present.
-- Seven pre-stable executable schemas cover source profiles, campaign artifacts, commitment mappings, acquisition events, administrative evidence, pilot snapshots, and Knowledge Passports, with a standard-library validator.
+- Eight pre-stable executable schemas cover source profiles, campaign artifacts, commitment mappings, acquisition events, administrative evidence, procurement evidence, pilot snapshots, and Knowledge Passports, with a standard-library validator.
 - A deterministic local transformation, three-level static HTML product projection, and initial contract, methodology, and presentation guardrail tests exist.
-- One exact bounded API response and acquisition event exist; no production connector, general immutable raw store, database, network service, public API, deployment, or public service exists.
+- Two exact bounded City API responses and acquisition events exist; no production connector, general immutable raw store, database, network service, public API, deployment, or public service exists.
 - Ten metadata-only municipal document versions establish a partial administrative chain without conflating adopted policy, programme finance, reported delivery, and funding forecasts.
 - A minimal read-only CI workflow runs deterministic validation, tests, and the local build on Python 3.11.
-- A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata. Its one-component mapping to the later programme is now an explicit AI-assisted proposal, but independent methodological and authority review, procurement and competent-completion evidence, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
+- A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata. Its one-component mapping to the later programme is now an explicit AI-assisted proposal. A separate executable bundle documents candidate procurement evidence for a 2020 study and 2025 design services, with explicit relationship, amount-grain, scope, cut-off, and rights limits; those sources do not directly name Respire. Independent methodological and authority review, attributable works procurement, competent-completion evidence, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
 - A local Clermont-Ferrand home, bounded Education dashboard, evidence-linked timeline, and printable programme dossier now demonstrate the target navigation. The macro view remains an explicit missing-data placeholder, and no real city-wide macro series, generalized indicator explorer, production report service, or SaaS deployment exists.
 
 ### Exit criteria
@@ -79,6 +79,7 @@ Implement one end-to-end path for the programme and three selected school case s
 - one exact six-UAI API response, acquisition event, and deterministic raw-to-normalized equality check;
 - normalized six-record open-data subset for the three accepted cases;
 - ten metadata-only municipal document versions forming a partial administrative chain;
+- one bounded City procurement response and executable candidate-evidence bundle for study and design services, with BOAMP metadata retained without raw bytes pending rights review;
 - one explicit, review-pending commitment-mapping proposal with a seven-dimension scope comparison and fail-closed output constraints;
 - deterministic validation and transformation;
 - row-level evidence locators and source attribution;
@@ -94,7 +95,7 @@ Implement one end-to-end path for the programme and three selected school case s
 - immutable raw evidence with recovery and governed redaction behavior;
 - parsing, validation, and canonical transformation;
 - source-fragment citations and transformation lineage;
-- generalized immutable raw source versions and governed acquisition events beyond the single bounded prototype;
+- generalized immutable raw source versions and governed acquisition events beyond the two bounded City prototype artifacts;
 - independent review of the proposed commitment-to-action mapping and action-to-impact pathways backed by the remaining authoritative records;
 - browser, responsive-layout, print, and assistive-technology review of the product-shaped navigation prototype;
 - generalized field-level implementation of the ADR-0010 assessment and policy-lineage model beyond the bounded dossier;
