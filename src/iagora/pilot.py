@@ -1141,34 +1141,41 @@ def render_html(passport: dict[str, Any]) -> str:
 
     chain_rows = [
         (
-            "Correspondance promesse → programme",
-            "Proposition structurée, revue indépendante en attente",
+            "Lien entre la promesse et le programme",
+            "Lien proposé ; vérification indépendante encore nécessaire",
             milestone_link("evidence-pev-respire-definition-2023", "Projet éducatif adopté"),
         ),
         (
-            "Politique publique",
-            "Adoption établie",
+            "Décision de la mairie",
+            "Le programme a été adopté",
             milestone_link("evidence-pev-adoption-2023", "Délibération du 5 mai 2023"),
         ),
         (
-            "Autorisation budgétaire",
-            "Établie à l’échelle du programme",
-            milestone_link("evidence-apcp-respire-total-2022", "AP de 4,07 M€")
-            + " ; "
-            + milestone_link("evidence-budget-2023-cp-opened", "810 000 € de CP 2023"),
-        ),
-        (
-            "Dépense exécutée",
-            "Établie à l’échelle du programme, non répartie par école",
-            milestone_link("evidence-account-2022-respire-expenditure", "1,09 M€ en 2022")
+            "Sommes que la mairie pouvait utiliser",
+            "Montants autorisés pour tout le programme ; ce ne sont pas des dépenses",
+            milestone_link(
+                "evidence-apcp-respire-total-2022",
+                "Autorisation totale du programme : 4,07 M€",
+            )
             + " ; "
             + milestone_link(
-                "evidence-budget-2023-prior-mandates", "1 939 810,63 € cumulés avant 2023"
+                "evidence-budget-2023-cp-opened",
+                "Somme prévue pour 2023 : 810 000 €",
             ),
         ),
         (
-            "Marchés publics",
-            "Étude et conception candidates par leur objet ; le programme n’est pas nommé, les travaux et la réception ne sont pas localisés",
+            "Dépenses enregistrées",
+            "Montants connus pour tout le programme, sans détail par école",
+            milestone_link("evidence-account-2022-respire-expenditure", "1,09 M€ en 2022")
+            + " ; "
+            + milestone_link(
+                "evidence-budget-2023-prior-mandates",
+                "1 939 810,63 € d’ordres de paiement enregistrés avant 2023",
+            ),
+        ),
+        (
+            "Contrats publics retrouvés",
+            "Ils concernent des études et de la conception. Ils ne prouvent ni les travaux, ni leur paiement, ni leur fin",
             evidence_link("evidence-procurement-city-study-2020", "Étude notifiée en 2020")
             + " ; "
             + evidence_link("evidence-procurement-boamp-competition-25-110034", "Consultation 2025")
@@ -1176,8 +1183,8 @@ def render_html(passport: dict[str, Any]) -> str:
             + evidence_link("evidence-procurement-boamp-award-26-4348", "Attributions publiées en 2026"),
         ),
         (
-            "Livraison et réception",
-            "Livraison déclarée pour certains sites ; réception compétente non localisée",
+            "Fin des travaux",
+            "La mairie signale des livraisons sur certains sites ; les documents officiels de fin manquent",
             milestone_link("evidence-transition-nestor-reported-use", "Nestor-Perret")
             + " ; "
             + milestone_link("evidence-pierre-curie-reported-delivery", "Curie maternelle")
@@ -1185,9 +1192,9 @@ def render_html(passport: dict[str, Any]) -> str:
             + milestone_link("evidence-jean-zay-forecast-cost", "Jean-Zay : prévision"),
         ),
         (
-            "Résultats et impact",
-            "Non établis",
-            "Aucun indicateur de résultat ni dispositif causal revu",
+            "Résultats et effets sur la ville",
+            "Nous ne le savons pas encore",
+            "Aucune mesure avant-après ni méthode permettant d’attribuer un effet n’a été validée",
         ),
     ]
     rendered_chain_rows = "".join(
@@ -1218,11 +1225,11 @@ def render_html(passport: dict[str, Any]) -> str:
               <h2 id="{html.escape(case['case_id'])}">{html.escape(case['school_name'])}</h2>
               <p><strong>Lecture :</strong> {html.escape(status_labels[case['reported_summary']])}.</p>
               <p>Les lignes par unité scolaire restent distinctes et ne constituent pas une conclusion à l’échelle du programme.</p>
-              <p><strong>Pièces administratives reliées :</strong> {len(case['administrative_evidence_ids'])}. Leur présence ne vaut ni réception des travaux ni preuve d’impact.</p>
+              <p><strong>Documents reliés à cette école :</strong> {len(case['administrative_evidence_ids'])}. Leur présence ne prouve pas à elle seule la fin officielle des travaux ni leurs effets.</p>
               <div class="table-wrap" tabindex="0" aria-label="Tableau défilable des données de {html.escape(case['school_name'])}">
                 <table>
-                  <caption>Données déclarées dans le jeu open data pour {html.escape(case['school_name'])}</caption>
-                  <thead><tr><th scope="col">Unité</th><th scope="col">UAI</th><th scope="col">Année</th><th scope="col">État déclaré</th><th scope="col">Surface désimperméabilisée (m²)</th><th scope="col">Arbres plantés</th></tr></thead>
+                  <caption>Données ouvertes publiées par la mairie pour {html.escape(case['school_name'])}</caption>
+                  <thead><tr><th scope="col">Unité</th><th scope="col">Identifiant national de l’école (UAI)</th><th scope="col">Année</th><th scope="col">État déclaré</th><th scope="col">Surface rendue perméable (m²)</th><th scope="col">Arbres plantés</th></tr></thead>
                   <tbody>{''.join(rows)}</tbody>
                 </table>
               </div>
@@ -1234,7 +1241,7 @@ def render_html(passport: dict[str, Any]) -> str:
         "commitment_mapping_and_methodological_review_incomplete": "La correspondance entre la promesse et le programme attend une revue méthodologique indépendante.",
         "campaign_artifact_raw_bytes_not_preserved_for_rights": "La page de campagne complète n’est pas conservée dans le dépôt en raison des droits de reproduction.",
         "methodological_review_incomplete": "La revue méthodologique globale du POC reste incomplète.",
-        "attributable_works_procurement_and_competent_completion_evidence_missing": "Les marchés de travaux attribuables et les pièces de réception compétente n’ont pas été localisés.",
+        "attributable_works_procurement_and_competent_completion_evidence_missing": "Nous n’avons pas encore trouvé les contrats de travaux reliés aux écoles étudiées ni les documents officiels confirmant leur fin.",
         "outcome_and_impact_evidence_missing": "Les preuves de résultats et d’impact restent absentes.",
         "production_privacy_security_and_retention_review_incomplete": "Les revues de confidentialité, de sécurité et de conservation nécessaires à la production restent incomplètes.",
     }
@@ -1242,11 +1249,11 @@ def render_html(passport: dict[str, Any]) -> str:
         "The primary campaign fragment is unquantified and does not state a delivery date, budget, or number of schoolyards.": "Le fragment primaire n’est pas chiffré et ne précise ni échéance, ni budget, ni nombre de cours d’école.",
         "The all-neighbourhood scope appears in supporting interview evidence, not in the retained primary fragment.": "La portée « tous les quartiers » apparaît dans un entretien de soutien, pas dans le fragment primaire retenu.",
         "Pierre-et-Marie-Curie has different reported states for its maternelle and élémentaire units; this is a scope difference, not a resolved contradiction.": "Pierre-et-Marie-Curie présente des états déclarés différents pour la maternelle et l’élémentaire ; il s’agit d’une différence de périmètre, pas d’une contradiction résolue.",
-        "The 1.09 million euros reported for 2022 and 1,939,810.63 euros of cumulative mandates before 2023 have different periods and precision; they must not be treated as contradictory or interchangeable.": "Les 1,09 M€ déclarés pour 2022 et les 1 939 810,63 € de mandats cumulés avant 2023 couvrent des périodes et des précisions différentes ; ils ne sont ni contradictoires ni interchangeables par défaut.",
-        "The located procurement records cover study, design, and user-assistance services but do not directly name the Respire programme; they remain candidate evidence and do not establish attributable schoolyard works or competent completion.": "Les marchés localisés couvrent des prestations d’étude, de conception et d’assistance à maîtrise d’usage sans nommer directement le programme Respire ; ils restent des preuves candidates et n’établissent ni les travaux attribuables ni leur réception compétente.",
+        "The 1.09 million euros reported for 2022 and 1,939,810.63 euros of cumulative mandates before 2023 have different periods and precision; they must not be treated as contradictory or interchangeable.": "Les 1,09 M€ déclarés pour 2022 et les 1 939 810,63 € d’ordres de paiement enregistrés avant 2023 ne couvrent pas exactement la même période. Nous ne les additionnons pas et ne les remplaçons pas l’un par l’autre.",
+        "The located procurement records cover study, design, and user-assistance services but do not directly name the Respire programme; they remain candidate evidence and do not establish attributable schoolyard works or competent completion.": "Les contrats retrouvés portent sur des études, de la conception et de l’accompagnement des usagers. Ils ne nomment pas directement le programme Respire et ne prouvent ni les travaux dans les écoles ni leur fin officielle.",
         "The 2025 design awards were published and issued after the observation cut-off and therefore remain post-cut-off historical evidence.": "Les attributions de conception de 2025 ont été publiées et contractualisées après la date d’observation ; elles restent donc des preuves historiques postérieures à cette date.",
         "The Pierre-et-Marie-Curie design lot also covers Alphonse-Daudet and cannot be allocated to one school or linked to the reported 2023 maternal delivery.": "Le lot de conception mentionnant Pierre-et-Marie-Curie couvre aussi Alphonse-Daudet ; son montant ne peut être attribué à une seule école ni relié à la livraison maternelle déclarée en 2023.",
-        "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.": "Aucune référence initiale, aucun indicateur de résultat, contrefactuel ou examen de contribution n’a été validé.",
+        "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.": "Nous n’avons pas de mesure de départ validée, ni de mesure des résultats, ni de méthode permettant de savoir si les changements viennent réellement du programme.",
     }
     blockers = "".join(
         f"<li>{html.escape(blocker_labels.get(item, item))}</li>"
@@ -1273,33 +1280,39 @@ def render_html(passport: dict[str, Any]) -> str:
   <section class="content-card" aria-labelledby="titre-dossier">
     <p class="eyebrow">Dossier détaillé · Méthode, périmètres et preuves</p>
     <h1 id="titre-dossier" class="page-title">Respire à la récré</h1>
-    <p class="lede">La vue imprimable du programme étudié, construite à partir du même passeport de connaissance que le tableau de bord.</p>
+    <p class="lede">Ce dossier explique ce qui a été promis, ce que la mairie indique avoir fait, l’argent retrouvé et ce qui reste impossible à vérifier.</p>
     <div class="actions no-print"><a class="button button--secondary" href="../../education/index.html">Retour à l’éducation</a><button class="button" type="button" onclick="window.print()">Imprimer le dossier</button></div>
   </section>
   <div class="banner" role="status">
     <strong>Prototype local — publication bloquée.</strong>
-    Ce rendu démontre la traçabilité technique. Il ne conclut ni à la réalisation de la promesse, ni à un impact sur la ville.
+    Ce dossier est encore en vérification. Il ne permet pas encore de dire que toute la promesse a été tenue ni de mesurer ses effets sur la ville.
   </div>
   <section aria-labelledby="synthese">
-    <h2 id="synthese">Synthèse multidimensionnelle</h2>
-    <p>Chaque dimension reste séparée : documenter une action ou une dépense ne suffit pas à prouver l’accomplissement global ni l’impact.</p>
-    {render_multidimensional_summary()}
+    <h2 id="synthese">L’essentiel en six réponses</h2>
+    <p>Une action réalisée dans une école ou une dépense enregistrée ne suffit pas à prouver que toute la promesse est tenue.</p>
+    {render_multidimensional_summary(passport)}
+  </section>
+  <section aria-labelledby="conclusion">
+    <h2 id="conclusion">La promesse a-t-elle été tenue ?</h2>
+    <p><strong>Nous n’avons pas assez de preuves pour répondre.</strong></p>
+    <p>Le texte de campagne retrouvé ne donne ni nombre d’écoles, ni date de fin, ni budget. La mairie publie des informations sur six unités scolaires étudiées ici, mais ce petit groupe ne représente pas toute la ville. Le lien avec le programme « Respire à la récré » doit aussi être vérifié par une personne indépendante.</p>
   </section>
   <section aria-labelledby="filiation">
-    <div class="theme-card__top"><h2 id="filiation">Filiation de la politique publique</h2><span class="tag tag--pending">Indéterminable</span></div>
-    <p>La séquence est documentée sans attribuer automatiquement le programme à la promesse et sans affirmer qu’il est inédit ou hérité.</p>
+    <div class="theme-card__top"><h2 id="filiation">Le programme vient-il de la promesse ?</h2><span class="tag tag--pending">Lien non vérifié</span></div>
+    <p>Les dates montrent ce qui s’est passé dans quel ordre. Elles ne suffisent pas à prouver que le programme vient directement de la promesse, qu’il est entièrement nouveau ou qu’il poursuit une politique plus ancienne.</p>
     {render_policy_timeline(passport)}
   </section>
   <section aria-labelledby="engagement">
-    <h2 id="engagement">Engagement de campagne retrouvé</h2>
-    <p>La page de campagne archivée présente la proposition <q>{html.escape(passport['campaign_commitment']['wording'])}</q>.</p>
-    <p><a href="{html.escape(passport['provenance']['campaign_artifact']['archive_url'], quote=True)}" rel="external noreferrer">Consulter la capture archivée</a>. Le fragment ne précise ni nombre de cours, ni échéance, ni budget.</p>
+    <h2 id="engagement">Qu’avait promis le candidat ?</h2>
+    <p>La page de campagne archivée contient cette phrase : <q>{html.escape(passport['campaign_commitment']['wording'])}</q>.</p>
+    <p>La capture est <strong>authentifiée avec limites</strong> : elle confirme que cette phrase figurait sur une page de campagne, mais elle ne conserve pas tout le contenu qui a pu exister autour de cette proposition.</p>
+    <p><a href="{html.escape(passport['provenance']['campaign_artifact']['archive_url'], quote=True)}" rel="external noreferrer">Consulter la capture archivée</a>. Dans le passage retrouvé, le candidat ne dit pas combien d’écoles seront concernées, quand les travaux finiront, combien ils coûteront ni comment ils seront financés et organisés.</p>
   </section>
   <section aria-labelledby="correspondance">
-    <h2 id="correspondance">Pourquoi le rapprochement avec « Respire à la récré » est proposé</h2>
+    <h2 id="correspondance">Pourquoi relions-nous cette promesse à « Respire à la récré » ?</h2>
     <p>IAgora conserve un seul composant essentiel : <strong>végétaliser des cours d’école</strong>. Ajouter une quantité, une échéance, une couverture de tous les quartiers ou les objectifs plus détaillés du programme réécrirait la promesse d’origine.</p>
     <p>La proposition de correspondance s’appuie sur le même territoire municipal, un objet compatible et le {milestone_link("evidence-pev-respire-definition-2023", "projet éducatif adopté")}. Le programme est toutefois plus large que la formulation de campagne et aucune pièce conservée n’établit encore directement leur continuité.</p>
-    <p><strong>État de revue :</strong> proposition assistée par IA, en attente d’une revue méthodologique et d’autorité indépendante. Elle ne constitue ni une preuve ni une conclusion de réalisation.</p>
+    <p><strong>Qui a vérifié ce lien ?</strong> Pour le moment, il s’agit d’une proposition assistée par intelligence artificielle. Une personne indépendante doit encore examiner la méthode et les sources. Cette proposition ne prouve pas que la promesse a été réalisée.</p>
     <div class="table-wrap" tabindex="0" aria-label="Tableau défilable comparant la promesse et le programme municipal">
       <table>
         <caption>Comparaison explicite des périmètres</caption>
@@ -1309,13 +1322,9 @@ def render_html(passport: dict[str, Any]) -> str:
     </div>
     <p><strong>Conséquence :</strong> la correspondance reste proposée et le respect de la promesse demeure <strong>non vérifiable</strong>.</p>
   </section>
-  <section aria-labelledby="conclusion">
-    <h2 id="conclusion">Ce que l’on peut conclure</h2>
-    <p>Le document primaire est <strong>authentifié avec limites</strong>. La chaîne administrative est maintenant partiellement documentée, mais le respect de la promesse reste <strong>non vérifiable</strong> : le rapprochement méthodologique n’est pas validé ; les marchés localisés portent sur des études et de la conception, tandis que les travaux attribuables, les réceptions, les résultats et les impacts restent incomplets. Les états scolaires ci-dessous proviennent d’un jeu de données municipal acquis après la date d’observation du 31 décembre 2025.</p>
-  </section>
   <section aria-labelledby="chaine">
-    <h2 id="chaine">Croisement avec les décisions et les finances municipales</h2>
-    <p>Chaque montant conserve son étape et sa portée. Un budget voté n’est pas une dépense, une dépense de programme n’est pas une dépense par école, et un coût annoncé n’est pas un paiement.</p>
+    <h2 id="chaine">Quelles décisions et quels montants avons-nous retrouvés ?</h2>
+    <p>Les montants ne veulent pas tous dire la même chose. Une somme autorisée n’est pas forcément dépensée. Une dépense pour tout le programme ne donne pas le coût de chaque école. Un coût annoncé ne prouve pas que la facture a été payée.</p>
     <div class="table-wrap" tabindex="0" aria-label="Tableau défilable de la chaîne administrative">
       <table>
         <caption>État des preuves administratives au 31 décembre 2025</caption>
@@ -1334,11 +1343,11 @@ def render_html(passport: dict[str, Any]) -> str:
     <ul>{blockers}</ul>
   </section>
   <section aria-labelledby="source">
-    <h2 id="source">Source et passeport</h2>
+    <h2 id="source">Sources et fichier de vérification</h2>
     <p><a href="{source_url}" rel="external noreferrer">Jeu de données de la Ville de Clermont-Ferrand</a>, Licence Ouverte 2.0.</p>
     <p>Les dix PDF administratifs sont enregistrés sous forme de métadonnées, empreintes et citations précises ; leurs octets ne sont pas redistribués avant la revue des droits et de la vie privée.</p>
     <p>La réponse bornée du jeu de marchés de la Ville est conservée sous Licence Ouverte 2.0. Pour BOAMP, seuls les identifiants, métadonnées minimales et l’empreinte de la réponse sont conservés tant que la base de réutilisation n’est pas qualifiée.</p>
-    <p>Le fichier <code>passport.json</code> fournit la version machine-readable équivalente.</p>
+    <p>Le fichier <code>passport.json</code> contient les mêmes informations dans un format lisible par une machine.</p>
   </section>
 </main>
 {render_footer()}

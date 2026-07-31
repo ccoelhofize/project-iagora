@@ -42,6 +42,7 @@ button { font: inherit; }
 .brand { display: inline-flex; align-items: center; gap: .65rem; color: var(--ink); font-size: 1.05rem; font-weight: 850; text-decoration: none; letter-spacing: -.02em; }
 .brand__mark { width: 2rem; height: 2rem; display: grid; place-items: center; border-radius: 50%; color: var(--surface); background: var(--forest); font-size: .76rem; letter-spacing: -.04em; }
 .site-nav { margin-left: auto; display: flex; align-items: center; gap: 1.1rem; }
+.site-nav a { padding-block: .25rem; }
 .site-nav a { color: var(--muted); font-size: .92rem; font-weight: 700; text-decoration: none; }
 .site-nav a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--lime); text-decoration-thickness: .28rem; text-underline-offset: .35rem; }
 .local-badge, .eyebrow, .tag { display: inline-flex; align-items: center; gap: .35rem; border-radius: 999px; font-weight: 800; letter-spacing: .03em; }
@@ -496,15 +497,36 @@ def render_policy_timeline(passport: dict[str, Any]) -> str:
 """
 
 
-def render_multidimensional_summary() -> str:
+def render_multidimensional_summary(passport: dict[str, Any]) -> str:
+    metrics = dashboard_metrics(passport)
+    complete = metrics["state_counts"]["reported_complete"]
+    in_progress = metrics["state_counts"]["reported_in_progress"]
+    not_complete = metrics["state_counts"]["reported_not_complete"]
     items = (
-        ("Respect de la promesse", "Non vérifiable"),
-        ("Mise en œuvre", "Actions documentées"),
-        ("Exécution financière", "Programme partiellement documenté"),
-        ("Productions", "Sorties déclarées limitées"),
-        ("Résultats et impact", "Non établis"),
-        ("Filiation", "Indéterminable"),
-        ("Preuves et revue", "Partielles · revue en attente"),
+        (
+            "Ce qui a été promis",
+            "Végétaliser des cours d’école, sans nombre, date ni budget dans le texte retrouvé",
+        ),
+        (
+            "Ce qui est documenté",
+            f"{metrics['school_units']} unités étudiées : {complete} indiquées comme terminées par la mairie",
+        ),
+        (
+            "Ce qui reste dans les données étudiées",
+            f"{in_progress} unités indiquées en cours et {not_complete} non terminée",
+        ),
+        (
+            "Ce que nous ne pouvons pas vérifier",
+            "Toute la promesse, le coût final, les résultats et les effets sur la ville",
+        ),
+        (
+            "Argent public retrouvé",
+            "4,07 M€ autorisés pour le programme ; 1,09 M€ de dépenses enregistrées en 2022",
+        ),
+        (
+            "État des sources",
+            "Sources partielles et lien promesse-programme encore à vérifier",
+        ),
     )
     return '<div class="summary-grid">' + "".join(
         f'<div class="summary-item"><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong></div>'
