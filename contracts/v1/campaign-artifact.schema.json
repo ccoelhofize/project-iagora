@@ -41,8 +41,9 @@
     "evidence_fragment": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["locator", "quote", "language", "relationship"],
+      "required": ["evidence_id", "locator", "quote", "language", "relationship"],
       "properties": {
+        "evidence_id": {"const": "evidence-campaign-schoolyards-2020"},
         "locator": {"type": "string", "minLength": 1},
         "quote": {"const": "Végétalisation des cours d’école"},
         "language": {"const": "fr"},

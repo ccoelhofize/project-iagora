@@ -41,7 +41,7 @@ The executable administrative bundle is in [`../../data/pilot/administrative-evi
 
 | Stage | Present and supported | Still missing or limited |
 | --- | --- | --- |
-| Campaign-to-programme mapping | A versioned AI-assisted proposal preserves one essential campaign component and compares seven dimensions with the adopted “Respire à la récré” policy using three precise evidence references | Independent methodological and authority reviewers have not accepted direct continuity or the proposed relationship; the proposal cannot establish fulfillment |
+| Campaign-to-programme mapping | A versioned AI-assisted proposal preserves one essential campaign component and compares seven dimensions with the adopted education policy using four precise evidence references and one separately resolvable canonical programme assertion | Independent methodological and authority reviewers have not accepted direct continuity or the proposed relationship; the proposal cannot establish fulfillment |
 | Adopted policy | Final council adoption and attached policy definition | Adoption does not prove implementation or campaign fulfillment |
 | Programme authorization | €4.07 million programme authorization; €810,000 of 2023 payment credits; a €350,000 rephasing | No school-level allocation follows from these programme figures |
 | Executed expenditure | Approved account reports €1.09 million for 2022; the 2023 budget annex reports €1,939,810.63 in cumulative prior mandates | The two figures have different periods and precision; neither is a transaction or school ledger |

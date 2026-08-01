@@ -1,0 +1,423 @@
+{
+  "contract_id": "iagora.commitment-mapping-review",
+  "contract_version": "1.0.0",
+  "review_packet_id": "review-mapping-schoolyards-respire-001",
+  "review_packet_version": "0.5.0",
+  "lifecycle_state": "ready_for_maintainer_review",
+  "prepared_at": "2026-08-01T14:38:46Z",
+  "preparation": {
+    "origin": "ai_assisted",
+    "maintainer_orientation": "validated_for_preparation",
+    "counts_as_independent_review": false
+  },
+  "mapping_reference": {
+    "mapping_id": "mapping-campaign-schoolyards-to-respire-001",
+    "mapping_version": "0.3.0",
+    "local_path": "data/pilot/commitment-mapping.json",
+    "sha256": "286432d9aa2fb2a0f44d68d80cbe250bb2b7f46d14f5ebe2c9bcb0a7066729de"
+  },
+  "review_question": "Is the candidate correspondence between the 2019 schoolyard-regreening commitment and Respire à la récré sufficiently supported for continued local POC presentation under the publication block, without asserting direct implementation, novelty, fulfillment, outcomes, or impact?",
+  "governing_adrs": ["ADR-0002", "ADR-0003", "ADR-0004", "ADR-0010"],
+  "evidence_basis": [
+    {
+      "evidence_id": "evidence-campaign-schoolyards-2020",
+      "role": "original_commitment",
+      "relationship": "supports",
+      "artifact_version_id": "campaign-naturellement-clermont-schoolyards-wayback-20191128144201",
+      "locator": "HTML content block under the heading “Végétalisation” on the archived “Une ville nature” page",
+      "source_url": "https://web.archive.org/web/20191128144201id_/https://olivierbianchi2020.fr/une-ville-nature/"
+    },
+    {
+      "evidence_id": "evidence-pev-respire-definition-2023",
+      "role": "programme_definition",
+      "relationship": "contextualizes",
+      "artifact_version_id": "artifact-pev-2023-adopted-annex",
+      "locator": "printed page 25, Respire à la récré inset",
+      "source_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004_annexe_0.pdf"
+    },
+    {
+      "evidence_id": "evidence-pev-adoption-2023",
+      "role": "policy_adoption",
+      "relationship": "supports",
+      "artifact_version_id": "artifact-pev-2023-final-deliberation",
+      "locator": "page 2 of 3, decision paragraph",
+      "source_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004.pdf"
+    },
+    {
+      "evidence_id": "evidence-pev-policy-history-2023",
+      "role": "policy_lineage_context",
+      "relationship": "contextualizes",
+      "artifact_version_id": "artifact-pev-2023-final-deliberation",
+      "locator": "page 2 of 3, opening paragraphs",
+      "source_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004.pdf"
+    }
+  ],
+  "findings": [
+    {
+      "dimension": "original_formulation",
+      "finding_state": "supported_with_limitations",
+      "explanation": "The archived campaign-controlled page contains the exact wording “Végétalisation des cours d’école”; it is authenticated with limitations rather than treated as a certified profession of faith."
+    },
+    {
+      "dimension": "name",
+      "finding_state": "broader_later_scope",
+      "explanation": "The campaign fragment gives no project name. “Respire à la récré” is a later municipal programme name and must not be retroactively inserted into the original wording."
+    },
+    {
+      "dimension": "territory",
+      "finding_state": "compatible",
+      "explanation": "Both records concern municipal action in Clermont-Ferrand, but common territory alone does not prove continuity."
+    },
+    {
+      "dimension": "beneficiaries",
+      "finding_state": "broader_later_scope",
+      "explanation": "The campaign fragment names schoolyards without an explicit beneficiary group. The later programme expressly addresses children and their varied needs."
+    },
+    {
+      "dimension": "delivery_method",
+      "finding_state": "broader_later_scope",
+      "explanation": "The campaign fragment gives no delivery method. The later programme adds ecological design, cooling, permeability, inclusive play, and co-construction."
+    },
+    {
+      "dimension": "timing",
+      "finding_state": "not_comparable",
+      "explanation": "The campaign fragment states no deadline. The later 2022–2025 policy period cannot become the campaign deadline."
+    },
+    {
+      "dimension": "quantity_and_budget",
+      "finding_state": "not_stated_in_campaign",
+      "explanation": "The original fragment states no site count, denominator, budget, or financing plan, so no implementation percentage or budget-compliance test can be derived from it."
+    },
+    {
+      "dimension": "direct_continuity",
+      "finding_state": "insufficient",
+      "explanation": "No retained first-class fragment directly states that Respire à la récré implements the campaign proposal."
+    },
+    {
+      "dimension": "policy_lineage",
+      "finding_state": "indeterminate_with_predecessors",
+      "explanation": "The 2023 deliberation states that the municipal education project began in 2015, continued with PEV 2 in 2018, and that PEV 2022–2025 followed evaluation of PEV 2018–2022. The bounded evidence cannot classify Respire safely as new, continued, extended, reoriented, or campaign-attributable."
+    }
+  ],
+  "counterevidence": {
+    "state": "no_material_contradiction_identified_in_bounded_corpus",
+    "evidence_ids": [],
+    "search_boundary": "The authenticated campaign fragment, the adopted 2022–2025 education-project deliberation and annex, and the bounded administrative and procurement evidence retained for the pilot.",
+    "limitations": [
+      "The corpus is not exhaustive, so absence of identified counterevidence is not evidence that none exists.",
+      "The documented 2015 and 2018 predecessors are policy-lineage context, not proof that the 2019 commitment had no effect."
+    ]
+  },
+  "ai_advisory_roles": [
+    {
+      "role_id": "ai_methodology_auditor",
+      "role_configuration_version": "0.3.0",
+      "execution_mode": "manually_invoked_non_autonomous",
+      "purpose": "Challenge the decomposition, scope comparison, relationship vocabulary, prohibited inferences, policy-lineage treatment, and plain-language conclusion before the maintainer decides whether the mapping is fit for continued local POC use.",
+      "must_check": [
+        "The original wording remains one unsplit, unquantified essential action component.",
+        "Later programme name, beneficiaries, delivery method, quantity, budget, and dates are not imported into the campaign commitment.",
+        "Candidate correspondence is not presented as implementation, fulfillment, novelty, outcome, impact, or political credit.",
+        "The 2015 and 2018 predecessors and indeterminate policy lineage remain visible.",
+        "No percentage is calculated from an undefined campaign denominator."
+      ],
+      "prohibited_actions": [
+        "Do not approve the mapping or count the audit as human review.",
+        "Do not treat model output as evidence.",
+        "Do not invent a campaign target, deadline, budget, delivery state, or causal claim."
+      ],
+      "output_requirements": [
+        "Return accept, reject, or request_changes as a non-binding recommendation.",
+        "Identify blockers separately from caveats.",
+        "Cite every evidence identifier used.",
+        "State remaining uncertainty and conditions for re-review."
+      ],
+      "status": "completed"
+    },
+    {
+      "role_id": "ai_evidence_authority_auditor",
+      "role_configuration_version": "0.3.0",
+      "execution_mode": "manually_invoked_non_autonomous",
+      "purpose": "Challenge artifact identity, precise locators, authority boundaries, source relationships, policy-history context, counterevidence search limits, rights constraints, and version bindings before maintainer review.",
+      "must_check": [
+        "The campaign wording resolves to the authenticated-with-limitations archived campaign artifact.",
+        "The programme definition and adoption resolve to the exact municipal PDF fragments.",
+        "The 2015 and 2018 predecessor statement is contextual evidence rather than proof of continuity or novelty.",
+        "No source is treated as authoritative outside its fact type and scope.",
+        "The bounded search and absence-of-evidence limitations remain explicit."
+      ],
+      "prohibited_actions": [
+        "Do not approve the mapping or count the audit as human review.",
+        "Do not promote an inaccessible or missing source to authoritative status.",
+        "Do not infer that an action did not occur because a document was not located."
+      ],
+      "output_requirements": [
+        "Return accept, reject, or request_changes as a non-binding recommendation.",
+        "Identify unresolved authority or traceability blockers.",
+        "Cite every evidence identifier and locator used.",
+        "State source, rights, search-boundary, and re-review limitations."
+      ],
+      "status": "completed"
+    }
+  ],
+  "ai_advisory_runs": [
+    {
+      "run_id": "ai-review-methodology-001",
+      "role_id": "ai_methodology_auditor",
+      "role_configuration_version": "0.2.0",
+      "reviewed_mapping_version": "0.2.0",
+      "applicability_state": "historical_superseded_mapping",
+      "status": "completed",
+      "generated_at": "2026-08-01T14:23:14Z",
+      "model_identifier": "Codex GPT-5 family; exact deployment identifier unavailable",
+      "recommendation": "accept",
+      "recommendation_rationale": "The proposal is methodologically fit for continued local POC use under the publication block: it preserves the unquantified campaign wording, limits the relationship to candidate correspondence, keeps the 2015 and 2018 predecessors visible, blocks unsupported percentages and inferences, and retains not_verifiable.",
+      "evidence_ids_reviewed": [
+        "evidence-campaign-schoolyards-2020",
+        "evidence-pev-respire-definition-2023",
+        "evidence-pev-adoption-2023",
+        "evidence-pev-policy-history-2023"
+      ],
+      "findings": [
+        "The original wording remains one unsplit essential action without an invented quantity, deadline, budget, financing plan, beneficiary group, or delivery method.",
+        "The seven scope dimensions and candidate-correspondence role preserve the distinction between compatible subject matter and unproven direct implementation.",
+        "The 2015 and 2018 predecessors remain visible without supporting novelty, continuity, or political-credit conclusions.",
+        "The six-unit chart is explicitly bounded and does not calculate a fulfillment percentage for the city-wide promise.",
+        "Activities, finance, delivery, outcomes, impact, and fulfillment remain separate dimensions."
+      ],
+      "blockers": [],
+      "caveats": [
+        "Some readers may still mistake the proportional six-unit chart for overall promise progress; a comprehension test with non-specialists remains necessary.",
+        "The mapping uses ADR-0010 policy-lineage concepts but does not list ADR-0010 in method.governing_adrs.",
+        "The public phrase about formal programme adoption should say that the council adopted the education project containing Respire à la récré.",
+        "Candidate correspondence should be explained as a possible link still requiring verification in first-read public language."
+      ],
+      "limitations": [
+        "Third-party source bytes are not retained in the repository, so this audit relied on recorded metadata, fingerprints, fragments, and locators.",
+        "The corpus is bounded and non-exhaustive.",
+        "This audit did not establish legal or documentary authority and did not perform a new visual or user-comprehension test.",
+        "This AI output is not evidence, human review, independent review, or permission to publish."
+      ],
+      "rereview_conditions": [
+        "A first-class source directly links the campaign proposal to Respire à la récré.",
+        "New evidence changes the scope, counterevidence record, or interpretation of the 2015 and 2018 predecessors.",
+        "The mapping, method, relationship vocabulary, chart, or public explanation changes materially.",
+        "The project moves from local POC use toward public release."
+      ],
+      "counts_as_human_review": false
+    },
+    {
+      "run_id": "ai-review-evidence-authority-001",
+      "role_id": "ai_evidence_authority_auditor",
+      "role_configuration_version": "0.2.0",
+      "reviewed_mapping_version": "0.2.0",
+      "applicability_state": "historical_superseded_mapping",
+      "status": "completed",
+      "generated_at": "2026-08-01T14:28:44Z",
+      "model_identifier": "Codex GPT-5 family; exact deployment identifier unavailable",
+      "recommendation": "request_changes",
+      "recommendation_rationale": "The four cited sources support a cautious thematic correspondence and their main fingerprints and locators were confirmed, but the campaign evidence identifier and target assertion do not yet resolve end to end as stable canonical records.",
+      "evidence_ids_reviewed": [
+        "evidence-campaign-schoolyards-2020",
+        "evidence-pev-respire-definition-2023",
+        "evidence-pev-adoption-2023",
+        "evidence-pev-policy-history-2023"
+      ],
+      "findings": [
+        "The campaign artifact identity, exact wording, and bounded attribution were confirmed with the recorded limitations.",
+        "The municipal deliberation and annex fingerprints and targeted adoption, programme-definition, and policy-history locators were confirmed.",
+        "Each source remains limited to its fact type and none establishes direct continuity, delivery, outcomes, or impact.",
+        "The mapping, review packet, and snapshot version bindings are internally coherent.",
+        "The absence of identified counterevidence remains correctly limited to a bounded, non-exhaustive corpus, and rights restrictions remain fail-closed."
+      ],
+      "blockers": [
+        "evidence-campaign-schoolyards-2020 is referenced across the mapping and review outputs, but campaign-artifact.json does not assign that stable evidence_id to its evidence_fragment.",
+        "assertion-respire-schoolyard-transformation-policy-2023 is used as the mapping target without a separately resolvable canonical assertion record defining its proposition, version, temporal scope, and state."
+      ],
+      "caveats": [
+        "The bounded counterevidence corpus is described in prose rather than enumerated by version and fingerprint with a reproducible search method.",
+        "The campaign rights state differs between the source profile and campaign bundle and should be harmonized without pre-empting qualified legal review.",
+        "Observed municipal licence notices and current rights_unknown states should be reconciled by qualified review.",
+        "One documentation statement still counts three precise mapping references although mapping version 0.2.0 uses four.",
+        "Non-retention of third-party bytes leaves future reproduction dependent on source availability despite recorded fingerprints."
+      ],
+      "limitations": [
+        "This was a bounded AI audit, not an exhaustive search for counterevidence or a legal review.",
+        "It did not assess delivery, spending, outcomes, or impact.",
+        "PDF text and targeted pages were inspected without a complete visual-layout review.",
+        "This AI output is not evidence, human review, independent review, or permission to publish."
+      ],
+      "rereview_conditions": [
+        "Assign a stable resolvable identifier to the campaign evidence fragment.",
+        "Create or explicitly resolve the canonical target assertion.",
+        "Enumerate and version the bounded counterevidence corpus and search method.",
+        "Harmonize rights states and correct the evidence-count documentation.",
+        "Recalculate fingerprints and repeat deterministic validation after any correction."
+      ],
+      "counts_as_human_review": false
+    },
+    {
+      "run_id": "ai-review-methodology-002",
+      "role_id": "ai_methodology_auditor",
+      "role_configuration_version": "0.3.0",
+      "reviewed_mapping_version": "0.3.0",
+      "applicability_state": "superseded_by_correction",
+      "status": "completed",
+      "generated_at": "2026-08-01T14:50:43Z",
+      "model_identifier": "Codex GPT-5 family; exact deployment identifier unavailable",
+      "recommendation": "request_changes",
+      "recommendation_rationale": "Mapping version 0.3.0 corrected the first-cycle traceability issues, but two active summaries still overstated direct programme adoption and the generated dossier retained the superseded timeline wording. Those presentation defects required correction before maintainer review.",
+      "evidence_ids_reviewed": [
+        "evidence-campaign-schoolyards-2020",
+        "evidence-pev-respire-definition-2023",
+        "evidence-pev-adoption-2023",
+        "evidence-pev-policy-history-2023"
+      ],
+      "findings": [
+        "The campaign fragment identifier, canonical target assertion, ADR-0010 reference, candidate-correspondence role, policy-lineage limits, and refusal of an unsupported percentage were methodologically sound.",
+        "Two active summaries stated that the programme itself was adopted although the evidence establishes adoption of the education project containing the Respire action.",
+        "The generated dossier still displayed the superseded direct-programme-adoption timeline wording."
+      ],
+      "blockers": [
+        "Correct every active summary so it states that the council adopted the education project containing the Respire action.",
+        "Regenerate the local POC and verify removal of the superseded timeline wording."
+      ],
+      "caveats": [
+        "A non-specialist comprehension test remains necessary for the bounded proportional six-unit chart.",
+        "Candidate correspondence still needs a plain-language explanation wherever exposed.",
+        "The review packet preparation timestamp needed reconciliation with mapping version 0.3.0.",
+        "The mapping and review-packet lifecycle vocabularies describe different review layers and may still need future simplification."
+      ],
+      "limitations": [
+        "Third-party source bytes are not retained in the repository.",
+        "The corpus is bounded and non-exhaustive.",
+        "This audit did not establish source authority, spending, delivery, outcomes, or impact and did not perform a new user-comprehension test.",
+        "This recommendation applied only to continued local POC use under the publication block.",
+        "This AI output is not evidence, human review, independent review, or permission to publish."
+      ],
+      "rereview_conditions": [
+        "Correct and rebuild every generated projection before repeating the methodological audit.",
+        "A first-class source directly links the campaign proposal to Respire à la récré.",
+        "The mapping, method, relationship vocabulary, chart, public explanation, or policy-lineage interpretation changes materially.",
+        "The project moves from local POC use toward public release."
+      ],
+      "counts_as_human_review": false
+    },
+    {
+      "run_id": "ai-review-evidence-authority-002",
+      "role_id": "ai_evidence_authority_auditor",
+      "role_configuration_version": "0.3.0",
+      "reviewed_mapping_version": "0.3.0",
+      "applicability_state": "current",
+      "status": "completed",
+      "generated_at": "2026-08-01T14:51:37Z",
+      "model_identifier": "Codex GPT-5 family; exact deployment identifier unavailable",
+      "recommendation": "accept",
+      "recommendation_rationale": "Both first-cycle traceability blockers are resolved end to end. The campaign fragment carries its stable identifier, the municipal target is a distinct versioned canonical assertion linked to exact definition and adoption fragments, and all file fingerprints and evidence roles support continued local POC use without establishing direct implementation, novelty, fulfillment, outcomes, or impact.",
+      "evidence_ids_reviewed": [
+        "evidence-campaign-schoolyards-2020",
+        "evidence-pev-respire-definition-2023",
+        "evidence-pev-adoption-2023",
+        "evidence-pev-policy-history-2023"
+      ],
+      "findings": [
+        "The campaign evidence identifier resolves directly from the source fragment through the mapping and review packet.",
+        "The target assertion resolves as version 0.1.0 with explicit proposition, lifecycle, scope, derivation, limitations, and two evidence relationships.",
+        "Programme definition, policy adoption, and policy-history context remain separate evidence roles with fact-specific authority limits.",
+        "The four evidence identifiers and the campaign, administrative, assertion, mapping, review, and snapshot fingerprints are internally coherent.",
+        "Rights and counterevidence handling remain fail-closed and do not turn missing material into evidence of absence."
+      ],
+      "blockers": [],
+      "caveats": [
+        "Third-party source bytes are not retained, so their declared content fingerprints cannot be independently recomputed from repository bytes.",
+        "The bounded counterevidence corpus is not yet an enumerated, versioned, reproducible search record.",
+        "Municipal rights states remain conservative but require qualified reconciliation across layers.",
+        "Consumers must filter historical advisory runs by mapping version and applicability state."
+      ],
+      "limitations": [
+        "The audit was limited to the bounded repository corpus and did not perform new external acquisition or exhaustive counterevidence research.",
+        "It provides no legal opinion on licences, reuse, or retention.",
+        "It did not verify works, payments, competent acceptance, outcomes, or impact.",
+        "This recommendation applies only to continued local POC use under the publication block.",
+        "This AI output is not evidence, human review, independent review, or permission to publish."
+      ],
+      "rereview_conditions": [
+        "A first-class source directly links the campaign proposal to Respire à la récré.",
+        "New evidence changes authority, scope, evidence relationships, or policy-lineage interpretation.",
+        "The mapping, target assertion, evidence fragments, versions, fingerprints, search boundary, or rights decision changes materially.",
+        "The project moves from local POC use toward public release."
+      ],
+      "counts_as_human_review": false
+    },
+    {
+      "run_id": "ai-review-methodology-003",
+      "role_id": "ai_methodology_auditor",
+      "role_configuration_version": "0.3.0",
+      "reviewed_mapping_version": "0.3.0",
+      "applicability_state": "current",
+      "status": "completed",
+      "generated_at": "2026-08-01T14:56:52Z",
+      "model_identifier": "Codex GPT-5 family; exact deployment identifier unavailable",
+      "recommendation": "accept",
+      "recommendation_rationale": "The corrections remove all three statements that overstated direct programme adoption. The current projection says that the council adopted the education project containing Respire à la récré, while the unquantified promise, candidate correspondence, 2015 and 2018 predecessors, bounded six-unit chart, not_verifiable conclusion, and publication block remain intact.",
+      "evidence_ids_reviewed": [
+        "evidence-campaign-schoolyards-2020",
+        "evidence-pev-respire-definition-2023",
+        "evidence-pev-adoption-2023",
+        "evidence-pev-policy-history-2023"
+      ],
+      "findings": [
+        "The primary campaign wording remains one unquantified essential component without imported programme details.",
+        "The three obsolete direct-programme-adoption statements are absent from the source and generated HTML.",
+        "The current 2023 milestone accurately distinguishes adoption of the containing education project from execution of the Respire action.",
+        "Candidate correspondence, the seven scope dimensions, and policy-lineage uncertainty remain explicit.",
+        "The six-unit chart remains bounded to three studied schools and is not presented as overall promise progress.",
+        "The mapping, packet, and projection retain not_verifiable, prohibit a global implementation percentage, and keep publication ineligible."
+      ],
+      "blockers": [],
+      "caveats": [
+        "The 2023 milestone could link the programme definition annex separately from the adoption deliberation for maximum precision.",
+        "A non-specialist comprehension test remains necessary for the bounded proportional chart.",
+        "Final fingerprints must be recalculated and deterministic validation repeated after persisting the audit history."
+      ],
+      "limitations": [
+        "Third-party campaign and municipal PDF bytes are not retained in the repository.",
+        "External rereading failed during this final pass, so no new independent source authentication was performed.",
+        "The corpus is bounded and non-exhaustive.",
+        "This audit did not verify works, payments, competent acceptance, outcomes, or impact.",
+        "This AI output is not evidence, human review, independent review, or permission to publish."
+      ],
+      "rereview_conditions": [
+        "A first-class source directly links the campaign proposal to Respire à la récré.",
+        "New evidence changes scope, correspondence, counterevidence, or policy-lineage interpretation.",
+        "The promise, mapping, target assertion, relationship vocabulary, chart, or public explanation changes materially.",
+        "The project moves from local POC use toward public release."
+      ],
+      "counts_as_human_review": false
+    }
+  ],
+  "human_review_requirements": {
+    "interim_poc_reviewer_role": "maintainer_reviewer",
+    "ai_advisory_required_before_maintainer_review": true,
+    "independent_publication_roles": ["methodological_reviewer", "evidence_authority_reviewer"],
+    "independent_reviewer_separation_required": true,
+    "proposal_preparer_ineligible_for_independent_review": true,
+    "allowed_decisions": ["accept", "reject", "request_changes"],
+    "identity_policy": "role_and_pseudonymous_reference_only"
+  },
+  "maintainer_review": null,
+  "independent_human_reviews": [],
+  "independent_final_decision": null,
+  "rereview_conditions": [
+    "A first-class source directly connects the campaign proposal to Respire à la récré.",
+    "New evidence materially changes the compared scope, policy-lineage interpretation, or counterevidence record.",
+    "The mapping vocabulary or governing method changes.",
+    "The maintainer reviews both completed AI advisory audits and the original evidence before recording an interim POC decision.",
+    "Two distinct independent humans complete the publication-grade methodological and evidence-authority reviews for mapping version 0.3.0."
+  ],
+  "output_constraints": {
+    "fulfillment_conclusion": "not_verifiable",
+    "publication_eligible": false,
+    "implementation_percentage_allowed": false
+  }
+}

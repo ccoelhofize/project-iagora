@@ -1,10 +1,10 @@
 {
   "contract_id": "iagora.pilot-snapshot",
-  "contract_version": "1.4.0",
+  "contract_version": "1.6.0",
   "snapshot_id": "pilot-respire-recre-2025",
-  "snapshot_version": "0.5.0",
+  "snapshot_version": "0.10.0",
   "observation_cutoff": "2025-12-31",
-  "generated_at": "2026-07-30T12:24:19Z",
+  "generated_at": "2026-08-01T14:56:52Z",
   "territory": "fr-63113-clermont-ferrand",
   "programme": {
     "programme_id": "programme-respire-a-la-recre",
@@ -19,20 +19,33 @@
     "source_id": "src-campaign-2020-primary",
     "artifact_version_id": "campaign-naturellement-clermont-schoolyards-wayback-20191128144201",
     "local_path": "data/pilot/campaign-artifact.json",
-    "sha256": "afa6405a147185bf979eb995a12f32fe4258631f970f21f7875908ea31744308"
+    "sha256": "c2b12db5640189e012d9b5edccda257d693f9c8e2cff1381953325d331b5327d"
   },
   "commitment_mapping": {
     "mapping_id": "mapping-campaign-schoolyards-to-respire-001",
-    "mapping_version": "0.1.0",
+    "mapping_version": "0.3.0",
     "lifecycle_state": "proposed_review_pending",
     "local_path": "data/pilot/commitment-mapping.json",
-    "sha256": "e8da3707e9f2792ef5988909626cc635a05e8d191f6ee8b0e7f15103b26cfdd1"
+    "sha256": "286432d9aa2fb2a0f44d68d80cbe250bb2b7f46d14f5ebe2c9bcb0a7066729de"
+  },
+  "canonical_assertions": {
+    "bundle_id": "canonical-assertions-respire-recre-pilot",
+    "bundle_version": "0.1.0",
+    "local_path": "data/pilot/canonical-assertions.json",
+    "sha256": "6967a6cbacf8f0e3202f07a882690538dfddb4bfee6705bce94c5c91832de93e"
+  },
+  "commitment_mapping_review": {
+    "review_packet_id": "review-mapping-schoolyards-respire-001",
+    "review_packet_version": "0.5.0",
+    "lifecycle_state": "ready_for_maintainer_review",
+    "local_path": "data/pilot/commitment-mapping-review.json",
+    "sha256": "4001cde7230c550abcc804f6b38c96a48ea6d49775064f6cc4ea903830e64c85"
   },
   "administrative_evidence": {
     "bundle_id": "administrative-evidence-respire-recre-2025",
-    "bundle_version": "0.1.0",
+    "bundle_version": "0.2.0",
     "local_path": "data/pilot/administrative-evidence.json",
-    "sha256": "2bf39dec8876f133eefc98dd8ec6956386df134e54f2281acc1b6edf720f87d9",
+    "sha256": "20df56b0dc97028d14ec7ab74ce0eb5c6f566a980388b572ec00f2e55ed47df0",
     "raw_bytes_preserved": false
   },
   "procurement_evidence": {

@@ -2,21 +2,31 @@
 
 **Status:** Pre-stable implementation
 **Owner:** Maintainers
-**Last reviewed:** 2026-07-30
+**Last reviewed:** 2026-08-01
 
 The `v1` directory contains the first field-level contracts for the bounded
 “Respire à la récré” proof of concept. They implement a deliberately small
 subset of the accepted logical model and do not freeze a future database or API.
 
 The campaign-artifact contract records an archived primary fragment without
-redistributing restricted HTML. The commitment-mapping contract records one
+redistributing restricted HTML and now assigns its cited fragment a stable
+evidence identifier. The bounded canonical-assertions contract makes the
+municipal target proposition separately resolvable and keeps its two evidence
+relationships distinct from the assertion itself. The commitment-mapping
+contract records one
 essential, unquantified action component and an explicit scope comparison with
-the later municipal programme. It is an AI-assisted proposal with mandatory
-independent review, not an accepted mapping or fulfillment conclusion.
+the later municipal programme. It uses a cautious candidate-correspondence role
+rather than asserting implementation. The separate commitment-mapping-review
+contract binds the exact proposal, canonical target assertion, and evidence
+versions to two configured AI
+advisory roles, one interim human maintainer decision for local POC use, and two
+distinct independent human roles retained as public-release requirements. All
+records remain fail-closed and do not establish a publishable mapping or
+fulfillment conclusion.
 
 The pilot-snapshot contract accepts the historical `1.0.0` state and the
-additive `1.1.0` through `1.4.0` evidence references; both snapshot files remain
-validateable, while the current build uses `0.5.0`. The `1.2.0` Knowledge
+additive `1.1.0` through `1.6.0` evidence references; both snapshot files remain
+validateable, while the current build uses `0.10.0`. The `1.2.0` Knowledge
 Passport projection exposes the proposed mapping and partial candidate procurement chain without changing the
 fail-closed publication state.
 The acquisition-event contract covers the two bounded City API responses and
@@ -26,7 +36,9 @@ result, and limitations. It is not a general production acquisition contract.
 The administrative-evidence contract binds ten official document versions to
 precise fragments while keeping adopted policy, budget authorization, executed
 expenditure, reported delivery, funding forecasts, and publication events
-distinct. The procurement-evidence contract separately records candidate
+distinct. It also records the 2015 and 2018 education-policy predecessors as
+policy-lineage context rather than proof of continuity or novelty. The
+procurement-evidence contract separately records candidate
 evidence for a 2020 study, a 2025 competition, and two service awards without
 treating them as direct Respire records, works, payments, completion, or
 fulfillment. It enforces procurement-identifier amount

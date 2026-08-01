@@ -4,7 +4,7 @@
   "sources": [
     {
       "source_id": "src-campaign-2020-primary",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "link_only",
       "title": "Archived Naturellement Clermont 2020 campaign page — Une ville nature",
       "source_class": "campaign_artifact",
@@ -13,12 +13,12 @@
       "purpose": "Authenticate the original wording, scope, conditions, and target of the schoolyard commitment.",
       "fact_types": ["original_campaign_wording"],
       "territory": "fr-63113-clermont-ferrand",
-      "rights": {"state": "rights_unknown", "license_id": null, "redistribution": "blocked", "review_state": "pending"},
+      "rights": {"state": "restricted_by_archived_notice", "license_id": null, "redistribution": "blocked", "review_state": "pending"},
       "privacy": {"classification": "public_official_role", "personal_data_expected": true, "child_data_allowed": false},
       "security": {"risk_tier": "medium", "remote_content_untrusted": true},
       "acquisition": {"mode": "manual_link", "frequency": "one_off", "prototype_authorized": false},
       "retention": {"class": "metadata_only", "state": "active", "review_required_before_production": true},
-      "review": {"verified_at": "2026-07-29", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["Wayback capture authenticates a campaign-controlled web publication, not a legally certified profession of faith.", "The archived page states an unquantified schoolyard-regreening commitment; the wider all-neighbourhood scope appears only in supporting interview evidence.", "The archived legal notice blocks repository redistribution of the full page without permission."]}
+      "review": {"verified_at": "2026-08-01", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["Wayback capture authenticates a campaign-controlled web publication, not a legally certified profession of faith.", "The archived page states an unquantified schoolyard-regreening commitment; the wider all-neighbourhood scope appears only in supporting interview evidence.", "The archived legal notice blocks repository redistribution of the full page without permission; the source-profile rights state was aligned with the artifact bundle after REVIEW-0001."]}
     },
     {
       "source_id": "src-campaign-2020-interview",

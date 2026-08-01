@@ -2,9 +2,9 @@
   "contract_id": "iagora.administrative-evidence",
   "contract_version": "1.0.0",
   "bundle_id": "administrative-evidence-respire-recre-2025",
-  "bundle_version": "0.1.0",
+  "bundle_version": "0.2.0",
   "observation_cutoff": "2025-12-31",
-  "assembled_at": "2026-07-29T14:52:03+00:00",
+  "assembled_at": "2026-08-01T13:17:57+00:00",
   "territory": "fr-63113-clermont-ferrand",
   "raw_bytes_preserved": false,
   "documents": [
@@ -21,7 +21,8 @@
       "rights": {"state": "rights_review_pending", "redistribution": "blocked", "notice_url": "https://clermont-ferrand.fr/mentions-legales-0", "review_state": "qualified_review_pending"},
       "authority": {"fact_type": "adopted_policy", "outcome": "authoritative", "basis": "The municipal council final deliberation records adoption of the attached 2022–2025 education project.", "limitations": ["Adoption of the policy does not by itself prove continuity from the campaign commitment, implementation, or impact."]},
       "evidence_fragments": [
-        {"evidence_id": "evidence-pev-adoption-2023", "relationship": "supports", "locator": "page 2 of 3, decision paragraph", "statement": "The council adopted the 2022–2025 municipal education project unanimously.", "stage": "adopted_policy"}
+        {"evidence_id": "evidence-pev-adoption-2023", "relationship": "supports", "locator": "page 2 of 3, decision paragraph", "statement": "The council adopted the 2022–2025 municipal education project unanimously.", "stage": "adopted_policy"},
+        {"evidence_id": "evidence-pev-policy-history-2023", "relationship": "contextualizes", "locator": "page 2 of 3, opening paragraphs", "statement": "The deliberation states that the municipal education project began in 2015, continued with PEV 2 in 2018, and that the 2022–2025 version was built from the evaluation of PEV 2018–2022.", "stage": "adopted_policy"}
       ]
     },
     {
@@ -197,7 +198,7 @@
     }
   ],
   "chain_summary": {
-    "commitment_mapping": "candidate_evidence_found_review_incomplete",
+    "commitment_mapping": "compatible_subject_and_scope_direct_continuity_unverified",
     "policy_adoption": "evidenced",
     "budget_authorization": "evidenced_at_programme_level",
     "executed_expenditure": "evidenced_at_programme_level",

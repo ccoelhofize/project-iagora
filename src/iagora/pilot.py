@@ -28,7 +28,9 @@ CONTRACTS = ROOT / "contracts" / "v1"
 SOURCE_PROFILES = ROOT / "data" / "sources" / "source-profiles.json"
 SNAPSHOT = ROOT / "data" / "pilot" / "pilot-snapshot.json"
 CAMPAIGN_ARTIFACT = ROOT / "data" / "pilot" / "campaign-artifact.json"
+CANONICAL_ASSERTIONS = ROOT / "data" / "pilot" / "canonical-assertions.json"
 COMMITMENT_MAPPING = ROOT / "data" / "pilot" / "commitment-mapping.json"
+COMMITMENT_MAPPING_REVIEW = ROOT / "data" / "pilot" / "commitment-mapping-review.json"
 ADMINISTRATIVE_EVIDENCE = ROOT / "data" / "pilot" / "administrative-evidence.json"
 PROCUREMENT_EVIDENCE = ROOT / "data" / "pilot" / "procurement-evidence.json"
 
@@ -87,6 +89,8 @@ def validate_inputs(
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
 ]:
     profiles_path = root / SOURCE_PROFILES.relative_to(ROOT)
     snapshot_path = root / SNAPSHOT.relative_to(ROOT)
@@ -96,9 +100,19 @@ def validate_inputs(
     campaign_artifact = validate_files(
         campaign_path, root / "contracts/v1/campaign-artifact.schema.json"
     )
+    canonical_assertions_path = root / snapshot["canonical_assertions"]["local_path"]
+    canonical_assertions = validate_files(
+        canonical_assertions_path,
+        root / "contracts/v1/canonical-assertions.schema.json",
+    )
     mapping_path = root / snapshot["commitment_mapping"]["local_path"]
     commitment_mapping = validate_files(
         mapping_path, root / "contracts/v1/commitment-mapping.schema.json"
+    )
+    mapping_review_path = root / snapshot["commitment_mapping_review"]["local_path"]
+    commitment_mapping_review = validate_files(
+        mapping_review_path,
+        root / "contracts/v1/commitment-mapping-review.schema.json",
     )
     administrative_path = root / snapshot["administrative_evidence"]["local_path"]
     administrative_evidence = validate_files(
@@ -255,6 +269,8 @@ def validate_inputs(
         raise ContractViolation("Campaign artifact must remain metadata-only and link-only")
     if campaign_source["rights"]["redistribution"] != "blocked":
         raise ContractViolation("Campaign artifact redistribution must remain blocked")
+    if campaign_source["rights"]["state"] != campaign_artifact["rights"]["state"]:
+        raise ContractViolation("Campaign source and artifact rights states must remain aligned")
     if campaign_artifact["raw_bytes_preserved"]:
         raise ContractViolation("Restricted campaign HTML must not be committed to the public repository")
     if (
@@ -296,6 +312,11 @@ def validate_inputs(
     ):
         raise ContractViolation("Commitment mapping must preserve the exact primary wording")
     if (
+        commitment_mapping["original_commitment"]["evidence_id"]
+        != campaign_artifact["evidence_fragment"]["evidence_id"]
+    ):
+        raise ContractViolation("Campaign evidence identifier does not resolve to its fragment")
+    if (
         commitment_mapping["target_programme"]["programme_id"]
         != snapshot["programme"]["programme_id"]
     ):
@@ -328,6 +349,10 @@ def validate_inputs(
         raise ContractViolation("Proposed mapping cannot change the fulfillment conclusion")
     if commitment_mapping["output_constraints"]["publication_eligible"]:
         raise ContractViolation("Proposed mapping cannot authorize publication")
+    if commitment_mapping["mapping"]["relationship_role"] != "candidate_correspondence":
+        raise ContractViolation(
+            "Review-pending mapping must describe a candidate correspondence, not implementation"
+        )
     required_comparison_dimensions = {
         "territory",
         "action_and_object",
@@ -342,6 +367,155 @@ def validate_inputs(
     }
     if actual_comparison_dimensions != required_comparison_dimensions:
         raise ContractViolation("Commitment mapping scope comparison is incomplete")
+
+    canonical_ref = snapshot["canonical_assertions"]
+    if file_sha256(canonical_assertions_path) != canonical_ref["sha256"]:
+        raise ContractViolation("Canonical assertion bundle fingerprint does not match snapshot")
+    if (
+        canonical_assertions["bundle_id"] != canonical_ref["bundle_id"]
+        or canonical_assertions["bundle_version"] != canonical_ref["bundle_version"]
+    ):
+        raise ContractViolation("Canonical assertion bundle reference does not resolve")
+    assertions_by_id = {
+        item["assertion_id"]: item for item in canonical_assertions["assertions"]
+    }
+    target_assertion = assertions_by_id.get(
+        commitment_mapping["target_programme"]["target_assertion_id"]
+    )
+    if target_assertion is None:
+        raise ContractViolation("Commitment mapping target assertion does not resolve")
+    if (
+        target_assertion["assertion_version"]
+        != commitment_mapping["target_programme"]["target_assertion_version"]
+        or target_assertion["assertion_id"]
+        != commitment_mapping["mapping"]["target_assertion_id"]
+        or target_assertion["assertion_version"]
+        != commitment_mapping["mapping"]["target_assertion_version"]
+    ):
+        raise ContractViolation("Commitment mapping does not bind the exact assertion version")
+    if (
+        commitment_mapping["target_programme"]["target_assertion_bundle_id"]
+        != canonical_assertions["bundle_id"]
+    ):
+        raise ContractViolation("Commitment mapping assertion bundle does not resolve")
+    administrative_fragment_ids = {
+        fragment["evidence_id"]
+        for document in administrative_evidence["documents"]
+        for fragment in document["evidence_fragments"]
+    }
+    assertion_evidence_ids = set(target_assertion["derivation"]["evidence_ids"])
+    if not assertion_evidence_ids <= administrative_fragment_ids:
+        raise ContractViolation("Canonical assertion evidence does not resolve")
+    relationship_evidence_ids = {
+        item["evidence_id"] for item in canonical_assertions["evidence_relationships"]
+    }
+    if relationship_evidence_ids != assertion_evidence_ids:
+        raise ContractViolation("Canonical assertion evidence relationships are incomplete")
+
+    mapping_review_ref = snapshot["commitment_mapping_review"]
+    mapping_review_hash = file_sha256(mapping_review_path)
+    if mapping_review_hash != mapping_review_ref["sha256"]:
+        raise ContractViolation(
+            f"{mapping_review_path}: fingerprint mismatch; expected "
+            f"{mapping_review_ref['sha256']}, got {mapping_review_hash}"
+        )
+    if (
+        commitment_mapping_review["review_packet_id"]
+        != mapping_review_ref["review_packet_id"]
+        or commitment_mapping_review["review_packet_version"]
+        != mapping_review_ref["review_packet_version"]
+        or commitment_mapping_review["lifecycle_state"]
+        != mapping_review_ref["lifecycle_state"]
+    ):
+        raise ContractViolation("Commitment-mapping review packet reference does not resolve")
+    review_mapping_ref = commitment_mapping_review["mapping_reference"]
+    if (
+        review_mapping_ref["mapping_id"] != commitment_mapping["mapping_id"]
+        or review_mapping_ref["mapping_version"] != commitment_mapping["mapping_version"]
+        or review_mapping_ref["sha256"] != mapping_ref["sha256"]
+    ):
+        raise ContractViolation("Review packet does not bind the exact mapping version")
+    advisory_roles = {
+        item["role_id"]: item for item in commitment_mapping_review["ai_advisory_roles"]
+    }
+    if len(commitment_mapping_review["ai_advisory_roles"]) != 2 or set(advisory_roles) != {
+        "ai_methodology_auditor",
+        "ai_evidence_authority_auditor",
+    }:
+        raise ContractViolation("Both AI advisory roles must be configured")
+    advisory_runs = commitment_mapping_review["ai_advisory_runs"]
+    if any(item["counts_as_human_review"] for item in advisory_runs):
+        raise ContractViolation("AI advisory runs cannot count as human review")
+    current_runs = [
+        item
+        for item in advisory_runs
+        if item["reviewed_mapping_version"] == commitment_mapping["mapping_version"]
+        and item["applicability_state"] == "current"
+    ]
+    if commitment_mapping_review["lifecycle_state"] == "ready_for_ai_advisory_review":
+        if any(item["status"] != "configured_not_run" for item in advisory_roles.values()):
+            raise ContractViolation("Current AI advisory roles must be configured but not run")
+        if current_runs:
+            raise ContractViolation("Corrected mapping cannot retain current-version audit outputs")
+    elif commitment_mapping_review["lifecycle_state"] == "ready_for_maintainer_review":
+        if any(item["status"] != "completed" for item in advisory_roles.values()):
+            raise ContractViolation("Both configured AI advisory roles must be completed")
+        if len(current_runs) != 2:
+            raise ContractViolation("The maintainer review requires exactly two current AI runs")
+        runs_by_role = {item["role_id"]: item for item in current_runs}
+        if set(runs_by_role) != set(advisory_roles):
+            raise ContractViolation("Each configured AI advisory role must have one current run")
+    else:
+        raise ContractViolation("Unsupported current commitment-mapping review lifecycle")
+    if commitment_mapping_review["maintainer_review"] is not None:
+        raise ContractViolation("The maintainer review must follow both AI advisory audits")
+    if commitment_mapping_review["independent_human_reviews"]:
+        raise ContractViolation("The prepared review packet has no independent human reviews")
+    if commitment_mapping_review["independent_final_decision"] is not None:
+        raise ContractViolation("The prepared review packet cannot contain an independent final decision")
+    if commitment_mapping_review["preparation"]["counts_as_independent_review"]:
+        raise ContractViolation("AI-assisted preparation cannot count as independent review")
+    review_requirements = commitment_mapping_review["human_review_requirements"]
+    if review_requirements["interim_poc_reviewer_role"] != "maintainer_reviewer":
+        raise ContractViolation("The local POC pathway must retain one maintainer reviewer")
+    if not review_requirements["ai_advisory_required_before_maintainer_review"]:
+        raise ContractViolation("Both AI advisory audits must precede maintainer review")
+    if set(review_requirements["independent_publication_roles"]) != {
+        "methodological_reviewer",
+        "evidence_authority_reviewer",
+    }:
+        raise ContractViolation("Both independent publication-review roles must remain required")
+    if not review_requirements["independent_reviewer_separation_required"]:
+        raise ContractViolation("Publication-grade independent reviewers must remain separated")
+    review_evidence_ids = {
+        item["evidence_id"] for item in commitment_mapping_review["evidence_basis"]
+    }
+    if review_evidence_ids != set(commitment_mapping["mapping"]["evidence_ids"]):
+        raise ContractViolation("Review packet evidence differs from the mapping evidence")
+    if any(
+        set(item["evidence_ids_reviewed"]) != review_evidence_ids
+        for item in current_runs
+    ):
+        raise ContractViolation("Each AI advisory audit must inspect the complete evidence basis")
+    required_review_dimensions = {
+        "original_formulation",
+        "name",
+        "territory",
+        "beneficiaries",
+        "delivery_method",
+        "timing",
+        "quantity_and_budget",
+        "direct_continuity",
+        "policy_lineage",
+    }
+    if {item["dimension"] for item in commitment_mapping_review["findings"]} != required_review_dimensions:
+        raise ContractViolation("Commitment-mapping review findings are incomplete")
+    if commitment_mapping_review["output_constraints"] != {
+        "fulfillment_conclusion": "not_verifiable",
+        "publication_eligible": False,
+        "implementation_percentage_allowed": False,
+    }:
+        raise ContractViolation("Review preparation must remain fail-closed")
 
     administrative_ref = snapshot["administrative_evidence"]
     if administrative_evidence["bundle_id"] != administrative_ref["bundle_id"]:
@@ -379,6 +553,7 @@ def validate_inputs(
     expected_input_hashes = {
         snapshot["campaign_artifact"]["local_path"]: snapshot["campaign_artifact"]["sha256"],
         snapshot["administrative_evidence"]["local_path"]: snapshot["administrative_evidence"]["sha256"],
+        snapshot["canonical_assertions"]["local_path"]: snapshot["canonical_assertions"]["sha256"],
     }
     mapping_input_hashes = {
         item["local_path"]: item["sha256"]
@@ -546,7 +721,9 @@ def validate_inputs(
         acquisition_event,
         raw_dataset,
         administrative_evidence,
+        canonical_assertions,
         commitment_mapping,
+        commitment_mapping_review,
         procurement_evidence,
         procurement_acquisition_event,
         procurement_raw,
@@ -574,11 +751,32 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
         acquisition_event,
         _,
         administrative_evidence,
+        canonical_assertions,
         commitment_mapping,
+        commitment_mapping_review,
         procurement_evidence,
         procurement_acquisition_event,
         _,
     ) = validate_inputs(root)
+    current_advisory_runs = [
+        item
+        for item in commitment_mapping_review["ai_advisory_runs"]
+        if item["reviewed_mapping_version"] == commitment_mapping["mapping_version"]
+        and item["applicability_state"] == "current"
+    ]
+    if commitment_mapping_review["lifecycle_state"] == "ready_for_ai_advisory_review":
+        mapping_review_progress_limitation = (
+            "The cautious commitment correspondence is an AI-assisted proposal. "
+            "Two first-cycle advisory audits are retained for the superseded mapping; "
+            "the corrected mapping awaits both repeat audits and one interim maintainer decision. "
+            "Independent publication review remains pending."
+        )
+    else:
+        mapping_review_progress_limitation = (
+            "The cautious commitment correspondence is an AI-assisted proposal with two "
+            "completed, non-binding current-version advisory audits awaiting one interim "
+            "maintainer decision; independent publication review remains pending."
+        )
     source = next(
         item for item in profiles["sources"] if item["source_id"] == "src-city-open-data-schools"
     )
@@ -851,6 +1049,15 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "document_count": len(administrative_evidence["documents"]),
                 "raw_bytes_preserved": administrative_evidence["raw_bytes_preserved"],
             },
+            "canonical_assertions": {
+                "bundle_id": canonical_assertions["bundle_id"],
+                "bundle_version": canonical_assertions["bundle_version"],
+                "local_path": snapshot["canonical_assertions"]["local_path"],
+                "content_fingerprint_sha256": snapshot["canonical_assertions"]["sha256"],
+                "assertion_ids": [
+                    item["assertion_id"] for item in canonical_assertions["assertions"]
+                ],
+            },
             "procurement_evidence": {
                 "bundle_id": procurement_evidence["bundle_id"],
                 "bundle_version": procurement_evidence["bundle_version"],
@@ -874,6 +1081,28 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "content_fingerprint_sha256": snapshot["commitment_mapping"]["sha256"],
                 "created_at": commitment_mapping["created_at"],
                 "proposal_origin": commitment_mapping["method"]["proposal_origin"],
+            },
+            "commitment_mapping_review": {
+                "review_packet_id": commitment_mapping_review["review_packet_id"],
+                "review_packet_version": commitment_mapping_review["review_packet_version"],
+                "lifecycle_state": commitment_mapping_review["lifecycle_state"],
+                "local_path": snapshot["commitment_mapping_review"]["local_path"],
+                "content_fingerprint_sha256": snapshot["commitment_mapping_review"]["sha256"],
+                "ai_advisory_roles_configured": len(
+                    commitment_mapping_review["ai_advisory_roles"]
+                ),
+                "ai_advisory_run_count": len(current_advisory_runs),
+                "historical_ai_advisory_run_count": len(
+                    commitment_mapping_review["ai_advisory_runs"]
+                )
+                - len(current_advisory_runs),
+                "maintainer_review_complete": commitment_mapping_review[
+                    "maintainer_review"
+                ]
+                is not None,
+                "independent_review_count": len(
+                    commitment_mapping_review["independent_human_reviews"]
+                ),
             },
         },
         "lineage": [
@@ -980,7 +1209,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "Dataset acquisition occurred after the historical observation cut-off.",
                 "Administrative PDF bytes are fingerprinted but not retained pending rights and privacy review.",
                 "Programme-level financial records cannot be allocated to individual schools from the reviewed evidence.",
-                "The commitment mapping is an AI-assisted proposal awaiting independent methodological and authority review.",
+                mapping_review_progress_limitation,
                 *procurement_evidence["limitations"],
             ],
             "procurement_findings": procurement_evidence["quality_findings"],
@@ -1033,6 +1262,14 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "reviewer_role": "maintainer",
             "methodological_review_complete": False,
             "commitment_mapping_review_state": commitment_mapping["review"]["state"],
+            "commitment_mapping_review_packet_state": commitment_mapping_review[
+                "lifecycle_state"
+            ],
+            "interim_maintainer_review_complete": commitment_mapping_review[
+                "maintainer_review"
+            ]
+            is not None,
+            "independent_publication_review_complete": False,
             "correction_channel": "repository issue or pull request",
         },
         "accessibility": {
@@ -1122,7 +1359,7 @@ def render_html(passport: dict[str, Any]) -> str:
         ),
         "institutional_continuity": (
             "Proposition attribuée à Olivier Bianchi et Naturellement Clermont",
-            "Politique adoptée et mise en œuvre par la Ville de Clermont-Ferrand",
+            "Politique adoptée par la Ville, dans un cadre éducatif documenté depuis 2015",
         ),
         "temporal_sequence": (
             "Page de campagne capturée en 2019 avant l’élection municipale de 2020",
@@ -1142,12 +1379,14 @@ def render_html(passport: dict[str, Any]) -> str:
     chain_rows = [
         (
             "Lien entre la promesse et le programme",
-            "Lien proposé ; vérification indépendante encore nécessaire",
-            milestone_link("evidence-pev-respire-definition-2023", "Projet éducatif adopté"),
+            "Correspondance candidate ; aucun document ne prouve encore une mise en œuvre directe",
+            milestone_link("evidence-pev-respire-definition-2023", "Définition de Respire")
+            + " ; "
+            + milestone_link("evidence-pev-policy-history-2023", "PEV antérieurs depuis 2015"),
         ),
         (
             "Décision de la mairie",
-            "Le programme a été adopté",
+            "Le projet éducatif contenant l’action a été adopté",
             milestone_link("evidence-pev-adoption-2023", "Délibération du 5 mai 2023"),
         ),
         (
@@ -1238,7 +1477,7 @@ def render_html(passport: dict[str, Any]) -> str:
         )
 
     blocker_labels = {
-        "commitment_mapping_and_methodological_review_incomplete": "La correspondance entre la promesse et le programme attend une revue méthodologique indépendante.",
+        "commitment_mapping_and_methodological_review_incomplete": "La correspondance entre la promesse et le programme attend le contrôle humain du POC, puis deux revues indépendantes avant publication.",
         "campaign_artifact_raw_bytes_not_preserved_for_rights": "La page de campagne complète n’est pas conservée dans le dépôt en raison des droits de reproduction.",
         "methodological_review_incomplete": "La revue méthodologique globale du POC reste incomplète.",
         "attributable_works_procurement_and_competent_completion_evidence_missing": "Nous n’avons pas encore trouvé les contrats de travaux reliés aux écoles étudiées ni les documents officiels confirmant leur fin.",
@@ -1295,11 +1534,11 @@ def render_html(passport: dict[str, Any]) -> str:
   <section aria-labelledby="conclusion">
     <h2 id="conclusion">La promesse a-t-elle été tenue ?</h2>
     <p><strong>Nous n’avons pas assez de preuves pour répondre.</strong></p>
-    <p>Le texte de campagne retrouvé ne donne ni nombre d’écoles, ni date de fin, ni budget. La mairie publie des informations sur six unités scolaires étudiées ici, mais ce petit groupe ne représente pas toute la ville. Le lien avec le programme « Respire à la récré » doit aussi être vérifié par une personne indépendante.</p>
+    <p>Le texte de campagne retrouvé ne donne ni nombre d’écoles, ni date de fin, ni budget. La mairie publie des informations sur six unités scolaires étudiées ici, mais ce petit groupe ne représente pas toute la ville. Le lien avec le programme « Respire à la récré » doit être contrôlé par le responsable du POC, puis revu par deux personnes indépendantes avant toute publication.</p>
   </section>
   <section aria-labelledby="filiation">
     <div class="theme-card__top"><h2 id="filiation">Le programme vient-il de la promesse ?</h2><span class="tag tag--pending">Lien non vérifié</span></div>
-    <p>Les dates montrent ce qui s’est passé dans quel ordre. Elles ne suffisent pas à prouver que le programme vient directement de la promesse, qu’il est entièrement nouveau ou qu’il poursuit une politique plus ancienne.</p>
+    <p>La délibération indique que la politique éducative municipale existait dès 2015 et a connu une deuxième version en 2018. Cela ne suffit pas à classer « Respire à la récré » comme une simple continuation, une extension ou une initiative nouvelle, ni à prouver qu’il vient directement de la promesse.</p>
     {render_policy_timeline(passport)}
   </section>
   <section aria-labelledby="engagement">
@@ -1311,8 +1550,8 @@ def render_html(passport: dict[str, Any]) -> str:
   <section aria-labelledby="correspondance">
     <h2 id="correspondance">Pourquoi relions-nous cette promesse à « Respire à la récré » ?</h2>
     <p>IAgora conserve un seul composant essentiel : <strong>végétaliser des cours d’école</strong>. Ajouter une quantité, une échéance, une couverture de tous les quartiers ou les objectifs plus détaillés du programme réécrirait la promesse d’origine.</p>
-    <p>La proposition de correspondance s’appuie sur le même territoire municipal, un objet compatible et le {milestone_link("evidence-pev-respire-definition-2023", "projet éducatif adopté")}. Le programme est toutefois plus large que la formulation de campagne et aucune pièce conservée n’établit encore directement leur continuité.</p>
-    <p><strong>Qui a vérifié ce lien ?</strong> Pour le moment, il s’agit d’une proposition assistée par intelligence artificielle. Une personne indépendante doit encore examiner la méthode et les sources. Cette proposition ne prouve pas que la promesse a été réalisée.</p>
+    <p>La proposition de correspondance s’appuie sur le même territoire municipal, un objet compatible et le {milestone_link("evidence-pev-respire-definition-2023", "projet éducatif adopté")}. Le {milestone_link("evidence-pev-policy-history-2023", "même document rappelle aussi des PEV en 2015 et 2018")}. Le programme est plus large que la formulation de campagne et aucune pièce conservée n’établit encore directement leur continuité.</p>
+    <p><strong>Qui a vérifié ce lien ?</strong> Pour le moment, il s’agit d’une proposition assistée par intelligence artificielle. Deux contrôles IA consultatifs sont prévus, puis le responsable du POC devra vérifier lui-même les avis et les sources. Avant toute publication, deux autres personnes devront encore examiner séparément la méthode et la qualité des preuves. Cette proposition ne prouve pas que la promesse a été réalisée.</p>
     <div class="table-wrap" tabindex="0" aria-label="Tableau défilable comparant la promesse et le programme municipal">
       <table>
         <caption>Comparaison explicite des périmètres</caption>

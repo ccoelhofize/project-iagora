@@ -129,8 +129,13 @@
         "method_version": {"const": "adr-0004-1.0"},
         "proposal_origin": {"const": "ai_assisted"},
         "review_state": {"const": "pending_independent_methodological_review"},
-        "relationship_role": {"const": "implements"},
-        "candidate_conclusion": {"const": "candidate_evidence_found_review_incomplete"},
+        "relationship_role": {"enum": ["implements", "candidate_correspondence"]},
+        "candidate_conclusion": {
+          "enum": [
+            "candidate_evidence_found_review_incomplete",
+            "compatible_subject_and_scope_direct_continuity_unverified"
+          ]
+        },
         "target_programme_id": {"const": "programme-respire-a-la-recre"},
         "target_programme_name": {"const": "Respire à la récré"},
         "component": {"type": "object"},
@@ -159,7 +164,12 @@
       ],
       "properties": {
         "rule_version": {"const": "adr-0003-and-adr-0004-1.0"},
-        "commitment_mapping": {"const": "candidate_evidence_found_review_incomplete"},
+        "commitment_mapping": {
+          "enum": [
+            "candidate_evidence_found_review_incomplete",
+            "compatible_subject_and_scope_direct_continuity_unverified"
+          ]
+        },
         "policy_adoption": {"const": "evidenced"},
         "budget_authorization": {"const": "evidenced_at_programme_level"},
         "executed_expenditure": {"const": "evidenced_at_programme_level"},

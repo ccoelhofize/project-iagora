@@ -80,7 +80,7 @@ Implement one end-to-end path for the programme and three selected school case s
 - normalized six-record open-data subset for the three accepted cases;
 - ten metadata-only municipal document versions forming a partial administrative chain;
 - one bounded City procurement response and executable candidate-evidence bundle for study and design services, with BOAMP metadata retained without raw bytes pending rights review;
-- one explicit, review-pending commitment-mapping proposal with a seven-dimension scope comparison and fail-closed output constraints;
+- one explicit, review-pending candidate-correspondence proposal with a seven-dimension scope comparison, documented 2015 and 2018 policy predecessors, a stable campaign-fragment identifier, a separately resolvable canonical target assertion, complete advisory history, two current non-binding `accept` recommendations for corrected version `0.3.0`, an interim single-maintainer POC decision still pending, retained publication-grade independent reviews, and fail-closed output constraints;
 - deterministic validation and transformation;
 - row-level evidence locators and source attribution;
 - versioned Knowledge Passport JSON;

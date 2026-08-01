@@ -21,6 +21,7 @@
     "review_state": "qualified_review_pending"
   },
   "evidence_fragment": {
+    "evidence_id": "evidence-campaign-schoolyards-2020",
     "locator": "HTML content block under the heading “Végétalisation” on the archived “Une ville nature” page",
     "quote": "Végétalisation des cours d’école",
     "language": "fr",
