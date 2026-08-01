@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-07-30
 
 ## Purpose
 
@@ -34,6 +34,6 @@ The Knowledge Passport exposes the source and acquisition context needed for ins
 
 ## Current implementation
 
-The pilot source registry and normalized open-data subset record publisher, URLs, acquisition and source-modification times, rights, retention class, and a local content fingerprint. One bounded official API response is now preserved byte-for-byte with a validated [acquisition event](../../contracts/v1/acquisition-event.schema.json), request parameters, size, media type, SHA-256 fingerprint, rights, privacy minimization, security result, and immutable relative path. The normalized six-record file must reproduce the selected raw fields exactly.
+The pilot source registry and normalized open-data subset record publisher, URLs, acquisition and source-modification times, rights, retention class, and a local content fingerprint. Two bounded City API responses are now preserved byte-for-byte with validated [acquisition events](../../contracts/v1/acquisition-event.schema.json), request parameters, sizes, media types, SHA-256 fingerprints, rights, privacy minimization, security results, and immutable relative paths. The normalized six-record school file must reproduce its selected raw fields exactly. The procurement response retains eight holder-grain rows for three procurement identifiers and records the rule that repeated contract amounts are aggregated once per identifier.
 
-The archived campaign artifact separately records the original and archive URLs, Wayback capture time, acquisition time, media type, byte size, replay fingerprint, precise fragment, authenticity basis, rights notice, and governed non-retention reason. Its raw HTML is not stored because the archived notice restricts redistribution. General production acquisition, custody, quarantine, and artifact-version contracts remain incomplete.
+The archived campaign artifact separately records the original and archive URLs, Wayback capture time, acquisition time, media type, byte size, replay fingerprint, precise fragment, authenticity basis, rights notice, and governed non-retention reason. Its raw HTML is not stored because the archived notice restricts redistribution. BOAMP notice metadata follows the same fail-closed principle: the official catalog stated no dataset licence, so the pilot retains notice identifiers, minimal extracted facts, response size, SHA-256 fingerprint, and non-retention reason, but no raw response bytes. General production acquisition, custody, quarantine, and artifact-version contracts remain incomplete.

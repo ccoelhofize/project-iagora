@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-07-30
 
 ## Purpose
 
@@ -26,6 +26,8 @@ Users should be able to:
 
 - connect campaign commitments to later public decisions, resources, delivery, and observed effects;
 - scan a territory-level dashboard, identify a small number of primary indicators by policy theme, and drill down without losing definitions or caveats;
+- see at first glance what was promised, what is documented as completed, what remains, what is positively documented as not completed, and what cannot yet be verified;
+- discover one canonical commitment through every relevant policy theme without duplicating its assessment or evidence;
 - understand which commitments are assessed as fulfilled, partially fulfilled, not fulfilled, changed, or not verifiable under a published method;
 - distinguish what was announced, decided, funded, delivered, and measured;
 - distinguish a new initiative from a continuation, extension, acceleration, reorientation, renaming, replacement, or indeterminate lineage when evidence permits;
@@ -42,7 +44,7 @@ IAgora should distinguish delivery from impact. Completing an announced action d
 
 IAgora is a verifiable civic knowledge platform. It is not only an open-data portal, document search engine, dashboard, or chatbot.
 
-The intended public experience is a hosted interactive civic dashboard: a territory home presents a macro trajectory and thematic blocks, each theme exposes a limited number of primary indicators, and every summary can be explored through indicator, programme, commitment, evidence, and Knowledge Passport views. Printable reports are reproducible export views, not the product's only interface or a separate source of truth. The core remains reusable across territories even though the first deployment is bounded to Clermont-Ferrand.
+The intended public experience is a hosted interactive civic dashboard: a territory home presents a macro trajectory and thematic blocks, each theme exposes a limited number of primary indicators, and every summary can be explored through indicator, programme, commitment, evidence, and Knowledge Passport views. The first view prioritizes a plain-language state of the commitment and any material difference between campaign wording and observed implementation; dense documentation remains available on demand. Printable reports are reproducible export views, not the product's only interface or a separate source of truth. The core remains reusable across territories even though the first deployment is bounded to Clermont-Ferrand.
 
 The first proposed deployment focuses on Clermont-Ferrand, France. The canonical model must remain usable across territories and public institutions and must not adopt a portal-specific field as a shared domain definition.
 

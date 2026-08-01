@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/procurement-evidence.schema.json",
+  "title": "IAgora bounded procurement evidence bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "bundle_id", "bundle_version",
+    "observation_cutoff", "assembled_at", "territory",
+    "city_dataset_acquisition", "boamp_acquisition", "records",
+    "quality_findings", "chain_summary", "limitations"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.procurement-evidence"},
+    "contract_version": {"const": "1.0.0"},
+    "bundle_id": {"const": "procurement-evidence-respire-recre-2025"},
+    "bundle_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "observation_cutoff": {"const": "2025-12-31"},
+    "assembled_at": {"type": "string", "format": "date-time"},
+    "territory": {"const": "fr-63113-clermont-ferrand"},
+    "city_dataset_acquisition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id", "artifact_version_id", "acquisition_event_path",
+        "raw_local_path", "raw_sha256", "record_count", "source_modified_at"
+      ],
+      "properties": {
+        "source_id": {"const": "src-city-procurement-open-data"},
+        "artifact_version_id": {"const": "dataset-city-procurement-selected-raw-20260730-001"},
+        "acquisition_event_path": {"const": "data/raw/procurement/city-contracts/2026-07-30/acquisition-event.json"},
+        "raw_local_path": {"const": "data/raw/procurement/city-contracts/2026-07-30/records-selected.json"},
+        "raw_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "record_count": {"const": 8},
+        "source_modified_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "boamp_acquisition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id", "artifact_version_id", "requested_endpoint", "record_ids",
+        "acquired_at", "response_byte_size", "response_sha256",
+        "raw_bytes_preserved", "nonretention_reason", "rights_state"
+      ],
+      "properties": {
+        "source_id": {"const": "src-boamp-schoolyard-regreening-2025"},
+        "artifact_version_id": {"const": "boamp-notices-25-110034-and-26-4348-metadata-20260730"},
+        "requested_endpoint": {"type": "string", "format": "uri"},
+        "record_ids": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"enum": ["25-110034", "26-4348"]}
+        },
+        "acquired_at": {"type": "string", "format": "date-time"},
+        "response_byte_size": {"const": 29026},
+        "response_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "raw_bytes_preserved": {"const": false},
+        "nonretention_reason": {"const": "dataset_license_not_stated_in_official_catalog_metadata"},
+        "rights_state": {"const": "qualified_review_pending"}
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_id", "evidence_id", "source_ids", "title", "role",
+          "authority", "scope", "dates", "duration_months", "amount",
+          "lots", "source_locators", "observation_state", "establishes",
+          "does_not_establish"
+        ],
+        "properties": {
+          "record_id": {"type": "string", "pattern": "^procurement-[a-z0-9-]+$"},
+          "evidence_id": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"},
+          "source_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^src-[a-z0-9-]+$"}
+          },
+          "title": {"type": "string", "minLength": 1},
+          "role": {
+            "enum": ["study_service_contract", "competition_notice", "award_notice"]
+          },
+          "authority": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["fact_type", "outcome", "basis", "limitations"],
+            "properties": {
+              "fact_type": {
+                "enum": ["procurement_contract_metadata", "procurement_competition", "procurement_award"]
+              },
+              "outcome": {"const": "authoritative_with_limitation"},
+              "basis": {"type": "string", "minLength": 1},
+              "limitations": {
+                "type": "array",
+                "minItems": 1,
+                "items": {"type": "string", "minLength": 1}
+              }
+            }
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "level", "candidate_programme_id", "relationship_to_programme",
+              "school_groups", "pilot_case_ids"
+            ],
+            "properties": {
+              "level": {"enum": ["citywide_schoolyard_regreening", "multi_school_groups"]},
+              "candidate_programme_id": {"const": "programme-respire-a-la-recre"},
+              "relationship_to_programme": {
+                "const": "candidate_relevant_object_not_directly_named"
+              },
+              "school_groups": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {"type": "string", "minLength": 1}
+              },
+              "pilot_case_ids": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {"enum": ["case-nestor-perret", "case-pierre-marie-curie", "case-jean-zay"]}
+              }
+            }
+          },
+          "dates": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["notice_publication", "response_deadline", "notification", "award", "issue"],
+            "properties": {
+              "notice_publication": {"type": ["string", "null"], "format": "date"},
+              "response_deadline": {"type": ["string", "null"], "format": "date-time"},
+              "notification": {"type": ["string", "null"], "format": "date"},
+              "award": {"type": ["string", "null"], "format": "date"},
+              "issue": {"type": ["string", "null"], "format": "date"}
+            }
+          },
+          "duration_months": {"type": ["integer", "null"], "minimum": 1},
+          "amount": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "required": ["value", "currency", "tax_basis", "financial_stage", "aggregation_rule"],
+            "properties": {
+              "value": {"type": "number", "minimum": 0},
+              "currency": {"const": "EUR"},
+              "tax_basis": {"enum": ["HT", "not_stated"]},
+              "financial_stage": {"enum": ["contracted_service_value", "published_award_value"]},
+              "aggregation_rule": {"type": "string", "minLength": 1}
+            }
+          },
+          "lots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["lot_id", "school_groups", "contract_reference", "holder", "issue_date", "amount"],
+              "properties": {
+                "lot_id": {"type": "string", "minLength": 1},
+                "school_groups": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {"type": "string", "minLength": 1}
+                },
+                "contract_reference": {"type": ["string", "null"]},
+                "holder": {"type": ["string", "null"]},
+                "issue_date": {"type": ["string", "null"], "format": "date"},
+                "amount": {
+                  "type": ["object", "null"],
+                  "additionalProperties": false,
+                  "required": ["value", "currency", "tax_basis"],
+                  "properties": {
+                    "value": {"type": "number", "minimum": 0},
+                    "currency": {"const": "EUR"},
+                    "tax_basis": {"enum": ["HT", "not_stated"]}
+                  }
+                }
+              }
+            }
+          },
+          "source_locators": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "observation_state": {
+            "enum": ["eligible_historical_evidence", "post_cutoff_publication_historical_event"]
+          },
+          "establishes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "does_not_establish": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "quality_findings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "severity", "confidence", "finding", "evidence", "impact", "remediation"],
+        "properties": {
+          "finding_id": {"type": "string", "pattern": "^quality-[a-z0-9-]+$"},
+          "severity": {"enum": ["high", "medium", "low"]},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "finding": {"type": "string", "minLength": 1},
+          "evidence": {"type": "string", "minLength": 1},
+          "impact": {"type": "string", "minLength": 1},
+          "remediation": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "chain_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "procurement", "attributable_works_procurement", "competent_completion",
+        "school_level_accounting", "fulfillment_conclusion"
+      ],
+      "properties": {
+        "procurement": {"const": "partial_candidate_services_evidence"},
+        "attributable_works_procurement": {"const": "not_located"},
+        "competent_completion": {"const": "not_located"},
+        "school_level_accounting": {"const": "not_located"},
+        "fulfillment_conclusion": {"const": "not_verifiable"}
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

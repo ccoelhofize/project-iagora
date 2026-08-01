@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-07-30
 
 ## Purpose
 
@@ -35,4 +35,4 @@ Changed, restricted, or removed inputs trigger an impact traversal. Dependent as
 
 ## Current state
 
-The local vertical slice emits bounded acquisition, campaign-artifact authentication, deterministic normalization, passport projection, and publication-gate lineage events. Tests bind the exact raw API fingerprint to the acquisition event, verify raw-to-normalized equality, and verify deterministic passport replay. No persistent lineage store, general dependency traversal, restriction propagation, or production replay mechanism exists. Physical representation remains open.
+The local vertical slice emits campaign-artifact authentication, two bounded City acquisitions, deterministic school-data normalization, an AI-assisted mapping proposal, administrative- and procurement-evidence reviews, passport projection, and publication-gate lineage events. Tests bind both retained raw City fingerprints to their acquisition events, verify school raw-to-normalized equality, protect procurement amounts from holder-grain duplication, and verify deterministic passport replay. The BOAMP contribution records its response fingerprint and governed non-retention decision rather than a replayable raw artifact. No persistent lineage store, general dependency traversal, restriction propagation, or production replay mechanism exists. Physical representation remains open.

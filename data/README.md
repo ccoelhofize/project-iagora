@@ -2,7 +2,7 @@
 
 **Status:** Prototype data
 **Owner:** Maintainers
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-07-30
 
 Files under `sources/` are IAgora governance metadata. Files under `pilot/` are
 bounded prototype inputs and carry their own rights and acquisition metadata.
@@ -27,7 +27,7 @@ precise locator, and a short citation from an archived 2019 campaign page.
 It does not contain the archived HTML. The archived legal notice reserves
 reproduction rights, so full-page repository storage is blocked pending
 qualified review. `pilot/pilot-snapshot-0.1.json` preserves the earlier missing-
-source state; `pilot/pilot-snapshot.json` is the current `0.4.0` evidence state.
+source state; `pilot/pilot-snapshot.json` is the current `0.5.0` evidence state.
 
 `pilot/commitment-mapping.json` is an AI-assisted, review-pending proposal that
 preserves the primary wording as one essential, unquantified action component.
@@ -43,3 +43,16 @@ bundle documents adopted policy, programme budget authorization, programme
 expenditure, reported site delivery, and site funding forecasts. It does not
 contain the PDFs, infer missing procurement, establish competent works
 acceptance, or support an outcome or causal-impact conclusion.
+
+`pilot/procurement-evidence.json` is a separate executable bundle for three
+procurement records: the 2020 study service, the 2025 design competition, and
+the later-published award notice for its two lots. The exact eight-row City API
+response is preserved under `raw/procurement/city-contracts/2026-07-30/` under
+Licence Ouverte 2.0. Values are aggregated once per procurement identifier,
+never once per holder row. BOAMP response bytes are not retained because its
+official dataset catalog does not state a licence; the bundle keeps only the
+official notice identifiers, minimal metadata, response size, fingerprint, and
+non-retention reason. These records are candidate evidence for services because
+their objects concern schoolyard regreening, but they do not directly name the
+Respire programme and do not establish attributable works, payment, competent
+completion, outcomes, impact, or campaign fulfillment.
