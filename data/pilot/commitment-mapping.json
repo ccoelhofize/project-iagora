@@ -2,15 +2,16 @@
   "contract_id": "iagora.commitment-mapping",
   "contract_version": "1.0.0",
   "mapping_id": "mapping-campaign-schoolyards-to-respire-001",
-  "mapping_version": "0.1.0",
+  "mapping_version": "0.3.0",
+  "supersedes_mapping_version": "0.2.0",
   "lifecycle_state": "proposed_review_pending",
   "observation_cutoff": "2025-12-31",
-  "created_at": "2026-07-29T18:08:18Z",
+  "created_at": "2026-08-01T14:38:46Z",
   "territory": "fr-63113-clermont-ferrand",
   "method": {
     "method_id": "iagora.commitment-mapping",
     "method_version": "adr-0004-1.0",
-    "governing_adrs": ["ADR-0002", "ADR-0003", "ADR-0004"],
+    "governing_adrs": ["ADR-0002", "ADR-0003", "ADR-0004", "ADR-0010"],
     "proposal_origin": "ai_assisted"
   },
   "original_commitment": {
@@ -72,16 +73,19 @@
     "programme_id": "programme-respire-a-la-recre",
     "name": "Respire à la récré",
     "institution": "Ville de Clermont-Ferrand",
+    "target_assertion_bundle_id": "canonical-assertions-respire-recre-pilot",
     "target_assertion_id": "assertion-respire-schoolyard-transformation-policy-2023",
+    "target_assertion_version": "0.1.0",
     "definition_evidence_id": "evidence-pev-respire-definition-2023",
     "adoption_evidence_id": "evidence-pev-adoption-2023"
   },
   "mapping": {
     "component_id": "component-vegetate-schoolyards-001",
     "target_assertion_id": "assertion-respire-schoolyard-transformation-policy-2023",
-    "relationship_role": "implements",
+    "target_assertion_version": "0.1.0",
+    "relationship_role": "candidate_correspondence",
     "state": "proposed_review_pending",
-    "candidate_conclusion": "candidate_evidence_found_review_incomplete",
+    "candidate_conclusion": "compatible_subject_and_scope_direct_continuity_unverified",
     "scope_comparison": [
       {
         "dimension": "territory",
@@ -121,23 +125,24 @@
       {
         "dimension": "institutional_continuity",
         "commitment_scope": "Proposal attributed to Olivier Bianchi and Naturellement Clermont",
-        "programme_scope": "Policy adopted and implemented by the Ville de Clermont-Ferrand",
+        "programme_scope": "Policy adopted by the Ville de Clermont-Ferrand; later activities are reported in separate sources",
         "comparison_result": "pending_additional_evidence",
-        "rationale": "Campaign attribution and municipal policy adoption are evidenced separately, but a first-class evidence fragment directly documenting continuity remains to be acquired or reviewed."
+        "rationale": "Campaign attribution and municipal policy adoption are evidenced separately. The adoption record also places the education policy in a sequence beginning in 2015 and continuing in 2018, but no first-class fragment directly attributes Respire to the 2019 campaign proposal."
       },
       {
         "dimension": "temporal_sequence",
         "commitment_scope": "Campaign page captured in 2019 before the 2020 municipal election",
         "programme_scope": "Later programme action and adopted policy records",
         "comparison_result": "compatible",
-        "rationale": "The sequence is compatible with implementation, but chronology alone does not establish that the programme implements the promise."
+        "rationale": "The sequence is compatible with a possible correspondence, but chronology alone does not establish that the programme implements the promise."
       }
     ],
-    "rationale": "The authenticated campaign proposal and adopted policy concern compatible schoolyard-greening action in the same municipal territory. The adopted programme is broader and later. This supports a candidate implementation mapping only; direct continuity, complete scope equivalence, delivery, fulfillment, outcomes, and impact remain unverified.",
+    "rationale": "The authenticated campaign proposal and adopted policy concern compatible schoolyard-greening action in the same municipal territory. The adopted programme is broader and later. The education-policy record also documents predecessors in 2015 and 2018, so neither novelty nor direct campaign-to-programme continuity can be inferred. The evidence supports a candidate correspondence for independent review; implementation, complete scope equivalence, delivery, fulfillment, outcomes, and impact remain unverified.",
     "evidence_ids": [
       "evidence-campaign-schoolyards-2020",
       "evidence-pev-respire-definition-2023",
-      "evidence-pev-adoption-2023"
+      "evidence-pev-adoption-2023",
+      "evidence-pev-policy-history-2023"
     ],
     "counterevidence": {
       "state": "none_identified_in_bounded_corpus",
@@ -150,6 +155,7 @@
     "limitations": [
       "Shared subject matter is insufficient by itself; institutional continuity still requires review.",
       "The mapping does not establish that every programme activity derives from the campaign proposal.",
+      "The documented 2015 and 2018 education-policy predecessors prevent an unsupported novelty inference.",
       "The mapping does not establish a numerical target, deadline, delivery state, fulfillment conclusion, outcome, or causal impact."
     ]
   },
@@ -177,6 +183,14 @@
       "artifact_version_id": "artifact-pev-2023-final-deliberation",
       "locator": "page 2 of 3, decision paragraph",
       "source_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004.pdf"
+    },
+    {
+      "evidence_id": "evidence-pev-policy-history-2023",
+      "role": "policy_lineage_context",
+      "relationship": "contextualizes",
+      "artifact_version_id": "artifact-pev-2023-final-deliberation",
+      "locator": "page 2 of 3, opening paragraphs",
+      "source_url": "https://clermont-ferrand.fr/docs/delib/CM05052023/CM05052023_004.pdf"
     }
   ],
   "uncertainty": [
@@ -201,6 +215,11 @@
       "explanation": "The chronology is compatible with continuity, but chronological sequence is not direct mapping evidence."
     },
     {
+      "dimension": "policy_lineage",
+      "state": "indeterminate",
+      "explanation": "The adopted record documents municipal education-policy predecessors in 2015 and 2018. It does not establish whether Respire is a continuation, extension, reorientation, or new initiative attributable to the campaign proposal."
+    },
+    {
       "dimension": "competent_completion",
       "state": "not_located",
       "explanation": "Competent works-acceptance records have not been located for the selected sites or complete programme scope."
@@ -213,8 +232,9 @@
     "reviewer_separation_required": true,
     "final_decision": null,
     "notes": [
-      "Maintainer approval authorized preparation of this bounded proposal; it did not constitute methodological acceptance.",
-      "A reviewer must decide whether the converging context is sufficient or whether direct continuity evidence is required before accepting the mapping.",
+      "Maintainer approval authorized correction of the bounded proposal and its traceability after REVIEW-0001; it did not constitute either required independent review or a final maintainer review of the corrected mapping.",
+      "The revised proposal records a candidate correspondence rather than asserting implementation.",
+      "The maintainer must decide whether the converging context is sufficient for continued local POC use; future independent reviewers must separately decide whether it is sufficient for public presentation and how the documented 2015 and 2018 predecessors affect policy-lineage interpretation.",
       "Any accepted review must record role, decision, timestamp, rationale, reviewed version, counterevidence, and limitations."
     ]
   },
@@ -235,20 +255,25 @@
       "provider": "OpenAI",
       "model_identifier": "Codex GPT-5 family",
       "exact_deployment_identifier_available": false,
-      "task_version": "iagora.commitment-mapping.proposal/0.1.0",
-      "generated_at": "2026-07-29T18:08:18Z",
+      "task_version": "iagora.commitment-mapping.proposal/0.3.0",
+      "generated_at": "2026-08-01T14:38:46Z",
       "human_review_required": true
     },
     "inputs": [
       {
         "local_path": "data/pilot/campaign-artifact.json",
-        "sha256": "afa6405a147185bf979eb995a12f32fe4258631f970f21f7875908ea31744308",
+        "sha256": "c2b12db5640189e012d9b5edccda257d693f9c8e2cff1381953325d331b5327d",
         "role": "original_commitment_evidence"
       },
       {
         "local_path": "data/pilot/administrative-evidence.json",
-        "sha256": "2bf39dec8876f133eefc98dd8ec6956386df134e54f2281acc1b6edf720f87d9",
+        "sha256": "20df56b0dc97028d14ec7ab74ce0eb5c6f566a980388b572ec00f2e55ed47df0",
         "role": "administrative_mapping_evidence"
+      },
+      {
+        "local_path": "data/pilot/canonical-assertions.json",
+        "sha256": "6967a6cbacf8f0e3202f07a882690538dfddb4bfee6705bce94c5c91832de93e",
+        "role": "target_canonical_assertion"
       }
     ]
   }

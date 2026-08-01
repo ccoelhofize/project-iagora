@@ -50,7 +50,7 @@
             "additionalProperties": false,
             "required": ["state", "license_id", "redistribution", "review_state"],
             "properties": {
-              "state": {"enum": ["open_license", "rights_unknown", "not_acquired"]},
+              "state": {"enum": ["open_license", "rights_unknown", "restricted_by_archived_notice", "not_acquired"]},
               "license_id": {"type": ["string", "null"]},
               "redistribution": {"enum": ["allowed_with_attribution", "blocked", "not_applicable"]},
               "review_state": {"enum": ["reviewed_for_prototype", "pending", "not_applicable"]}

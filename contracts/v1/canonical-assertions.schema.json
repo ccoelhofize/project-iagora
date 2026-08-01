@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/canonical-assertions.schema.json",
+  "title": "IAgora bounded canonical assertion bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "bundle_id", "bundle_version",
+    "observation_cutoff", "generated_at", "assertions", "evidence_relationships"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.canonical-assertions"},
+    "contract_version": {"const": "0.1.0"},
+    "bundle_id": {"const": "canonical-assertions-respire-recre-pilot"},
+    "bundle_version": {"const": "0.1.0"},
+    "observation_cutoff": {"const": "2025-12-31"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "assertions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assertion_id", "assertion_version", "lifecycle_state", "proposition",
+          "subject_id", "predicate", "object_id", "datatype", "qualifiers",
+          "territorial_scope", "institutional_scope", "temporal_scope",
+          "epistemic_kind", "derivation", "supersession", "limitations"
+        ],
+        "properties": {
+          "assertion_id": {"const": "assertion-respire-schoolyard-transformation-policy-2023"},
+          "assertion_version": {"const": "0.1.0"},
+          "lifecycle_state": {"const": "evidence_linked_review_pending"},
+          "proposition": {"const": "The adopted Clermont-Ferrand education project defines Respire à la récré as a municipal schoolyard-transformation action."},
+          "subject_id": {"const": "programme-respire-a-la-recre"},
+          "predicate": {"const": "is_defined_as"},
+          "object_id": {"const": "municipal_schoolyard_transformation_action"},
+          "datatype": {"const": "entity_reference"},
+          "qualifiers": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["policy_container", "attribution_boundary"],
+            "properties": {
+              "policy_container": {"const": "projet-educatif-ville-2022-2025"},
+              "attribution_boundary": {"const": "definition_in_adopted_policy_not_proof_of_implementation_or_campaign_continuity"}
+            }
+          },
+          "territorial_scope": {"const": "fr-63113-clermont-ferrand"},
+          "institutional_scope": {"const": "Ville de Clermont-Ferrand"},
+          "temporal_scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["policy_period", "adoption_date", "observation_cutoff"],
+            "properties": {
+              "policy_period": {"const": "2022-2025"},
+              "adoption_date": {"const": "2023-05-05"},
+              "observation_cutoff": {"const": "2025-12-31"}
+            }
+          },
+          "epistemic_kind": {"const": "source_claim"},
+          "derivation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "method_id", "method_version", "evidence_ids"],
+            "properties": {
+              "kind": {"const": "canonicalized_from_source_claim"},
+              "method_id": {"const": "iagora.canonical-assertion.manual-bounded-pilot"},
+              "method_version": {"const": "0.1.0"},
+              "evidence_ids": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "uniqueItems": true,
+                "items": {"enum": ["evidence-pev-respire-definition-2023", "evidence-pev-adoption-2023"]}
+              }
+            }
+          },
+          "supersession": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["state", "superseded_by"],
+            "properties": {
+              "state": {"const": "not_superseded_as_of_observation_cutoff"},
+              "superseded_by": {"type": "null"}
+            }
+          },
+          "limitations": {
+            "type": "array",
+            "minItems": 2,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "evidence_relationships": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "relationship_id", "relationship_version", "evidence_id",
+          "assertion_id", "assertion_version", "relationship", "scope_rationale",
+          "evaluation_method", "review_state", "evaluated_at", "limitations"
+        ],
+        "properties": {
+          "relationship_id": {"type": "string", "pattern": "^evidence-relationship-[a-z0-9-]+$"},
+          "relationship_version": {"const": "0.1.0"},
+          "evidence_id": {"enum": ["evidence-pev-respire-definition-2023", "evidence-pev-adoption-2023"]},
+          "assertion_id": {"const": "assertion-respire-schoolyard-transformation-policy-2023"},
+          "assertion_version": {"const": "0.1.0"},
+          "relationship": {"const": "supports"},
+          "scope_rationale": {"type": "string", "minLength": 1},
+          "evaluation_method": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["method_id", "method_version", "preparer_role"],
+            "properties": {
+              "method_id": {"const": "iagora.evidence-relationship.manual-bounded-pilot"},
+              "method_version": {"const": "0.1.0"},
+              "preparer_role": {"const": "ai_assisted_preparation"}
+            }
+          },
+          "review_state": {"const": "proposed_review_pending"},
+          "evaluated_at": {"type": "string", "format": "date-time"},
+          "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    }
+  }
+}

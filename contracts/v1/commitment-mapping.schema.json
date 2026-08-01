@@ -16,6 +16,7 @@
     "contract_version": {"const": "1.0.0"},
     "mapping_id": {"const": "mapping-campaign-schoolyards-to-respire-001"},
     "mapping_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "supersedes_mapping_version": {"enum": ["0.1.0", "0.2.0"]},
     "lifecycle_state": {"const": "proposed_review_pending"},
     "observation_cutoff": {"const": "2025-12-31"},
     "created_at": {"type": "string", "format": "date-time"},
@@ -29,9 +30,9 @@
         "method_version": {"const": "adr-0004-1.0"},
         "governing_adrs": {
           "type": "array",
-          "minItems": 3,
+          "minItems": 4,
           "uniqueItems": true,
-          "items": {"enum": ["ADR-0002", "ADR-0003", "ADR-0004"]}
+          "items": {"enum": ["ADR-0002", "ADR-0003", "ADR-0004", "ADR-0010"]}
         },
         "proposal_origin": {"const": "ai_assisted"}
       }
@@ -151,14 +152,17 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "programme_id", "name", "institution", "target_assertion_id",
+        "programme_id", "name", "institution", "target_assertion_bundle_id",
+        "target_assertion_id", "target_assertion_version",
         "definition_evidence_id", "adoption_evidence_id"
       ],
       "properties": {
         "programme_id": {"const": "programme-respire-a-la-recre"},
         "name": {"const": "Respire à la récré"},
         "institution": {"const": "Ville de Clermont-Ferrand"},
+        "target_assertion_bundle_id": {"const": "canonical-assertions-respire-recre-pilot"},
         "target_assertion_id": {"const": "assertion-respire-schoolyard-transformation-policy-2023"},
+        "target_assertion_version": {"const": "0.1.0"},
         "definition_evidence_id": {"const": "evidence-pev-respire-definition-2023"},
         "adoption_evidence_id": {"const": "evidence-pev-adoption-2023"}
       }
@@ -167,21 +171,29 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "component_id", "target_assertion_id", "relationship_role", "state",
+        "component_id", "target_assertion_id", "target_assertion_version",
+        "relationship_role", "state",
         "candidate_conclusion", "scope_comparison", "rationale", "evidence_ids",
         "counterevidence", "limitations"
       ],
       "properties": {
         "component_id": {"pattern": "^component-[a-z0-9-]+$", "type": "string"},
         "target_assertion_id": {"const": "assertion-respire-schoolyard-transformation-policy-2023"},
+        "target_assertion_version": {"const": "0.1.0"},
         "relationship_role": {
           "enum": [
-            "implements", "partially_implements", "changes_scope", "replaces",
+            "candidate_correspondence", "implements", "partially_implements",
+            "changes_scope", "replaces",
             "contributes_to", "reports_outcome_for", "claims_impact_for"
           ]
         },
         "state": {"const": "proposed_review_pending"},
-        "candidate_conclusion": {"const": "candidate_evidence_found_review_incomplete"},
+        "candidate_conclusion": {
+          "enum": [
+            "candidate_evidence_found_review_incomplete",
+            "compatible_subject_and_scope_direct_continuity_unverified"
+          ]
+        },
         "scope_comparison": {
           "type": "array",
           "minItems": 5,
@@ -255,7 +267,7 @@
         ],
         "properties": {
           "evidence_id": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"},
-          "role": {"enum": ["original_commitment", "programme_definition", "policy_adoption"]},
+          "role": {"enum": ["original_commitment", "programme_definition", "policy_adoption", "policy_lineage_context"]},
           "relationship": {"enum": ["supports", "contradicts", "contextualizes"]},
           "artifact_version_id": {"type": "string", "minLength": 1},
           "locator": {"type": "string", "minLength": 1},
@@ -274,7 +286,8 @@
           "dimension": {
             "enum": [
               "semantic_alignment", "direct_continuity_evidence",
-              "scope_equivalence", "temporal_continuity", "competent_completion"
+              "scope_equivalence", "temporal_continuity", "policy_lineage",
+              "competent_completion"
             ]
           },
           "state": {
@@ -344,14 +357,20 @@
             "provider": {"const": "OpenAI"},
             "model_identifier": {"const": "Codex GPT-5 family"},
             "exact_deployment_identifier_available": {"const": false},
-            "task_version": {"const": "iagora.commitment-mapping.proposal/0.1.0"},
+            "task_version": {
+              "enum": [
+                "iagora.commitment-mapping.proposal/0.1.0",
+                "iagora.commitment-mapping.proposal/0.2.0",
+                "iagora.commitment-mapping.proposal/0.3.0"
+              ]
+            },
             "generated_at": {"type": "string", "format": "date-time"},
             "human_review_required": {"const": true}
           }
         },
         "inputs": {
           "type": "array",
-          "minItems": 2,
+          "minItems": 3,
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -359,7 +378,7 @@
             "properties": {
               "local_path": {"type": "string", "minLength": 1},
               "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-              "role": {"enum": ["original_commitment_evidence", "administrative_mapping_evidence"]}
+              "role": {"enum": ["original_commitment_evidence", "administrative_mapping_evidence", "target_canonical_assertion"]}
             }
           }
         }

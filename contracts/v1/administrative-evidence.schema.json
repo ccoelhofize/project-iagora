@@ -194,7 +194,12 @@
         "outcome_evidence", "causal_impact", "fulfillment_conclusion"
       ],
       "properties": {
-        "commitment_mapping": {"const": "candidate_evidence_found_review_incomplete"},
+        "commitment_mapping": {
+          "enum": [
+            "candidate_evidence_found_review_incomplete",
+            "compatible_subject_and_scope_direct_continuity_unverified"
+          ]
+        },
         "policy_adoption": {"const": "evidenced"},
         "budget_authorization": {"const": "evidenced_at_programme_level"},
         "executed_expenditure": {"const": "evidenced_at_programme_level"},

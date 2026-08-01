@@ -25,7 +25,7 @@ class PilotSliceTests(unittest.TestCase):
         self.assertEqual("mixed_by_school_unit", self.cases["Pierre-et-Marie-Curie"]["reported_summary"])
 
     def test_every_source_row_has_precise_evidence(self) -> None:
-        self.assertEqual(25, len(self.passport["evidence"]))
+        self.assertEqual(26, len(self.passport["evidence"]))
         school_evidence = [
             item
             for item in self.passport["evidence"]
@@ -111,7 +111,7 @@ class PilotSliceTests(unittest.TestCase):
         self.assertEqual(
             "pending_independent_methodological_review", mapping["review_state"]
         )
-        self.assertEqual("implements", mapping["relationship_role"])
+        self.assertEqual("candidate_correspondence", mapping["relationship_role"])
         self.assertEqual("essential", mapping["component"]["essentiality"])
         self.assertEqual("action", mapping["component"]["component_type"])
         self.assertEqual("not_stated", mapping["component"]["quantity"]["state"])

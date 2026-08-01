@@ -40,6 +40,8 @@ A versioned, reviewable relationship between an atomic campaign commitment compo
 
 Compatible wording or chronology may support a proposed mapping but cannot establish it alone. A proposed or AI-assisted mapping is not an accepted relationship, implementation state, fulfillment conclusion, or impact claim.
 
+`Candidate correspondence` is the bounded review-pending relationship used when records have compatible subject and scope but direct continuity remains unverified. It does not mean `implements`, does not establish novelty or political credit, and cannot support fulfillment or a completion percentage without the evidence and review required by the governing method.
+
 ### Fulfillment assessment
 
 A versioned evaluation of how the evidenced public action compares with a campaign commitment under an accepted method and observation cut-off. A fulfillment assessment must expose the commitment decomposition, required conditions, atomic implementation states, evidence, uncertainty, and review record.

@@ -1,0 +1,327 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/commitment-mapping-review.schema.json",
+  "title": "IAgora bounded commitment-mapping review packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "review_packet_id", "review_packet_version",
+    "lifecycle_state", "prepared_at", "preparation", "mapping_reference",
+    "review_question", "governing_adrs", "evidence_basis", "findings",
+    "counterevidence", "ai_advisory_roles", "ai_advisory_runs",
+    "human_review_requirements", "maintainer_review",
+    "independent_human_reviews", "independent_final_decision",
+    "rereview_conditions", "output_constraints"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.commitment-mapping-review"},
+    "contract_version": {"const": "1.0.0"},
+    "review_packet_id": {"const": "review-mapping-schoolyards-respire-001"},
+    "review_packet_version": {"const": "0.5.0"},
+    "lifecycle_state": {
+      "enum": [
+        "ready_for_ai_advisory_review", "ready_for_maintainer_review",
+        "maintainer_reviewed_independent_review_pending",
+        "independent_review_in_progress", "human_review_complete"
+      ]
+    },
+    "prepared_at": {"type": "string", "format": "date-time"},
+    "preparation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origin", "maintainer_orientation", "counts_as_independent_review"],
+      "properties": {
+        "origin": {"const": "ai_assisted"},
+        "maintainer_orientation": {"const": "validated_for_preparation"},
+        "counts_as_independent_review": {"const": false}
+      }
+    },
+    "mapping_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mapping_id", "mapping_version", "local_path", "sha256"],
+      "properties": {
+        "mapping_id": {"const": "mapping-campaign-schoolyards-to-respire-001"},
+        "mapping_version": {"const": "0.3.0"},
+        "local_path": {"const": "data/pilot/commitment-mapping.json"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "review_question": {"type": "string", "minLength": 1},
+    "governing_adrs": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": {"enum": ["ADR-0002", "ADR-0003", "ADR-0004", "ADR-0010"]}
+    },
+    "evidence_basis": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidence_id", "role", "relationship", "artifact_version_id", "locator", "source_url"],
+        "properties": {
+          "evidence_id": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"},
+          "role": {"enum": ["original_commitment", "programme_definition", "policy_adoption", "policy_lineage_context"]},
+          "relationship": {"enum": ["supports", "contradicts", "contextualizes"]},
+          "artifact_version_id": {"type": "string", "minLength": 1},
+          "locator": {"type": "string", "minLength": 1},
+          "source_url": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension", "finding_state", "explanation"],
+        "properties": {
+          "dimension": {
+            "enum": [
+              "original_formulation", "name", "territory", "beneficiaries",
+              "delivery_method", "timing", "quantity_and_budget",
+              "direct_continuity", "policy_lineage"
+            ]
+          },
+          "finding_state": {
+            "enum": [
+              "supported_with_limitations", "compatible", "broader_later_scope",
+              "not_stated_in_campaign", "not_comparable", "insufficient",
+              "indeterminate_with_predecessors"
+            ]
+          },
+          "explanation": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "counterevidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "evidence_ids", "search_boundary", "limitations"],
+      "properties": {
+        "state": {"const": "no_material_contradiction_identified_in_bounded_corpus"},
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"}
+        },
+        "search_boundary": {"type": "string", "minLength": 1},
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "ai_advisory_roles": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role_id", "role_configuration_version", "execution_mode", "purpose",
+          "must_check", "prohibited_actions", "output_requirements", "status"
+        ],
+        "properties": {
+          "role_id": {
+            "enum": ["ai_methodology_auditor", "ai_evidence_authority_auditor"]
+          },
+          "role_configuration_version": {"const": "0.3.0"},
+          "execution_mode": {"const": "manually_invoked_non_autonomous"},
+          "purpose": {"type": "string", "minLength": 1},
+          "must_check": {
+            "type": "array",
+            "minItems": 4,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "prohibited_actions": {
+            "type": "array",
+            "minItems": 3,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "output_requirements": {
+            "type": "array",
+            "minItems": 4,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "status": {"enum": ["configured_not_run", "completed"]}
+        }
+      }
+    },
+    "ai_advisory_runs": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "run_id", "role_id", "role_configuration_version",
+          "reviewed_mapping_version", "applicability_state", "status",
+          "generated_at", "model_identifier", "recommendation",
+          "recommendation_rationale", "evidence_ids_reviewed", "findings",
+          "blockers", "caveats", "limitations", "rereview_conditions",
+          "counts_as_human_review"
+        ],
+        "properties": {
+          "run_id": {"type": "string", "pattern": "^ai-review-[a-z0-9-]+$"},
+          "role_id": {
+            "enum": ["ai_methodology_auditor", "ai_evidence_authority_auditor"]
+          },
+          "role_configuration_version": {"enum": ["0.2.0", "0.3.0"]},
+          "reviewed_mapping_version": {"enum": ["0.2.0", "0.3.0"]},
+          "applicability_state": {
+            "enum": ["historical_superseded_mapping", "superseded_by_correction", "current"]
+          },
+          "status": {"const": "completed"},
+          "generated_at": {"type": "string", "format": "date-time"},
+          "model_identifier": {"type": "string", "minLength": 1},
+          "recommendation": {"enum": ["accept", "reject", "request_changes"]},
+          "recommendation_rationale": {"type": "string", "minLength": 1},
+          "evidence_ids_reviewed": {
+            "type": "array",
+            "minItems": 4,
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"}
+          },
+          "findings": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "blockers": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          },
+          "caveats": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          },
+          "limitations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "rereview_conditions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "counts_as_human_review": {"const": false}
+        }
+      }
+    },
+    "human_review_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interim_poc_reviewer_role", "ai_advisory_required_before_maintainer_review",
+        "independent_publication_roles", "independent_reviewer_separation_required",
+        "proposal_preparer_ineligible_for_independent_review",
+        "allowed_decisions", "identity_policy"
+      ],
+      "properties": {
+        "interim_poc_reviewer_role": {"const": "maintainer_reviewer"},
+        "ai_advisory_required_before_maintainer_review": {"const": true},
+        "independent_publication_roles": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"enum": ["methodological_reviewer", "evidence_authority_reviewer"]}
+        },
+        "independent_reviewer_separation_required": {"const": true},
+        "proposal_preparer_ineligible_for_independent_review": {"const": true},
+        "allowed_decisions": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {"enum": ["accept", "reject", "request_changes"]}
+        },
+        "identity_policy": {"const": "role_and_pseudonymous_reference_only"}
+      }
+    },
+    "maintainer_review": {
+      "type": ["null", "object"],
+      "additionalProperties": false,
+      "required": [
+        "reviewer_reference", "reviewer_role", "decision", "reviewed_at",
+        "reviewed_mapping_version", "advisory_run_ids_reviewed",
+        "evidence_ids_reviewed", "rationale", "limitations",
+        "counts_as_independent_review", "authorizes_publication"
+      ],
+      "properties": {
+        "reviewer_reference": {"type": "string", "pattern": "^reviewer-[a-z0-9-]+$"},
+        "reviewer_role": {"const": "maintainer_reviewer"},
+        "decision": {"enum": ["accept", "reject", "request_changes"]},
+        "reviewed_at": {"type": "string", "format": "date-time"},
+        "reviewed_mapping_version": {"const": "0.3.0"},
+        "advisory_run_ids_reviewed": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^ai-review-[a-z0-9-]+$"}
+        },
+        "evidence_ids_reviewed": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"}
+        },
+        "rationale": {"type": "string", "minLength": 1},
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "counts_as_independent_review": {"const": false},
+        "authorizes_publication": {"const": false}
+      }
+    },
+    "independent_human_reviews": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reviewer_reference", "reviewer_role", "decision", "reviewed_at",
+          "reviewed_mapping_version", "rationale", "evidence_ids_reviewed", "limitations"
+        ],
+        "properties": {
+          "reviewer_reference": {"type": "string", "pattern": "^reviewer-[a-z0-9-]+$"},
+          "reviewer_role": {"enum": ["methodological_reviewer", "evidence_authority_reviewer"]},
+          "decision": {"enum": ["accept", "reject", "request_changes"]},
+          "reviewed_at": {"type": "string", "format": "date-time"},
+          "reviewed_mapping_version": {"const": "0.3.0"},
+          "rationale": {"type": "string", "minLength": 1},
+          "evidence_ids_reviewed": {
+            "type": "array",
+            "minItems": 4,
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"}
+          },
+          "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "independent_final_decision": {"enum": [null, "accept", "reject", "request_changes"]},
+    "rereview_conditions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "output_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fulfillment_conclusion", "publication_eligible", "implementation_percentage_allowed"],
+      "properties": {
+        "fulfillment_conclusion": {"const": "not_verifiable"},
+        "publication_eligible": {"const": false},
+        "implementation_percentage_allowed": {"const": false}
+      }
+    }
+  }
+}

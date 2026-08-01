@@ -1,0 +1,86 @@
+{
+  "contract_id": "iagora.canonical-assertions",
+  "contract_version": "0.1.0",
+  "bundle_id": "canonical-assertions-respire-recre-pilot",
+  "bundle_version": "0.1.0",
+  "observation_cutoff": "2025-12-31",
+  "generated_at": "2026-08-01T14:38:46Z",
+  "assertions": [
+    {
+      "assertion_id": "assertion-respire-schoolyard-transformation-policy-2023",
+      "assertion_version": "0.1.0",
+      "lifecycle_state": "evidence_linked_review_pending",
+      "proposition": "The adopted Clermont-Ferrand education project defines Respire à la récré as a municipal schoolyard-transformation action.",
+      "subject_id": "programme-respire-a-la-recre",
+      "predicate": "is_defined_as",
+      "object_id": "municipal_schoolyard_transformation_action",
+      "datatype": "entity_reference",
+      "qualifiers": {
+        "policy_container": "projet-educatif-ville-2022-2025",
+        "attribution_boundary": "definition_in_adopted_policy_not_proof_of_implementation_or_campaign_continuity"
+      },
+      "territorial_scope": "fr-63113-clermont-ferrand",
+      "institutional_scope": "Ville de Clermont-Ferrand",
+      "temporal_scope": {
+        "policy_period": "2022-2025",
+        "adoption_date": "2023-05-05",
+        "observation_cutoff": "2025-12-31"
+      },
+      "epistemic_kind": "source_claim",
+      "derivation": {
+        "kind": "canonicalized_from_source_claim",
+        "method_id": "iagora.canonical-assertion.manual-bounded-pilot",
+        "method_version": "0.1.0",
+        "evidence_ids": ["evidence-pev-respire-definition-2023", "evidence-pev-adoption-2023"]
+      },
+      "supersession": {
+        "state": "not_superseded_as_of_observation_cutoff",
+        "superseded_by": null
+      },
+      "limitations": [
+        "This assertion records the adopted policy definition and does not establish implementation, delivery, fulfillment, outcome, or impact.",
+        "This assertion does not establish that Respire à la récré implements the 2019 campaign commitment or that the programme was new."
+      ]
+    }
+  ],
+  "evidence_relationships": [
+    {
+      "relationship_id": "evidence-relationship-pev-definition-to-respire-assertion",
+      "relationship_version": "0.1.0",
+      "evidence_id": "evidence-pev-respire-definition-2023",
+      "assertion_id": "assertion-respire-schoolyard-transformation-policy-2023",
+      "assertion_version": "0.1.0",
+      "relationship": "supports",
+      "scope_rationale": "The adopted annex names Respire à la récré and defines it as a schoolyard-transformation action within the municipal education project.",
+      "evaluation_method": {
+        "method_id": "iagora.evidence-relationship.manual-bounded-pilot",
+        "method_version": "0.1.0",
+        "preparer_role": "ai_assisted_preparation"
+      },
+      "review_state": "proposed_review_pending",
+      "evaluated_at": "2026-08-01T14:38:46Z",
+      "limitations": [
+        "The programme definition does not establish direct continuity with the campaign commitment or prove delivery."
+      ]
+    },
+    {
+      "relationship_id": "evidence-relationship-pev-adoption-to-respire-assertion",
+      "relationship_version": "0.1.0",
+      "evidence_id": "evidence-pev-adoption-2023",
+      "assertion_id": "assertion-respire-schoolyard-transformation-policy-2023",
+      "assertion_version": "0.1.0",
+      "relationship": "supports",
+      "scope_rationale": "The final deliberation establishes adoption of the 2022–2025 education project that contains the Respire à la récré definition.",
+      "evaluation_method": {
+        "method_id": "iagora.evidence-relationship.manual-bounded-pilot",
+        "method_version": "0.1.0",
+        "preparer_role": "ai_assisted_preparation"
+      },
+      "review_state": "proposed_review_pending",
+      "evaluated_at": "2026-08-01T14:38:46Z",
+      "limitations": [
+        "Adoption of the containing education project does not independently prove that every described action was implemented."
+      ]
+    }
+  ]
+}

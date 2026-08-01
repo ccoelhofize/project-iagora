@@ -7,7 +7,9 @@ import unittest
 from iagora.contracts import ContractViolation, load_json, validate
 from iagora.pilot import (
     ADMINISTRATIVE_EVIDENCE,
+    CANONICAL_ASSERTIONS,
     COMMITMENT_MAPPING,
+    COMMITMENT_MAPPING_REVIEW,
     CONTRACTS,
     PROCUREMENT_EVIDENCE,
     SOURCE_PROFILES,
@@ -26,7 +28,9 @@ class ContractTests(unittest.TestCase):
             acquisition_event,
             raw_dataset,
             administrative_evidence,
+            canonical_assertions,
             commitment_mapping,
+            commitment_mapping_review,
             procurement_evidence,
             procurement_acquisition_event,
             procurement_raw,
@@ -37,13 +41,33 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(
             "authenticated_with_limitations", campaign_artifact["authenticity"]["outcome"]
         )
+        campaign_profile = next(
+            item for item in profiles["sources"] if item["source_id"] == "src-campaign-2020-primary"
+        )
+        self.assertEqual(
+            campaign_artifact["rights"]["state"], campaign_profile["rights"]["state"]
+        )
         self.assertEqual(6, raw_dataset["total_count"])
         self.assertEqual(3189, acquisition_event["response"]["byte_size"])
         self.assertTrue(snapshot["source_dataset"]["raw_bytes_preserved"])
         self.assertEqual(10, len(administrative_evidence["documents"]))
         self.assertFalse(administrative_evidence["raw_bytes_preserved"])
+        self.assertEqual(1, len(canonical_assertions["assertions"]))
+        self.assertEqual(
+            commitment_mapping["target_programme"]["target_assertion_id"],
+            canonical_assertions["assertions"][0]["assertion_id"],
+        )
         self.assertEqual("proposed_review_pending", commitment_mapping["lifecycle_state"])
         self.assertEqual(1, len(commitment_mapping["components"]))
+        self.assertEqual(
+            "ready_for_maintainer_review",
+            commitment_mapping_review["lifecycle_state"],
+        )
+        self.assertEqual(2, len(commitment_mapping_review["ai_advisory_roles"]))
+        self.assertEqual(5, len(commitment_mapping_review["ai_advisory_runs"]))
+        self.assertIsNone(commitment_mapping_review["maintainer_review"])
+        self.assertEqual([], commitment_mapping_review["independent_human_reviews"])
+        self.assertIsNone(commitment_mapping_review["independent_final_decision"])
         self.assertEqual(
             "partial_candidate_services_evidence",
             procurement_evidence["chain_summary"]["procurement"],
@@ -90,7 +114,26 @@ class ContractTests(unittest.TestCase):
         validate(campaign, schema)
         self.assertFalse(campaign["raw_bytes_preserved"])
         self.assertEqual("blocked", campaign["rights"]["redistribution"])
+        self.assertEqual(
+            "evidence-campaign-schoolyards-2020",
+            campaign["evidence_fragment"]["evidence_id"],
+        )
         self.assertRegex(campaign["content_fingerprint_sha256"], r"^[a-f0-9]{64}$")
+
+    def test_canonical_target_assertion_resolves_to_precise_evidence(self) -> None:
+        bundle = load_json(CANONICAL_ASSERTIONS)
+        schema = load_json(CONTRACTS / "canonical-assertions.schema.json")
+        validate(bundle, schema)
+        assertion = bundle["assertions"][0]
+        self.assertEqual(
+            "assertion-respire-schoolyard-transformation-policy-2023",
+            assertion["assertion_id"],
+        )
+        self.assertEqual(
+            set(assertion["derivation"]["evidence_ids"]),
+            {item["evidence_id"] for item in bundle["evidence_relationships"]},
+        )
+        self.assertEqual("source_claim", assertion["epistemic_kind"])
 
     def test_administrative_evidence_preserves_financial_stages(self) -> None:
         bundle = load_json(ADMINISTRATIVE_EVIDENCE)
@@ -181,6 +224,81 @@ class ContractTests(unittest.TestCase):
         invalid["review"]["state"] = "accepted"
         with self.assertRaisesRegex(ContractViolation, "expected constant"):
             validate(invalid, schema)
+
+    def test_review_packet_supports_interim_maintainer_path_and_stays_fail_closed(self) -> None:
+        packet = load_json(COMMITMENT_MAPPING_REVIEW)
+        schema = load_json(CONTRACTS / "commitment-mapping-review.schema.json")
+        validate(packet, schema)
+        self.assertEqual(
+            {"methodological_reviewer", "evidence_authority_reviewer"},
+            set(packet["human_review_requirements"]["independent_publication_roles"]),
+        )
+        self.assertTrue(
+            packet["human_review_requirements"]["independent_reviewer_separation_required"]
+        )
+        self.assertEqual(
+            "maintainer_reviewer",
+            packet["human_review_requirements"]["interim_poc_reviewer_role"],
+        )
+        self.assertTrue(
+            packet["human_review_requirements"][
+                "ai_advisory_required_before_maintainer_review"
+            ]
+        )
+        self.assertFalse(packet["preparation"]["counts_as_independent_review"])
+        self.assertEqual(
+            {"ai_methodology_auditor", "ai_evidence_authority_auditor"},
+            {item["role_id"] for item in packet["ai_advisory_roles"]},
+        )
+        self.assertTrue(
+            all(item["status"] == "completed" for item in packet["ai_advisory_roles"])
+        )
+        self.assertTrue(
+            all(
+                item["execution_mode"] == "manually_invoked_non_autonomous"
+                and item["role_configuration_version"] == "0.3.0"
+                for item in packet["ai_advisory_roles"]
+            )
+        )
+        self.assertEqual(
+            {"accept", "request_changes"},
+            {
+                item["recommendation"]
+                for item in packet["ai_advisory_runs"]
+                if item["reviewed_mapping_version"] == "0.2.0"
+            },
+        )
+        current_runs = [
+            item
+            for item in packet["ai_advisory_runs"]
+            if item["reviewed_mapping_version"] == "0.3.0"
+            and item["applicability_state"] == "current"
+        ]
+        self.assertEqual(2, len(current_runs))
+        self.assertEqual(
+            {"ai_methodology_auditor", "ai_evidence_authority_auditor"},
+            {item["role_id"] for item in current_runs},
+        )
+        self.assertEqual(
+            {"accept"},
+            {item["recommendation"] for item in current_runs},
+        )
+        self.assertTrue(
+            all(not item["counts_as_human_review"] for item in packet["ai_advisory_runs"])
+        )
+        self.assertIsNone(packet["maintainer_review"])
+        self.assertEqual(4, len(packet["evidence_basis"]))
+        self.assertEqual(
+            "indeterminate_with_predecessors",
+            next(
+                finding["finding_state"]
+                for finding in packet["findings"]
+                if finding["dimension"] == "policy_lineage"
+            ),
+        )
+        self.assertEqual("not_verifiable", packet["output_constraints"]["fulfillment_conclusion"])
+        self.assertFalse(packet["output_constraints"]["publication_eligible"])
+        self.assertFalse(packet["output_constraints"]["implementation_percentage_allowed"])
 
     def test_missing_required_source_field_is_rejected(self) -> None:
         profiles = load_json(SOURCE_PROFILES)

@@ -491,7 +491,7 @@ def render_policy_timeline(passport: dict[str, Any]) -> str:
 <ol class="timeline">
   <li><time datetime="2019">2019</time><strong>La phrase de campagne est retrouvée</strong><p><a href="{archive_url}" rel="external noreferrer">« Végétalisation des cours d’école »</a>. Le texte retrouvé ne précise ni combien d’écoles, ni quel budget, ni quelle date de fin.</p></li>
   <li><time datetime="2022">2022</time><strong>Un budget et une première école apparaissent dans les documents</strong><p>Les documents montrent un {evidence_link("evidence-apcp-respire-total-2022", "budget total autorisé")} et indiquent que {evidence_link("evidence-transition-nestor-reported-use", "les élèves utilisent le nouvel espace de Nestor-Perret")}. Ils ne disent pas clairement que ces actions viennent de la promesse.</p></li>
-  <li><time datetime="2023">2023</time><strong>Le conseil municipal adopte officiellement le programme</strong><p>Le {evidence_link("evidence-pev-adoption-2023", "projet éducatif municipal")} décrit « Respire à la récré ». Ce programme est plus large que la phrase prononcée pendant la campagne.</p></li>
+  <li><time datetime="2023">2023</time><strong>Le conseil municipal adopte le projet éducatif qui contient « Respire à la récré »</strong><p>Le {evidence_link("evidence-pev-adoption-2023", "projet éducatif municipal")} décrit cette action. Elle est plus large que la phrase prononcée pendant la campagne.</p></li>
   <li><time datetime="2025-12-31">2025</time><strong>Dernière date étudiée par ce prototype</strong><p>Nous disposons d’informations sur trois écoles. Il manque encore les contrats de travaux, les documents confirmant leur fin et les mesures de leurs effets.</p></li>
 </ol>
 """
@@ -558,7 +558,7 @@ def render_execution_chain(passport: dict[str, Any]) -> str:
             "",
             "03",
             "Décision de la mairie",
-            "Programme officiellement adopté",
+            "Projet éducatif contenant l’action adopté",
         ),
         (
             "#finances",
@@ -918,7 +918,7 @@ def render_commitment_brief(passport: dict[str, Any]) -> str:
       <a class="state-card state-card--incomplete" href="#etat-non-acheve"><strong>{counts['reported_not_complete']} unité</strong><span class="state-card__label">non terminée</span><span class="state-card__detail">travaux indiqués comme non terminés par la mairie</span></a>
     </div>
     <p class="chain-note">Dans les données de la mairie, la maternelle et l’élémentaire sont comptées séparément, même lorsqu’elles portent le même nom d’école.</p>
-    <p class="commitment-brief__mapping"><strong>La promesse et le programme ne disent pas exactement la même chose :</strong> « Respire à la récré » prévoit davantage que la seule végétalisation. Nous avons des indices qui relient les deux, mais ce lien doit encore être vérifié par une personne indépendante.</p>
+    <p class="commitment-brief__mapping"><strong>La promesse et le programme ne disent pas exactement la même chose :</strong> « Respire à la récré » prévoit davantage que la seule végétalisation. Nous avons des indices qui relient les deux. Ce lien doit encore être contrôlé par le responsable du POC, puis revu par des personnes indépendantes avant toute publication.</p>
     <p class="commitment-brief__limit"><strong>Attention :</strong> ces informations concernent seulement six unités dans trois écoles. Elles ne décrivent pas toutes les écoles de Clermont-Ferrand et ne permettent pas de dire que toute la promesse est tenue ou non tenue.</p>
     <p><strong>Thèmes proposés</strong></p>
     <ul class="theme-list" aria-label="Thèmes de navigation proposés">
