@@ -136,15 +136,15 @@
       "source_class": "official_dataset",
       "publisher": "Ville de Clermont-Ferrand, Direction des Actions Juridiques et des Achats",
       "canonical_url": "https://opendata.clermont-ferrand.fr/explore/dataset/marches-publics-a-partir-de-2020-vcf/",
-      "purpose": "Provide a bounded official procurement record for the 2020 schoolyard-regreening study and cross-check the later design-service contract references and values.",
-      "fact_types": ["procurement_contract_metadata", "published_contract_value"],
+      "purpose": "Provide bounded official procurement records for the 2020 schoolyard-regreening study, a 2021 citywide schoolyard works framework, and later design-service contract references and values.",
+      "fact_types": ["procurement_contract_metadata", "procurement_works_framework", "published_contract_value", "published_framework_maximum"],
       "territory": "fr-63113-clermont-ferrand",
       "rights": {"state": "open_license", "license_id": "etalab-2.0", "redistribution": "allowed_with_attribution", "review_state": "reviewed_for_prototype"},
       "privacy": {"classification": "public_non_personal", "personal_data_expected": false, "child_data_allowed": false},
       "security": {"risk_tier": "low", "remote_content_untrusted": true},
       "acquisition": {"mode": "bounded_api_query", "frequency": "one_off", "prototype_authorized": true},
       "retention": {"class": "open_data_prototype", "state": "active", "review_required_before_production": true},
-      "review": {"verified_at": "2026-07-30", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["The dataset is authoritative for the contract metadata it publishes, not for invoices, payment, works completion, outcomes, or impact.", "Its eight selected rows are at contract-holder grain for three procurement identifiers; repeated amounts must not be summed across holders.", "The marche_nature and marche_type fields change semantics across the selected years and require record-level normalization.", "The source was modified and acquired after the pilot observation cut-off."]}
+      "review": {"verified_at": "2026-08-01", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["The dataset is authoritative for the contract metadata it publishes, not for invoices, payment, works completion, outcomes, or impact.", "Its eight previously selected rows are at contract-holder grain for three procurement identifiers; repeated amounts must not be summed across holders.", "The separately acquired 2021 works-framework row has one holder but does not identify a purchase order, Respire, or a pilot school.", "For framework agreements, the dataset defines montant as the maximum order value for the validity period; it is not executed expenditure.", "The marche_nature and marche_type fields change semantics across the selected years and require record-level normalization.", "The source was modified and acquired after the pilot observation cut-off."]}
     },
     {
       "source_id": "src-boamp-schoolyard-regreening-2025",
@@ -163,6 +163,24 @@
       "acquisition": {"mode": "bounded_api_query", "frequency": "one_off", "prototype_authorized": false},
       "retention": {"class": "metadata_only", "state": "active", "review_required_before_production": true},
       "review": {"verified_at": "2026-07-30", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["The official catalog does not state a dataset licence, so raw response redistribution remains blocked pending qualified rights review.", "The award notice was published and the contracts were issued after the 2025 observation cut-off even though the reported award date is 26 November 2025.", "The Pierre-et-Marie-Curie lot also covers Alphonse-Daudet and cannot be attached to the reported 2023 maternal courtyard delivery without a scope-bearing record.", "The notices concern design and user-assistance services, not attributable works, payment, competent acceptance, outcomes, or impact."]}
+    },
+    {
+      "source_id": "src-boamp-schoolyard-works-2022",
+      "version": "1.0.0",
+      "status": "link_only",
+      "title": "BOAMP schoolyard works framework competition and rectification notices",
+      "source_class": "official_dataset",
+      "publisher": "Bulletin officiel des annonces des marchés publics",
+      "canonical_url": "https://www.boamp.fr/pages/avis/?q=idweb:22-149017",
+      "purpose": "Establish the published scope, duration, financial bounds, funding statement, and corrected internal reference for the 2022 citywide schoolyard works framework competition.",
+      "fact_types": ["procurement_works_competition_notice", "procurement_notice_rectification"],
+      "territory": "fr-63113-clermont-ferrand",
+      "rights": {"state": "rights_unknown", "license_id": null, "redistribution": "blocked", "review_state": "pending"},
+      "privacy": {"classification": "public_official_role", "personal_data_expected": true, "child_data_allowed": false},
+      "security": {"risk_tier": "medium", "remote_content_untrusted": true},
+      "acquisition": {"mode": "bounded_api_query", "frequency": "one_off", "prototype_authorized": false},
+      "retention": {"class": "metadata_only", "state": "active", "review_required_before_production": true},
+      "review": {"verified_at": "2026-08-01", "reviewer_role": "maintainer", "authority_state": "authoritative_with_limitation", "limitations": ["The official catalog does not state a dataset licence, so the 5,835-byte response remains uncommitted and only its fingerprint and governed metadata are retained.", "The notices establish a competition, not an award, purchase order, payment, or completed work.", "The object covers schoolyards citywide but does not name Respire or any pilot school.", "The minimum and maximum values are four-year framework bounds, not executed expenditure."]}
     },
     {
       "source_id": "src-city-budget-2025-summary",

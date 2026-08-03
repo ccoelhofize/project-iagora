@@ -69,15 +69,18 @@ context from 2015 and 2018. It does not
 contain the PDFs, infer missing procurement, establish competent works
 acceptance, or support an outcome or causal-impact conclusion.
 
-`pilot/procurement-evidence.json` is a separate executable bundle for three
-procurement records: the 2020 study service, the 2025 design competition, and
-the later-published award notice for its two lots. The exact eight-row City API
-response is preserved under `raw/procurement/city-contracts/2026-07-30/` under
-Licence Ouverte 2.0. Values are aggregated once per procurement identifier,
-never once per holder row. BOAMP response bytes are not retained because its
+`pilot/procurement-evidence.json` is a separate executable bundle for six
+procurement records: the 2020 study service; a 2021 citywide schoolyard works
+framework; a 2022 works-framework competition and rectification; the 2025
+design competition; and its later-published award notice. The exact eight-row
+service response and one-row works-framework response are preserved under
+`raw/procurement/city-contracts/` under Licence Ouverte 2.0. Values are
+aggregated once per procurement identifier, never once per holder row.
+Framework maxima and bounds are not spending and are never added. BOAMP
+response bytes are not retained because its
 official dataset catalog does not state a licence; the bundle keeps only the
 official notice identifiers, minimal metadata, response size, fingerprint, and
-non-retention reason. These records are candidate evidence for services because
-their objects concern schoolyard regreening, but they do not directly name the
-Respire programme and do not establish attributable works, payment, competent
+non-retention reason. The works records improve the citywide procurement chain,
+but they do not directly name the Respire programme, identify a purchase order
+or pilot school, or establish school-attributable works, payment, competent
 completion, outcomes, impact, or campaign fulfillment.

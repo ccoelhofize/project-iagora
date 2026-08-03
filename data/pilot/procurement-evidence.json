@@ -1,10 +1,10 @@
 {
   "contract_id": "iagora.procurement-evidence",
-  "contract_version": "1.0.0",
+  "contract_version": "1.1.0",
   "bundle_id": "procurement-evidence-respire-recre-2025",
-  "bundle_version": "0.1.0",
+  "bundle_version": "0.2.0",
   "observation_cutoff": "2025-12-31",
-  "assembled_at": "2026-07-30T12:24:19Z",
+  "assembled_at": "2026-08-01T15:34:48Z",
   "territory": "fr-63113-clermont-ferrand",
   "city_dataset_acquisition": {
     "source_id": "src-city-procurement-open-data",
@@ -15,6 +15,15 @@
     "record_count": 8,
     "source_modified_at": "2026-07-08T08:09:53+00:00"
   },
+  "city_works_acquisition": {
+    "source_id": "src-city-procurement-open-data",
+    "artifact_version_id": "dataset-city-procurement-schoolyard-works-raw-20260801-001",
+    "acquisition_event_path": "data/raw/procurement/city-contracts/2026-08-01/acquisition-event.json",
+    "raw_local_path": "data/raw/procurement/city-contracts/2026-08-01/works-framework-record.json",
+    "raw_sha256": "65506a95f79116362aa62945135ac51d4b28402a1ca29f68af19edb02af5fdf4",
+    "record_count": 1,
+    "source_modified_at": "2026-07-08T08:09:53+00:00"
+  },
   "boamp_acquisition": {
     "source_id": "src-boamp-schoolyard-regreening-2025",
     "artifact_version_id": "boamp-notices-25-110034-and-26-4348-metadata-20260730",
@@ -23,6 +32,18 @@
     "acquired_at": "2026-07-30T12:24:19Z",
     "response_byte_size": 29026,
     "response_sha256": "824ff09cca96c131c6d599738b5f8a54840dae7f14fd405038cec5bc65132fa7",
+    "raw_bytes_preserved": false,
+    "nonretention_reason": "dataset_license_not_stated_in_official_catalog_metadata",
+    "rights_state": "qualified_review_pending"
+  },
+  "boamp_works_acquisition": {
+    "source_id": "src-boamp-schoolyard-works-2022",
+    "artifact_version_id": "boamp-notices-22-149017-and-22-157373-metadata-20260801",
+    "requested_endpoint": "https://www.boamp.fr/api/explore/v2.1/catalog/datasets/boamp/records",
+    "record_ids": ["22-149017", "22-157373"],
+    "acquired_at": "2026-08-01T15:34:48Z",
+    "response_byte_size": 5835,
+    "response_sha256": "ae26e7c7a216b75c828472474e6ce09385b7260fa6d0eb44e84fc96a147c1683",
     "raw_bytes_preserved": false,
     "nonretention_reason": "dataset_license_not_stated_in_official_catalog_metadata",
     "rights_state": "qualified_review_pending"
@@ -65,6 +86,7 @@
         "financial_stage": "contracted_service_value",
         "aggregation_rule": "Use the value once for procurement identifier 20202012301."
       },
+      "amount_bounds": null,
       "lots": [],
       "source_locators": [
         "data/raw/procurement/city-contracts/2026-07-30/records-selected.json#results[marche_id=20202012301]"
@@ -80,6 +102,176 @@
         "Competent completion",
         "Outcome or causal impact",
         "Direct fulfillment of the campaign commitment"
+      ]
+    },
+    {
+      "record_id": "procurement-city-schoolyard-works-framework-2021",
+      "evidence_id": "evidence-procurement-city-schoolyard-works-framework-2021",
+      "source_ids": ["src-city-procurement-open-data"],
+      "title": "Citywide schoolyard road and landscaping works framework",
+      "role": "works_framework_contract",
+      "authority": {
+        "fact_type": "procurement_works_framework",
+        "outcome": "authoritative_with_limitation",
+        "basis": "The City procurement dataset is competent for the framework metadata it publishes and defines its amount field for framework agreements as the maximum order value for the validity period.",
+        "limitations": [
+          "The record does not name Respire à la récré, a purchase order, or any pilot school.",
+          "The published EUR 2,600,000 value is a framework maximum, not committed, invoiced, paid, or final expenditure.",
+          "The dataset does not establish delivery, competent completion, outcome, causal impact, or fulfillment."
+        ]
+      },
+      "scope": {
+        "level": "citywide_schoolyard_regreening",
+        "candidate_programme_id": "programme-respire-a-la-recre",
+        "relationship_to_programme": "candidate_relevant_object_not_directly_named",
+        "school_groups": [],
+        "pilot_case_ids": []
+      },
+      "dates": {
+        "notice_publication": null,
+        "response_deadline": null,
+        "notification": "2021-05-25",
+        "award": null,
+        "issue": null
+      },
+      "duration_months": 24,
+      "amount": {
+        "value": 2600000,
+        "currency": "EUR",
+        "tax_basis": "HT",
+        "financial_stage": "published_framework_maximum",
+        "aggregation_rule": "Use once as the published maximum order value for the 24-month validity period; never treat it as expenditure."
+      },
+      "amount_bounds": {
+        "minimum": null,
+        "maximum": 2600000,
+        "currency": "EUR",
+        "tax_basis": "HT",
+        "period_months": 24,
+        "financial_stage": "published_framework_maximum"
+      },
+      "lots": [],
+      "source_locators": [
+        "data/raw/procurement/city-contracts/2026-08-01/works-framework-record.json#results[marche_id=20212105200]"
+      ],
+      "observation_state": "eligible_historical_evidence",
+      "establishes": [
+        "The City dataset reports procurement identifier 20212105200, notified on 25 May 2021, as a 24-month framework for road and landscaping works in Clermont-Ferrand schoolyards.",
+        "The published maximum order value for the validity period is EUR 2,600,000 excluding tax, with EUROVIA DALA named as holder."
+      ],
+      "does_not_establish": [
+        "A direct relationship to Respire à la récré",
+        "A purchase order or allocation to Nestor-Perret, Pierre-et-Marie-Curie, or Jean-Zay",
+        "Committed, invoiced, paid, or final expenditure",
+        "Competent completion, outcome, causal impact, or fulfillment"
+      ]
+    },
+    {
+      "record_id": "procurement-boamp-schoolyard-works-competition-22-149017",
+      "evidence_id": "evidence-procurement-boamp-schoolyard-works-competition-22-149017",
+      "source_ids": ["src-boamp-schoolyard-works-2022"],
+      "title": "Citywide schoolyard road and landscaping works competition",
+      "role": "works_competition_notice",
+      "authority": {
+        "fact_type": "procurement_works_competition",
+        "outcome": "authoritative_with_limitation",
+        "basis": "The official BOAMP notice is competent for the published competition scope, procedure, duration, financial bounds, funding statement, and response deadline.",
+        "limitations": [
+          "The notice establishes a competition for a multi-awardee framework, not an award or purchase order.",
+          "It does not name Respire à la récré or any pilot school.",
+          "The official catalog does not state a dataset licence, so only governed metadata and the response fingerprint are retained."
+        ]
+      },
+      "scope": {
+        "level": "citywide_schoolyard_regreening",
+        "candidate_programme_id": "programme-respire-a-la-recre",
+        "relationship_to_programme": "candidate_relevant_object_not_directly_named",
+        "school_groups": [],
+        "pilot_case_ids": []
+      },
+      "dates": {
+        "notice_publication": "2022-11-08",
+        "response_deadline": "2022-12-05T12:00:00+01:00",
+        "notification": null,
+        "award": null,
+        "issue": null
+      },
+      "duration_months": 48,
+      "amount": null,
+      "amount_bounds": {
+        "minimum": 1600000,
+        "maximum": 4000000,
+        "currency": "EUR",
+        "tax_basis": "HT",
+        "period_months": 48,
+        "financial_stage": "published_framework_bounds"
+      },
+      "lots": [],
+      "source_locators": [
+        "https://www.boamp.fr/pages/avis/?q=idweb:22-149017",
+        "record[idweb=22-149017].donnees.OBJET",
+        "record[idweb=22-149017].donnees.RENSEIGNEMENTS_COMPLEMENTAIRES.RENS_COMPLEMENT"
+      ],
+      "observation_state": "eligible_historical_evidence",
+      "establishes": [
+        "BOAMP published a competition on 8 November 2022 for a four-year multi-awardee framework covering road and landscaping works in Clermont-Ferrand schoolyards.",
+        "The notice states a four-year minimum of EUR 1,600,000 excluding tax and maximum of EUR 4,000,000 excluding tax, with City funds plus stated FEDER and Agence de l'Eau funding.",
+        "The notice identifies CPV 45112700 and a social-insertion clause."
+      ],
+      "does_not_establish": [
+        "An award, framework holder, purchase order, or school-level allocation",
+        "A direct relationship to Respire à la récré",
+        "Committed, invoiced, paid, or final expenditure",
+        "Competent completion, outcome, causal impact, or fulfillment"
+      ]
+    },
+    {
+      "record_id": "procurement-boamp-schoolyard-works-rectification-22-157373",
+      "evidence_id": "evidence-procurement-boamp-schoolyard-works-rectification-22-157373",
+      "source_ids": ["src-boamp-schoolyard-works-2022"],
+      "title": "Rectification of the citywide schoolyard works competition",
+      "role": "works_competition_rectification",
+      "authority": {
+        "fact_type": "procurement_notice_rectification",
+        "outcome": "authoritative_with_limitation",
+        "basis": "The official BOAMP rectification is competent for the corrected internal reference and revised response deadline it publishes.",
+        "limitations": [
+          "The rectification does not identify an award or purchase order.",
+          "It does not name Respire à la récré or any pilot school.",
+          "The official catalog does not state a dataset licence, so only governed metadata and the response fingerprint are retained."
+        ]
+      },
+      "scope": {
+        "level": "citywide_schoolyard_regreening",
+        "candidate_programme_id": "programme-respire-a-la-recre",
+        "relationship_to_programme": "candidate_relevant_object_not_directly_named",
+        "school_groups": [],
+        "pilot_case_ids": []
+      },
+      "dates": {
+        "notice_publication": "2022-11-28",
+        "response_deadline": "2022-12-09T12:00:00+01:00",
+        "notification": null,
+        "award": null,
+        "issue": null
+      },
+      "duration_months": null,
+      "amount": null,
+      "amount_bounds": null,
+      "lots": [],
+      "source_locators": [
+        "https://www.boamp.fr/pages/avis/?q=idweb:22-157373",
+        "record[idweb=22-157373].donnees.RECTIF.INFO_COMPLEMENTAIRE"
+      ],
+      "observation_state": "eligible_historical_evidence",
+      "establishes": [
+        "The rectification replaces internal reference 2022CF-PRI80 with 2022CF-TRX76.",
+        "The response deadline was moved from 5 December to 9 December 2022 at noon."
+      ],
+      "does_not_establish": [
+        "An award, framework holder, purchase order, or school-level allocation",
+        "A direct relationship to Respire à la récré",
+        "Payment, competent completion, outcome, causal impact, or fulfillment"
       ]
     },
     {
@@ -113,6 +305,7 @@
       },
       "duration_months": 60,
       "amount": null,
+      "amount_bounds": null,
       "lots": [
         {
           "lot_id": "LOT-0001",
@@ -186,6 +379,7 @@
         "financial_stage": "published_award_value",
         "aggregation_rule": "Sum the two unique lot contract values once; never sum repeated City holder-grain rows."
       },
+      "amount_bounds": null,
       "lots": [
         {
           "lot_id": "LOT-0001",
@@ -266,22 +460,50 @@
       "severity": "medium",
       "confidence": "high",
       "finding": "The official BOAMP catalog metadata does not state a dataset licence.",
-      "evidence": "The catalog returned null for both license and license_url on 30 July 2026.",
-      "impact": "Repository redistribution of the 29,026-byte raw response cannot be approved under the current rights rule.",
+      "evidence": "The catalog returned null for both license and license_url during the 30 July and 1 August 2026 acquisitions.",
+      "impact": "Repository redistribution of the 29,026-byte design-service response and 5,835-byte works-notice response cannot be approved under the current rights rule.",
       "remediation": "Retain the fingerprint and minimal governed metadata only until qualified rights review establishes the reuse basis."
+    },
+    {
+      "finding_id": "quality-framework-maximum-is-not-spending",
+      "severity": "high",
+      "confidence": "high",
+      "finding": "The City dataset's EUR 2,600,000 amount for procurement 20212105200 is the maximum order value for the framework validity period, not an expenditure measure.",
+      "evidence": "The dataset catalog defines framework amounts as maximum order values per validity period; the selected record is a 24-month framework and labels the amount EUR 2,600,000 excluding tax.",
+      "impact": "Presenting the value as committed, paid, or final cost would materially overstate what the source establishes.",
+      "remediation": "Expose the amount only as a published framework maximum and require purchase orders or accounting records for actual spending."
+    },
+    {
+      "finding_id": "quality-citywide-works-site-attribution-gap",
+      "severity": "high",
+      "confidence": "high",
+      "finding": "The 2021 City framework and 2022 BOAMP competition concern schoolyard works citywide but identify no Respire programme record, purchase order, or pilot school.",
+      "evidence": "Both official objects name schoolyard road and landscaping works; neither names Nestor-Perret, Pierre-et-Marie-Curie, Jean-Zay, or Respire à la récré.",
+      "impact": "The records improve the works-procurement chain but cannot support school-level cost, delivery, or fulfillment claims.",
+      "remediation": "Locate the framework award, purchase orders, contract annexes, or accounting entries that carry a school and work scope."
+    },
+    {
+      "finding_id": "quality-successive-framework-relationship-unresolved",
+      "severity": "medium",
+      "confidence": "high",
+      "finding": "The 2021 City framework and 2022 BOAMP competition have related subject matter but different durations and financial bounds, and no reviewed source links or supersedes them.",
+      "evidence": "The City record reports a 24-month framework notified in May 2021 with a EUR 2,600,000 maximum; BOAMP reports a separate 48-month competition in November 2022 with EUR 1,600,000 to EUR 4,000,000 bounds and corrected internal reference 2022CF-TRX76.",
+      "impact": "Treating them as the same contract, adding their maxima, or assuming continuity would create an unsupported financial and contractual relationship.",
+      "remediation": "Keep both records separate until an award record, contract register, or procurement file establishes their relationship."
     }
   ],
   "chain_summary": {
-    "procurement": "partial_candidate_services_evidence",
-    "attributable_works_procurement": "not_located",
+    "procurement": "partial_candidate_services_and_works_framework_evidence",
+    "attributable_works_procurement": "candidate_citywide_frameworks_found_site_attribution_missing",
     "competent_completion": "not_located",
     "school_level_accounting": "not_located",
     "fulfillment_conclusion": "not_verifiable"
   },
   "limitations": [
-    "The bundle documents candidate study, competition, and award evidence for services only; the source records do not name the Respire à la récré programme.",
-    "No record in this bundle establishes attributable schoolyard works, transaction-level payment, competent acceptance, outcome, causal impact, or fulfillment.",
+    "The bundle documents candidate study and design-service evidence plus citywide schoolyard works frameworks; none of the source records names the Respire à la récré programme.",
+    "The works records do not identify a purchase order or pilot school and therefore do not establish attributable school-level works, transaction-level payment, competent acceptance, outcome, causal impact, or fulfillment.",
+    "Published framework maxima and bounds must not be presented as committed, invoiced, paid, or final expenditure.",
     "The award notice is post-cut-off evidence about a reported pre-cut-off award date and remains excluded from contemporaneous 2025 publication claims.",
-    "The public prototype must not allocate multi-school lot values to one school or sum holder-grain duplicates."
+    "The public prototype must not allocate multi-school lot values or citywide framework values to one school, sum holder-grain duplicates, or add framework maxima together."
   ]
 }

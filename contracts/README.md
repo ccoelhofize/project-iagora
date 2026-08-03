@@ -26,10 +26,10 @@ fulfillment conclusion.
 
 The pilot-snapshot contract accepts the historical `1.0.0` state and the
 additive `1.1.0` through `1.6.0` evidence references; both snapshot files remain
-validateable, while the current build uses `0.10.0`. The `1.2.0` Knowledge
+validateable, while the current build uses `0.11.0`. The `1.2.0` Knowledge
 Passport projection exposes the proposed mapping and partial candidate procurement chain without changing the
 fail-closed publication state.
-The acquisition-event contract covers the two bounded City API responses and
+The acquisition-event contract covers the three bounded City API responses and
 binds each request, exact bytes, fingerprint, rights, minimization, security
 result, and limitations. It is not a general production acquisition contract.
 
@@ -38,12 +38,14 @@ precise fragments while keeping adopted policy, budget authorization, executed
 expenditure, reported delivery, funding forecasts, and publication events
 distinct. It also records the 2015 and 2018 education-policy predecessors as
 policy-lineage context rather than proof of continuity or novelty. The
-procurement-evidence contract separately records candidate
-evidence for a 2020 study, a 2025 competition, and two service awards without
-treating them as direct Respire records, works, payments, completion, or
-fulfillment. It enforces procurement-identifier amount
-grain because the City response repeats values for each holder. BOAMP response
-bytes remain unretained while dataset rights are unresolved. The administrative
+procurement-evidence contract separately records candidate evidence for a 2020
+study, a 2021 citywide works framework, a separate 2022 works-framework
+competition and rectification, a 2025 design competition, and two service
+awards. None is treated as a direct Respire or pilot-school record. The contract
+keeps framework maxima distinct from expenditure and enforces
+procurement-identifier amount grain because one City response repeats values
+for each holder. BOAMP response bytes remain unretained while dataset rights
+are unresolved. The administrative
 bundle also records two bounded procurement searches as gaps that MUST NOT be
 interpreted as evidence that no relevant contract exists. The PDF bytes
 are fingerprinted but not retained pending qualified rights and privacy review.
