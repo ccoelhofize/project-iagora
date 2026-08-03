@@ -11,6 +11,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from .acquisition import validate_acquisition_increment
 from .contracts import ContractViolation, load_json, validate, validate_files
 from .presentation import (
     PAGE_STYLES,
@@ -94,6 +95,7 @@ def validate_inputs(
     dict[str, Any],
     dict[str, Any],
 ]:
+    validate_acquisition_increment(root)
     profiles_path = root / SOURCE_PROFILES.relative_to(ROOT)
     snapshot_path = root / SNAPSHOT.relative_to(ROOT)
     profiles = validate_files(profiles_path, root / "contracts/v1/source-profiles.schema.json")

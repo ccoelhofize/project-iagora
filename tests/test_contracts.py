@@ -4,6 +4,16 @@ import copy
 import hashlib
 import unittest
 
+from iagora.acquisition import (
+    FIRST_PLAN_FIELDS,
+    FIRST_PLAN_UAIS,
+    HISTORICAL_ACQUISITION_PATHS,
+    project_historical_acquisition,
+    validate_admission_review_semantics,
+    validate_acquisition_increment,
+    validate_attempt_semantics,
+    validate_plan_against_source,
+)
 from iagora.contracts import ContractViolation, load_json, validate
 from iagora.pilot import (
     ADMINISTRATIVE_EVIDENCE,
@@ -12,6 +22,7 @@ from iagora.pilot import (
     COMMITMENT_MAPPING_REVIEW,
     CONTRACTS,
     PROCUREMENT_EVIDENCE,
+    ROOT,
     SOURCE_PROFILES,
     SNAPSHOT,
     validate_inputs,
@@ -19,6 +30,88 @@ from iagora.pilot import (
 
 
 class ContractTests(unittest.TestCase):
+    def test_acquisition_increment_zero_validates(self) -> None:
+        increment = validate_acquisition_increment(ROOT)
+        plan = increment["plan"]
+        self.assertEqual("plan-city-schools-pilot-cases", plan["plan_id"])
+        self.assertEqual("0.1.0", plan["plan_version"])
+        self.assertEqual(FIRST_PLAN_UAIS, tuple(plan["observation_scope"]["identity_values"]))
+        self.assertEqual(FIRST_PLAN_FIELDS, tuple(plan["query"]["selected_fields"]))
+        self.assertEqual(10, plan["query"]["result_limit"])
+        self.assertEqual(6, plan["transport_policy"]["maximum_accepted_records"])
+        self.assertEqual(65536, plan["transport_policy"]["maximum_response_bytes"])
+        self.assertEqual(3, len(increment["historical_projections"]))
+
+    def test_historical_acquisitions_are_transparent_compatibility_fixtures(self) -> None:
+        root = ROOT
+        increment = validate_acquisition_increment(root)
+        for event_path, projection in zip(
+            HISTORICAL_ACQUISITION_PATHS,
+            increment["historical_projections"],
+            strict=True,
+        ):
+            event = load_json(root / event_path)
+            attempt, artifact, receipt = projection
+            self.assertEqual("retrospective_compatibility_fixture", attempt["record_origin"])
+            self.assertIsNone(attempt["plan_reference"])
+            self.assertIsNone(
+                attempt["source_profile_reference"]["source_profile_version"]
+            )
+            self.assertEqual(event["raw_artifact"]["sha256"], artifact["sha256"])
+            self.assertEqual(event["response"]["byte_size"], artifact["byte_size"])
+            self.assertFalse(artifact["storage"]["content_addressed"])
+            self.assertEqual("retrospective_compatibility_fixture", receipt["record_origin"])
+            self.assertIsNone(receipt["package_id"])
+            self.assertTrue(receipt["bytes_available"])
+
+    def test_historical_projection_rejects_a_changed_fingerprint(self) -> None:
+        root = ROOT
+        event_path = root / HISTORICAL_ACQUISITION_PATHS[0]
+        event = load_json(event_path)
+        invalid = copy.deepcopy(event)
+        invalid["raw_artifact"]["sha256"] = "0" * 64
+        raw_path = root / event["raw_artifact"]["local_path"]
+        with self.assertRaisesRegex(ContractViolation, "fingerprint mismatch"):
+            project_historical_acquisition(invalid, raw_path, root)
+
+    def test_acquisition_plan_rejects_an_unregistered_host(self) -> None:
+        root = ROOT
+        increment = validate_acquisition_increment(root)
+        plan = copy.deepcopy(increment["plan"])
+        plan["transport_policy"]["allowed_host"] = "example.invalid"
+        profiles = load_json(SOURCE_PROFILES)
+        source = next(
+            item
+            for item in profiles["sources"]
+            if item["source_id"] == "src-city-open-data-schools"
+        )
+        with self.assertRaisesRegex(ContractViolation, "registered source host"):
+            validate_plan_against_source(plan, source)
+
+    def test_synthetic_admission_fixture_remains_pending_and_fail_closed(self) -> None:
+        increment = validate_acquisition_increment(ROOT)
+        review = increment["pending_review_fixture"]
+        self.assertEqual("synthetic_non_civic_fixture", review["record_origin"])
+        self.assertEqual("admission_pending", review["review_state"])
+        self.assertIsNone(review["reviewer_role"])
+        self.assertFalse(review["publication_authorized"])
+        self.assertFalse(review["automatic_merge_allowed"])
+
+    def test_live_attempt_requires_exact_governance_versions(self) -> None:
+        increment = validate_acquisition_increment(ROOT)
+        attempt = copy.deepcopy(increment["historical_projections"][0][0])
+        attempt["record_origin"] = "live_execution"
+        attempt["execution_environment"] = "local"
+        with self.assertRaisesRegex(ContractViolation, "exact plan version"):
+            validate_attempt_semantics(attempt)
+
+    def test_pending_admission_cannot_hide_a_decision(self) -> None:
+        increment = validate_acquisition_increment(ROOT)
+        review = copy.deepcopy(increment["pending_review_fixture"])
+        review["reviewer_role"] = "maintainer"
+        with self.assertRaisesRegex(ContractViolation, "cannot contain a decision"):
+            validate_admission_review_semantics(review)
+
     def test_repository_inputs_validate(self) -> None:
         (
             profiles,

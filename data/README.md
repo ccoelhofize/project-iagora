@@ -7,6 +7,20 @@
 Files under `sources/` are IAgora governance metadata. Files under `pilot/` are
 bounded prototype inputs and carry their own rights and acquisition metadata.
 
+Files under `acquisition/plans/` are reviewed, non-secret acquisition
+instructions. The first plan is restricted to one registered Opendatasoft
+dataset, six UAIs, fourteen selected fields, and explicit transport and policy
+limits. Its presence does not perform or schedule an acquisition. Files under
+`acquisition/fixtures/` are test-only examples; the pending admission review is
+explicitly synthetic and describes no real civic fact or operational event.
+
+The three exact records under `raw/` remain the real historical compatibility
+fixtures. Validation projects their immutable acquisition metadata into the new
+attempt, artifact-version, and receipt contracts while explicitly preserving
+which plan, connector-rule, package, timing, and admission fields were not
+recorded at the time. The projection does not rewrite the historical files or
+pretend that a contemporaneous receipt existed.
+
 `pilot/open-data-subset.json` is a normalized six-record extract from the City of
 Clermont-Ferrand open-data dataset “Respire à la récré et Les enfants d'abord”.
 The upstream dataset is published under Licence Ouverte 2.0. Attribution:

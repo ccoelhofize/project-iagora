@@ -1,0 +1,43 @@
+{
+  "contract_id": "iagora.admission-review",
+  "contract_version": "1.0.0",
+  "review_id": "admission-review-synthetic-pending-001",
+  "record_origin": "synthetic_non_civic_fixture",
+  "package_id": "package-synthetic-schools-001",
+  "artifact_version_id": "dataset-synthetic-schools-candidate-001",
+  "attempt_id": "attempt-synthetic-schools-001",
+  "plan_reference": {
+    "plan_id": "plan-city-schools-pilot-cases",
+    "plan_version": "0.1.0"
+  },
+  "source_profile_reference": {
+    "source_id": "src-city-open-data-schools",
+    "source_profile_version": "1.1.0"
+  },
+  "rule_versions": {
+    "connector": "0.1.0",
+    "contract_validation": "1.0.0",
+    "policy_validation": "0.1.0"
+  },
+  "deterministic_checks": [
+    {"check_id": "package-fingerprint", "result": "passed"},
+    {"check_id": "plan-boundary", "result": "passed"},
+    {"check_id": "rights-privacy-security-retention", "result": "passed"},
+    {"check_id": "human-evidence-review", "result": "not_run"}
+  ],
+  "review_state": "admission_pending",
+  "reviewer_role": null,
+  "decided_at": null,
+  "rationale": null,
+  "targets": [],
+  "pull_request_url": null,
+  "publication_authorized": false,
+  "automatic_merge_allowed": false,
+  "limitations": [
+    "Synthetic contract fixture only; it does not describe a real acquisition, package, artifact, review, or civic fact.",
+    "Passing deterministic checks cannot replace the required human admission decision."
+  ],
+  "required_follow_up": [
+    "A maintainer must inspect the exact package, change report, rights, privacy, security, retention, and evidence limitations before any admission decision."
+  ]
+}

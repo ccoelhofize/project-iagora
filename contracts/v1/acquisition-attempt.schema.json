@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/acquisition-attempt.schema.json",
+  "title": "IAgora generalized acquisition attempt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "attempt_id", "record_origin",
+    "plan_reference", "source_profile_reference", "connector_reference",
+    "started_at", "completed_at", "execution_environment", "requested_endpoint",
+    "resolved_url", "outcome", "safe_failure_code", "response",
+    "policy_decisions", "artifact_version_id", "retry_of", "correlation_id",
+    "software", "limitations"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.acquisition-attempt"},
+    "contract_version": {"const": "1.0.0"},
+    "attempt_id": {"type": "string", "pattern": "^attempt-[a-z0-9-]+$"},
+    "record_origin": {"enum": ["live_execution", "retrospective_compatibility_fixture"]},
+    "plan_reference": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["plan_id", "plan_version"],
+      "properties": {
+        "plan_id": {"type": "string", "pattern": "^plan-[a-z0-9-]+$"},
+        "plan_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "source_profile_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "source_profile_version"],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^src-[a-z0-9-]+$"},
+        "source_profile_version": {"type": ["string", "null"], "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "connector_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["connector_type", "connector_rule_version"],
+      "properties": {
+        "connector_type": {"const": "opendatasoft_explore_v2_json"},
+        "connector_rule_version": {"type": ["string", "null"], "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": ["string", "null"], "format": "date-time"},
+    "execution_environment": {"enum": ["local", "github_actions", "compatibility_fixture"]},
+    "requested_endpoint": {"type": "string", "format": "uri"},
+    "resolved_url": {"type": ["string", "null"], "format": "uri"},
+    "outcome": {"enum": ["unchanged", "candidate_new_version", "quarantined_validation_failure", "blocked_by_policy", "transport_failure"]},
+    "safe_failure_code": {
+      "type": ["string", "null"],
+      "enum": [
+        null, "plan_invalid", "source_suspended", "unauthorized_endpoint",
+        "network_error", "redirect_blocked", "timeout", "response_too_large",
+        "unexpected_media_type", "malformed_response", "record_limit_exceeded",
+        "missing_expected_record", "duplicate_identity", "unexpected_identity",
+        "rights_blocked", "privacy_blocked", "retention_blocked",
+        "contract_invalid", "fingerprint_mismatch"
+      ]
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["http_status", "media_type", "byte_size", "record_count", "duration_milliseconds"],
+      "properties": {
+        "http_status": {"type": ["integer", "null"], "minimum": 100, "maximum": 599},
+        "media_type": {"type": ["string", "null"]},
+        "byte_size": {"type": ["integer", "null"], "minimum": 0},
+        "record_count": {"type": ["integer", "null"], "minimum": 0},
+        "duration_milliseconds": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "policy_decisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_validation", "rights", "privacy", "security", "retention"],
+      "properties": {
+        "contract_validation": {"enum": ["passed", "failed", "not_run"]},
+        "rights": {"enum": ["passed", "blocked", "not_run"]},
+        "privacy": {"enum": ["passed", "blocked", "not_run"]},
+        "security": {"enum": ["passed", "blocked", "not_run"]},
+        "retention": {"enum": ["passed", "blocked", "not_run"]}
+      }
+    },
+    "artifact_version_id": {"type": ["string", "null"], "pattern": "^[a-z0-9-]+$"},
+    "retry_of": {"type": ["string", "null"], "pattern": "^attempt-[a-z0-9-]+$"},
+    "correlation_id": {"type": "string", "pattern": "^correlation-[a-z0-9-]+$"},
+    "software": {"type": "string", "minLength": 1},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  }
+}

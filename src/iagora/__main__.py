@@ -22,7 +22,8 @@ def main() -> int:
         validate_inputs()
         build_passport()
         print(
-            "Validated source profiles, campaign artifact metadata, canonical assertions, "
+            "Validated acquisition contracts, bounded plan, compatibility fixtures, source "
+            "profiles, campaign artifact metadata, canonical assertions, "
             "commitment mapping, review packet, pilot snapshot, administrative evidence, procurement "
             "evidence, bounded raw artifacts, open-data subset, and Knowledge Passport."
         )
