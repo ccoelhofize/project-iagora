@@ -16,4 +16,4 @@ The repository does not yet define a complete RFC lifecycle. Until it does, ever
 
 | RFC | Status | Proposal | Implementation state |
 | --- | --- | --- | --- |
-| [RFC-0001](RFC-0001-portable-governed-source-acquisition.md) | Draft | Portable governed source acquisition, runnable locally and through manually triggered GitHub Actions | Increment 0 contracts, bounded plan, and compatibility fixtures present; connector and workflows absent |
+| [RFC-0001](RFC-0001-portable-governed-source-acquisition.md) | Draft | Portable governed source acquisition, runnable locally and through manually triggered GitHub Actions | Increment 0 and bounded local Increment 1 present; GitHub workflows, durable receipts, and admission absent |

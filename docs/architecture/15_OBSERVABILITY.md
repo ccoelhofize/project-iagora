@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-08-03
 
 ## Purpose
 
@@ -36,4 +36,10 @@ Security and governance audit records are durable, access-controlled evidence of
 
 ## Current state
 
-No telemetry stack, service objectives, dashboards, on-call process, or production environment exists.
+Local acquisition and replay attempts emit append-only safe records containing
+stable identifiers, outcome, timing, fingerprints when available, rule
+versions, validation state, and bounded failure codes. They exclude response
+bodies, request URLs, local paths, and secrets. These records are local
+prototype metadata, not a durable audit or telemetry service. No telemetry
+stack, service objectives, dashboards, alerts, on-call process, remote receipt
+adapter, or production environment exists.

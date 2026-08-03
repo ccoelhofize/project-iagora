@@ -157,15 +157,15 @@ def validate_attempt_semantics(attempt: dict[str, Any]) -> None:
     elif attempt["safe_failure_code"] is None:
         raise ContractViolation("Unsuccessful acquisition outcome must carry a safe failure code")
 
-    if attempt["record_origin"] == "live_execution":
+    if attempt["record_origin"] in {"live_execution", "offline_replay"}:
         if attempt["plan_reference"] is None:
-            raise ContractViolation("Live acquisition attempt must bind an exact plan version")
+            raise ContractViolation("Executed attempt must bind an exact plan version")
         if attempt["source_profile_reference"]["source_profile_version"] is None:
-            raise ContractViolation("Live acquisition attempt must bind a source-profile version")
+            raise ContractViolation("Executed attempt must bind a source-profile version")
         if attempt["connector_reference"]["connector_rule_version"] is None:
-            raise ContractViolation("Live acquisition attempt must bind a connector-rule version")
+            raise ContractViolation("Executed attempt must bind a connector-rule version")
         if attempt["completed_at"] is None:
-            raise ContractViolation("Persisted live acquisition attempt must have a completion time")
+            raise ContractViolation("Persisted executed attempt must have a completion time")
     elif attempt["execution_environment"] != "compatibility_fixture":
         raise ContractViolation("Retrospective attempt must use the compatibility environment")
 
@@ -185,9 +185,9 @@ def validate_artifact_semantics(artifact: dict[str, Any]) -> None:
         if not artifact["non_retention_reason"]:
             raise ContractViolation("Unpreserved bytes require a governed non-retention reason")
 
-    if artifact["record_origin"] == "live_execution":
+    if artifact["record_origin"] in {"live_execution", "offline_replay"}:
         if storage["storage_state"] != "not_retained" and not storage["content_addressed"]:
-            raise ContractViolation("Retained live artifacts must use content-addressed storage")
+            raise ContractViolation("Retained executed artifacts must use content-addressed storage")
 
 
 def validate_receipt_semantics(receipt: dict[str, Any]) -> None:

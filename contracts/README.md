@@ -2,7 +2,7 @@
 
 **Status:** Pre-stable implementation
 **Owner:** Maintainers
-**Last reviewed:** 2026-08-01
+**Last reviewed:** 2026-08-03
 
 The `v1` directory contains the first field-level contracts for the bounded
 “Respire à la récré” proof of concept. They implement a deliberately small
@@ -32,15 +32,19 @@ fail-closed publication state.
 The acquisition-event contract covers the three bounded City API responses and
 binds each request, exact bytes, fingerprint, rights, minimization, security
 result, and limitations. It is not a general production acquisition contract.
-Five separate pre-stable contracts now define the reusable Increment 0
+Six separate pre-stable contracts now define the reusable acquisition
 boundaries proposed by RFC-0001: acquisition plan, generalized attempt, source
-artifact version, safe attempt receipt, and admission review. The executable
+artifact version, safe attempt receipt, admission review, and deterministic
+source-change report. The executable
 plan remains bounded to six reviewed school UAIs, fourteen fields, one
 registered host and dataset, and fail-closed human admission. The generalized
 contracts expose safe failure states and allow retrospective compatibility
 projections to state which plan, connector, timing, package, or review metadata
 was not recorded by the three historical acquisitions. They do not implement a
-connector, networking, quarantine storage, GitHub workflow, or admission action.
+GitHub workflow or admission action. A local Increment 1 core now implements
+the registered Opendatasoft connector, constrained HTTPS transport, structural
+validation, content-addressed quarantine, deterministic change reports, and
+offline replay. Its tests do not contact the civic endpoint.
 
 The administrative-evidence contract binds ten official document versions to
 precise fragments while keeping adopted policy, budget authorization, executed

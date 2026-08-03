@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-28
+**Last reviewed:** 2026-08-03
 
 ## Security objectives
 
@@ -35,4 +35,17 @@ Threat modeling and tests must cover malicious files, archive bombs, path traver
 
 ## Current state
 
-ADR-0008 establishes boundaries, but no controls are implemented and no production security assessment, DPIA, or incident plan exists.
+ADR-0008 establishes the boundaries. The bounded local acquisition prototype
+implements a registered plan allowlist, exact query construction, HTTPS-only
+retrieval, public-address validation, DNS-result pinning with TLS hostname
+verification, redirect revalidation, a global timeout, response-size and media
+type limits, compression rejection, exact structural validation, safe metadata,
+and append-only quarantine outside the repository. Tests exercise loopback and
+mixed-address rejection, changed and cross-host redirects, media and size
+failures, missing stored bytes, and safe output without contacting the civic
+endpoint.
+
+These controls cover only one JSON plan and do not constitute a production
+security assessment. No complete threat model, parser sandbox, active-content
+or malware scanner, credential system, incident plan, recovery exercise,
+qualified security review, or DPIA exists.

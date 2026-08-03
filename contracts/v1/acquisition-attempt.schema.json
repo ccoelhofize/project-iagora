@@ -16,7 +16,7 @@
     "contract_id": {"const": "iagora.acquisition-attempt"},
     "contract_version": {"const": "1.0.0"},
     "attempt_id": {"type": "string", "pattern": "^attempt-[a-z0-9-]+$"},
-    "record_origin": {"enum": ["live_execution", "retrospective_compatibility_fixture"]},
+    "record_origin": {"enum": ["live_execution", "offline_replay", "retrospective_compatibility_fixture"]},
     "plan_reference": {
       "type": ["object", "null"],
       "additionalProperties": false,
@@ -55,7 +55,8 @@
       "enum": [
         null, "plan_invalid", "source_suspended", "unauthorized_endpoint",
         "network_error", "redirect_blocked", "timeout", "response_too_large",
-        "unexpected_media_type", "malformed_response", "record_limit_exceeded",
+        "unexpected_media_type", "unsupported_content_encoding",
+        "malformed_response", "record_limit_exceeded",
         "missing_expected_record", "duplicate_identity", "unexpected_identity",
         "rights_blocked", "privacy_blocked", "retention_blocked",
         "contract_invalid", "fingerprint_mismatch"
