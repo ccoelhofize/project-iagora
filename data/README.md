@@ -2,7 +2,7 @@
 
 **Status:** Prototype data
 **Owner:** Maintainers
-**Last reviewed:** 2026-07-30
+**Last reviewed:** 2026-08-03
 
 Files under `sources/` are IAgora governance metadata. Files under `pilot/` are
 bounded prototype inputs and carry their own rights and acquisition metadata.
@@ -10,9 +10,16 @@ bounded prototype inputs and carry their own rights and acquisition metadata.
 Files under `acquisition/plans/` are reviewed, non-secret acquisition
 instructions. The first plan is restricted to one registered Opendatasoft
 dataset, six UAIs, fourteen selected fields, and explicit transport and policy
-limits. Its presence does not perform or schedule an acquisition. Files under
+limits. A local command can execute this plan deliberately, but its presence
+does not perform or schedule an acquisition. Files under
 `acquisition/fixtures/` are test-only examples; the pending admission review is
 explicitly synthetic and describes no real civic fact or operational event.
+
+Local acquisition and replay attempts write to a configured quarantine
+directory outside this repository. They do not add, replace, or promote files
+under `data/`. The local core has no admission command; moving eligible bytes
+from quarantine into this curated tree requires a future governed review and
+admission implementation.
 
 The three exact records under `raw/` remain the real historical compatibility
 fixtures. Validation projects their immutable acquisition metadata into the new

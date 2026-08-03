@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/source-change-report.schema.json",
+  "title": "IAgora deterministic source change report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "report_id", "plan_reference",
+    "baseline", "candidate", "comparison_state", "identity_field",
+    "summary", "changes", "generated_by", "limitations"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.source-change-report"},
+    "contract_version": {"const": "1.0.0"},
+    "report_id": {"type": "string", "pattern": "^change-report-[a-z0-9-]+$"},
+    "plan_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_id", "plan_version", "plan_sha256"],
+      "properties": {
+        "plan_id": {"type": "string", "pattern": "^plan-[a-z0-9-]+$"},
+        "plan_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "plan_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_version_id", "sha256"],
+      "properties": {
+        "artifact_version_id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_version_id", "sha256"],
+      "properties": {
+        "artifact_version_id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "comparison_state": {"enum": ["unchanged", "candidate_changed"]},
+    "identity_field": {"const": "uai"},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "records_added", "records_removed", "records_changed",
+        "records_unchanged", "fields_changed"
+      ],
+      "properties": {
+        "records_added": {"type": "integer", "minimum": 0},
+        "records_removed": {"type": "integer", "minimum": 0},
+        "records_changed": {"type": "integer", "minimum": 0},
+        "records_unchanged": {"type": "integer", "minimum": 0},
+        "fields_changed": {"type": "integer", "minimum": 0}
+      }
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["identity", "change_type", "field", "before", "after"],
+        "properties": {
+          "identity": {"type": "string", "pattern": "^063[0-9A-Z]{5}$"},
+          "change_type": {"enum": ["record_added", "record_removed", "field_changed"]},
+          "field": {"type": ["string", "null"]},
+          "before": {},
+          "after": {}
+        }
+      }
+    },
+    "generated_by": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule_id", "rule_version"],
+      "properties": {
+        "rule_id": {"const": "opendatasoft-record-diff"},
+        "rule_version": {"const": "0.1.0"}
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

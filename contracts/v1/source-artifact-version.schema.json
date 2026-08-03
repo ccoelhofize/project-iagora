@@ -17,7 +17,7 @@
     "contract_version": {"const": "1.0.0"},
     "artifact_id": {"type": "string", "pattern": "^artifact-[a-z0-9-]+$"},
     "artifact_version_id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
-    "record_origin": {"enum": ["live_execution", "retrospective_compatibility_fixture"]},
+    "record_origin": {"enum": ["live_execution", "offline_replay", "retrospective_compatibility_fixture"]},
     "source_id": {"type": "string", "pattern": "^src-[a-z0-9-]+$"},
     "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
     "byte_size": {"type": "integer", "minimum": 1},

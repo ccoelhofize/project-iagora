@@ -8,7 +8,7 @@
 
 **Last reviewed:** 2026-08-03
 
-**Implementation status:** Increment 0 partially implemented; network connector and workflows absent
+**Implementation status:** Increment 0 and local Increment 1 implemented; remote workflows and admission absent
 
 **Decision dependency:** A later ADR is required before adopting material persistence, source scheduling, or external-storage choices
 
@@ -20,7 +20,7 @@ The first connector is limited to reviewed Opendatasoft JSON API sources. This R
 
 ## Status of this proposal
 
-The project maintainer validated the drafting direction on 3 August 2026. This document remains a draft. Its five Increment 0 contracts, bounded first plan, synthetic pending-review example, and historical compatibility projections are now present and executable. Their presence does not prove that the engine, network connector, workflows, quarantine storage, or production controls exist.
+The project maintainer validated the drafting direction on 3 August 2026. This document remains a draft. Increment 0 contracts, the bounded first plan, the synthetic pending-review example, and historical compatibility projections are present and executable. The local part of Increment 1 now adds one registered Opendatasoft connector, constrained HTTPS transport, structural validation, append-only content-addressed quarantine, offline replay, deduplication, safe attempt metadata, and deterministic source-change reports. Tests use retained or injected responses; this implementation lot records no live civic acquisition. Remote GitHub workflows, durable receipts, admission, scheduling, and production controls remain absent.
 
 ## Problem
 
@@ -49,7 +49,8 @@ This RFC concerns **upstream source APIs** used to retrieve public data. It does
 - deterministic fingerprint, byte-size, selected-field, scope, and projection checks;
 - a fail-closed Knowledge Passport and static local product projection;
 - read-only CI for validation, tests, and deterministic build.
-- five generalized acquisition and admission contracts, one reviewed six-school plan, one explicitly synthetic pending-review fixture, and deterministic compatibility projections for the three historical acquisitions.
+- six generalized acquisition, comparison, and admission contracts, one reviewed six-school plan, one explicitly synthetic pending-review fixture, and deterministic compatibility projections for the three historical acquisitions.
+- one bounded local Opendatasoft connector, constrained HTTPS transport, append-only content-addressed quarantine, offline replay, deduplication, and deterministic source-change reporting.
 
 ### Present but too narrow for a reusable collector
 
@@ -60,12 +61,10 @@ This RFC concerns **upstream source APIs** used to retrieve public data. It does
 
 ### Planned but absent
 
-- reusable network acquisition;
-- connector interfaces and executable network transport;
-- quarantine and atomic promotion;
-- failed-attempt and retry records;
-- content-addressed deduplication;
-- portable local and GitHub Actions execution;
+- GitHub Actions acquisition execution equivalent to the local core;
+- atomic admission from quarantine into the governed evidence tree;
+- durable remote attempt receipts and expiry handling;
+- automated retry policy and records;
 - a remote human-admission workflow;
 - durable external evidence storage;
 - source scheduling, production monitoring, and incident operations.
@@ -462,11 +461,13 @@ Live-source smoke tests, if later approved, are operational diagnostics and must
 
 ### Increment 0: contracts and fixtures
 
-**Current state:** Partially implemented. The five reusable boundary contracts,
-the bounded first plan, one synthetic pending-admission example, safe failure
-vocabulary, and deterministic projections of all three historical acquisitions
-are present. No live attempt, quarantine package, or human admission has been
-created through the proposed pipeline.
+**Current state:** Implemented for the stated contract-and-fixture scope. The
+five original boundary contracts, the bounded first plan, one synthetic
+pending-admission example, safe failure vocabulary, and deterministic
+projections of all three historical acquisitions are present. The source-change
+report contract added with Increment 1 brings the reusable acquisition family
+to six schemas. No human admission has been created through the proposed
+pipeline.
 
 - define acquisition-plan, generalized attempt, artifact-version, and admission-review contracts;
 - encode `plan-city-schools-pilot-cases` as the first bounded plan after its field and limit review;
@@ -474,6 +475,11 @@ created through the proposed pipeline.
 - record safe failure vocabularies and policy gates.
 
 ### Increment 1: portable local core
+
+**Current state:** Implemented locally for the one registered six-school plan.
+The tests use retained and injected responses and do not contact the civic
+endpoint. Remote equivalence and governed admission are not part of this
+increment.
 
 - implement the Opendatasoft connector and constrained transport boundary;
 - implement quarantine, fingerprints, deduplication, events, and local replay;
