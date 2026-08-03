@@ -132,6 +132,9 @@ docs/
 │   ├── ADR-0008-public-source-acquisition-privacy-and-security-boundaries.md
 │   ├── ADR-0009-project-licensing-policy.md
 │   └── ADR-0010-multidimensional-accountability-and-policy-lineage.md
+├── rfc/
+│   ├── RFC-INDEX.md
+│   └── RFC-0001-portable-governed-source-acquisition.md
 ├── development/
 │   ├── CONTRIBUTING.md
 │   ├── CODING_STANDARDS.md
@@ -180,6 +183,7 @@ The architecture index is the detailed navigation hub. The ADR index records acc
 4. `docs/architecture/06_DATA_MODEL.md`
 5. `docs/governance/16_SOURCE_OF_TRUTH.md` through `23_KNOWLEDGE_PASSPORT.md`
 6. `docs/adr/ADR-INDEX.md`
+7. `docs/rfc/RFC-INDEX.md`
 
 ## Current phase
 

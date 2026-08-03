@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-08-03
 
 ## Pipeline stages
 
@@ -33,7 +33,7 @@ Restriction or removal events invalidate or rebuild affected fragments, assertio
 
 ## Current state
 
-The local vertical slice implements bounded source registration, one manually triggered constrained API acquisition, exact preservation of its selected-field response, acquisition-event validation, deterministic raw-to-normalized comparison, canonical scope-preserving transformation, row-level evidence location, passport projection, and a fail-closed publication check. It does not implement a reusable production connector, quarantine, sandboxed parsing, managed persistence, scheduling, retry, restriction propagation, or production publication. Those technologies remain open.
+The local vertical slice implements bounded source registration, three manually captured constrained City API responses, exact preservation of their selected-field bytes, acquisition-event validation, deterministic raw-to-normalized comparison, canonical scope-preserving transformation, row-level evidence location, passport projection, and a fail-closed publication check. It does not implement reusable network acquisition, a production connector, quarantine, sandboxed parsing, managed persistence, scheduling, retry, restriction propagation, or production publication. [RFC-0001](../rfc/RFC-0001-portable-governed-source-acquisition.md) proposes a portable local and manually triggered GitHub Actions acquisition path with separate human admission; the proposal remains draft and unimplemented.
 
 ## Related records
 
@@ -41,3 +41,4 @@ The local vertical slice implements bounded source registration, one manually tr
 - [Observability](15_OBSERVABILITY.md)
 - [ADR-0007](../adr/ADR-0007-raw-evidence-retention-redaction-and-legal-removal.md)
 - [ADR-0008](../adr/ADR-0008-public-source-acquisition-privacy-and-security-boundaries.md)
+- [RFC-0001](../rfc/RFC-0001-portable-governed-source-acquisition.md)

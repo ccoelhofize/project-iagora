@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-30
+**Last reviewed:** 2026-08-03
 
 ## Purpose
 
@@ -58,6 +58,15 @@ This index distinguishes documents and accepted decisions from executable capabi
 | [`governance/22_GLOSSARY.md`](governance/22_GLOSSARY.md) | Draft | Canonical working vocabulary |
 | [`governance/23_KNOWLEDGE_PASSPORT.md`](governance/23_KNOWLEDGE_PASSPORT.md) | Draft | Public governance projection contract |
 | [`governance/24_PILOT_SOURCE_INVENTORY.md`](governance/24_PILOT_SOURCE_INVENTORY.md) | Active inventory | Verified, missing, limited, and approved POC sources |
+
+## Requests for comments
+
+RFCs are substantial proposals under review. They are not accepted decisions or implemented capabilities. The repository still has no complete accepted RFC lifecycle.
+
+| Document | State | Role |
+| --- | --- | --- |
+| [`rfc/RFC-INDEX.md`](rfc/RFC-INDEX.md) | Draft | Registry of substantial open proposals |
+| [`rfc/RFC-0001-portable-governed-source-acquisition.md`](rfc/RFC-0001-portable-governed-source-acquisition.md) | Draft, implementation absent | Portable local and manually triggered GitHub Actions acquisition, human admission, and deferred external storage |
 
 ## Decision records
 
