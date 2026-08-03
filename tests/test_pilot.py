@@ -25,7 +25,7 @@ class PilotSliceTests(unittest.TestCase):
         self.assertEqual("mixed_by_school_unit", self.cases["Pierre-et-Marie-Curie"]["reported_summary"])
 
     def test_every_source_row_has_precise_evidence(self) -> None:
-        self.assertEqual(26, len(self.passport["evidence"]))
+        self.assertEqual(29, len(self.passport["evidence"]))
         school_evidence = [
             item
             for item in self.passport["evidence"]
@@ -80,7 +80,7 @@ class PilotSliceTests(unittest.TestCase):
             self.passport["administrative_chain"]["executed_expenditure"],
         )
         self.assertEqual(
-            "partial_candidate_services_evidence",
+            "partial_candidate_services_and_works_framework_evidence",
             self.passport["administrative_chain"]["procurement"],
         )
         self.assertIn(
@@ -88,7 +88,7 @@ class PilotSliceTests(unittest.TestCase):
             self.passport["publication"]["blockers"],
         )
 
-    def test_procurement_evidence_stays_at_service_and_multi_school_scope(self) -> None:
+    def test_procurement_evidence_preserves_service_works_and_scope_limits(self) -> None:
         records = self.passport["administrative_chain"]["procurement_records"]
         award = next(record for record in records if record["role"] == "award_notice")
         self.assertEqual(158_300, award["amount"]["value"])
@@ -102,7 +102,10 @@ class PilotSliceTests(unittest.TestCase):
             {"Alphonse-Daudet", "Pierre-et-Marie-Curie"},
             set(pierre_lot["school_groups"]),
         )
-        self.assertEqual(5, len(self.passport["quality"]["procurement_findings"]))
+        works = next(record for record in records if record["role"] == "works_framework_contract")
+        self.assertEqual(2_600_000, works["amount_bounds"]["maximum"])
+        self.assertEqual([], works["scope"]["pilot_case_ids"])
+        self.assertEqual(8, len(self.passport["quality"]["procurement_findings"]))
 
     def test_mapping_is_explicit_ai_assisted_and_review_pending(self) -> None:
         mapping = self.passport["commitment_mapping"]
@@ -222,6 +225,10 @@ class PilotSliceTests(unittest.TestCase):
         self.assertIn("Le budget a-t-il été respecté ?", rendered)
         self.assertIn("Économies ou coûts évités", rendered)
         self.assertIn("ils ne veulent pas tous dire la même chose", rendered)
+        self.assertIn("Plafond d’un accord-cadre de travaux", rendered)
+        self.assertIn("2,6 M€ HT", rendered)
+        self.assertIn("pas une somme dépensée", rendered)
+        self.assertIn("une fourchette de 1,6 à 4 millions d’euros HT", rendered)
         self.assertIn("Presse et autres déclarations", rendered)
         self.assertIn("Cette recherche reste à faire", rendered)
         self.assertIn("Nous n’en avons trouvé aucune dans les documents étudiés", rendered)
@@ -253,6 +260,9 @@ class PilotSliceTests(unittest.TestCase):
         self.assertIn("mesurer ses effets sur la ville", rendered)
         self.assertIn("Quelles décisions et quels montants avons-nous retrouvés ?", rendered)
         self.assertIn("1 939 810,63 € d’ordres de paiement enregistrés avant 2023", rendered)
+        self.assertIn("Accord-cadre de travaux notifié en 2021", rendered)
+        self.assertIn("Consultation de travaux publiée en 2022", rendered)
+        self.assertIn("Aucun document ne relie encore une commande de travaux", rendered)
         self.assertIn("Identifiant national de l’école (UAI)", rendered)
         self.assertNotIn(">AP de 4,07 M€<", rendered)
         self.assertNotIn(">810 000 € de CP 2023<", rendered)

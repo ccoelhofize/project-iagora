@@ -34,8 +34,10 @@ class ContractTests(unittest.TestCase):
             procurement_evidence,
             procurement_acquisition_event,
             procurement_raw,
+            works_acquisition_event,
+            works_raw,
         ) = validate_inputs()
-        self.assertEqual(19, len(profiles["sources"]))
+        self.assertEqual(20, len(profiles["sources"]))
         self.assertEqual("2025-12-31", snapshot["observation_cutoff"])
         self.assertEqual(6, len(dataset["records"]))
         self.assertEqual(
@@ -69,11 +71,13 @@ class ContractTests(unittest.TestCase):
         self.assertEqual([], commitment_mapping_review["independent_human_reviews"])
         self.assertIsNone(commitment_mapping_review["independent_final_decision"])
         self.assertEqual(
-            "partial_candidate_services_evidence",
+            "partial_candidate_services_and_works_framework_evidence",
             procurement_evidence["chain_summary"]["procurement"],
         )
         self.assertEqual(8, procurement_acquisition_event["response"]["record_count"])
         self.assertEqual(8, len(procurement_raw["results"]))
+        self.assertEqual(1, works_acquisition_event["response"]["record_count"])
+        self.assertEqual("20212105200", works_raw["results"][0]["marche_id"])
 
     def test_acquisition_event_and_raw_artifact_validate(self) -> None:
         event_path = (
@@ -190,7 +194,10 @@ class ContractTests(unittest.TestCase):
             next(record for record in bundle["records"] if record["role"] == "award_notice")["observation_state"],
         )
         self.assertFalse(bundle["boamp_acquisition"]["raw_bytes_preserved"])
-        self.assertEqual("not_located", bundle["chain_summary"]["attributable_works_procurement"])
+        self.assertEqual(
+            "candidate_citywide_frameworks_found_site_attribution_missing",
+            bundle["chain_summary"]["attributable_works_procurement"],
+        )
         self.assertEqual("not_verifiable", bundle["chain_summary"]["fulfillment_conclusion"])
         self.assertTrue(
             all(
@@ -199,6 +206,16 @@ class ContractTests(unittest.TestCase):
                 for record in bundle["records"]
             )
         )
+        works_framework = next(
+            record for record in bundle["records"] if record["role"] == "works_framework_contract"
+        )
+        self.assertEqual("published_framework_maximum", works_framework["amount"]["financial_stage"])
+        self.assertEqual([], works_framework["scope"]["pilot_case_ids"])
+        works_notice = next(
+            record for record in bundle["records"] if record["role"] == "works_competition_notice"
+        )
+        self.assertEqual(1_600_000, works_notice["amount_bounds"]["minimum"])
+        self.assertEqual(4_000_000, works_notice["amount_bounds"]["maximum"])
 
     def test_commitment_mapping_preserves_primary_scope_and_review_gate(self) -> None:
         mapping = load_json(COMMITMENT_MAPPING)

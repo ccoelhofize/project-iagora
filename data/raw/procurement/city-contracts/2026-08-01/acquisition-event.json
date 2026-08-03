@@ -1,0 +1,63 @@
+{
+  "contract_id": "iagora.acquisition-event",
+  "contract_version": "1.1.0",
+  "event_id": "acquisition-city-procurement-schoolyard-works-20260801-001",
+  "source_id": "src-city-procurement-open-data",
+  "artifact_version_id": "dataset-city-procurement-schoolyard-works-raw-20260801-001",
+  "requested_endpoint": "https://opendata.clermont-ferrand.fr/api/explore/v2.1/catalog/datasets/marches-publics-a-partir-de-2020-vcf/records",
+  "resolved_url": "https://opendata.clermont-ferrand.fr/api/explore/v2.1/catalog/datasets/marches-publics-a-partir-de-2020-vcf/records?select=marche_id%2cannee_de_reference%2cmarche_nature%2cmarche_type%2cmarche_objet%2cprocedure%2cduree_mois%2cnotification_date%2cmontant%2cprix_forme%2ctitulaires_denomination&where=marche_id%3d%2220212105200%22&order_by=marche_id%2ctitulaires_denomination&limit=100",
+  "request": {
+    "selected_fields": [
+      "marche_id",
+      "annee_de_reference",
+      "marche_nature",
+      "marche_type",
+      "marche_objet",
+      "procedure",
+      "duree_mois",
+      "notification_date",
+      "montant",
+      "prix_forme",
+      "titulaires_denomination"
+    ],
+    "market_ids": ["20212105200"],
+    "order_by": "marche_id,titulaires_denomination",
+    "limit": 100
+  },
+  "acquired_at": "2026-08-01T15:34:37Z",
+  "method": "https_get",
+  "response": {
+    "http_status": 200,
+    "media_type": "application/json; charset=utf-8",
+    "byte_size": 811,
+    "record_count": 1
+  },
+  "raw_artifact": {
+    "local_path": "data/raw/procurement/city-contracts/2026-08-01/works-framework-record.json",
+    "sha256": "65506a95f79116362aa62945135ac51d4b28402a1ca29f68af19edb02af5fdf4",
+    "immutable": true,
+    "retention_class": "open_data_prototype"
+  },
+  "software": "curl with Opendatasoft Explore API v2.1",
+  "authentication_class": "public_unauthenticated",
+  "rights": {
+    "license_id": "etalab-2.0",
+    "attribution": "Direction des Actions Juridiques et des Achats, Ville de Clermont-Ferrand",
+    "redistribution": "allowed_with_attribution"
+  },
+  "privacy": {
+    "classification": "public_non_personal_procurement",
+    "coordinates_excluded": true,
+    "image_metadata_excluded": true
+  },
+  "security": {
+    "risk_tier": "low",
+    "content_treated_as_untrusted": true,
+    "result": "accepted_after_contract_validation"
+  },
+  "limitations": [
+    "The record describes a citywide schoolyard works framework and does not identify Respire a la recre, a purchase order, or any pilot school.",
+    "For framework agreements, the dataset defines montant as the maximum order value for the validity period; EUR 2,600,000 is not executed expenditure or payment.",
+    "The record does not establish a school-level allocation, competent acceptance, outcome, causal impact, or fulfillment."
+  ]
+}

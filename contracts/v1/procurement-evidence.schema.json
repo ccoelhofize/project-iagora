@@ -7,12 +7,13 @@
   "required": [
     "contract_id", "contract_version", "bundle_id", "bundle_version",
     "observation_cutoff", "assembled_at", "territory",
-    "city_dataset_acquisition", "boamp_acquisition", "records",
+    "city_dataset_acquisition", "city_works_acquisition",
+    "boamp_acquisition", "boamp_works_acquisition", "records",
     "quality_findings", "chain_summary", "limitations"
   ],
   "properties": {
     "contract_id": {"const": "iagora.procurement-evidence"},
-    "contract_version": {"const": "1.0.0"},
+    "contract_version": {"const": "1.1.0"},
     "bundle_id": {"const": "procurement-evidence-respire-recre-2025"},
     "bundle_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "observation_cutoff": {"const": "2025-12-31"},
@@ -33,6 +34,23 @@
         "raw_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
         "record_count": {"const": 8},
         "source_modified_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "city_works_acquisition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id", "artifact_version_id", "acquisition_event_path",
+        "raw_local_path", "raw_sha256", "record_count", "source_modified_at"
+      ],
+      "properties": {
+        "source_id": {"const": "src-city-procurement-open-data"},
+        "artifact_version_id": {"const": "dataset-city-procurement-schoolyard-works-raw-20260801-001"},
+        "acquisition_event_path": {"const": "data/raw/procurement/city-contracts/2026-08-01/acquisition-event.json"},
+        "raw_local_path": {"const": "data/raw/procurement/city-contracts/2026-08-01/works-framework-record.json"},
+        "raw_sha256": {"const": "65506a95f79116362aa62945135ac51d4b28402a1ca29f68af19edb02af5fdf4"},
+        "record_count": {"const": 1},
+        "source_modified_at": {"const": "2026-07-08T08:09:53+00:00"}
       }
     },
     "boamp_acquisition": {
@@ -61,15 +79,42 @@
         "rights_state": {"const": "qualified_review_pending"}
       }
     },
+    "boamp_works_acquisition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id", "artifact_version_id", "requested_endpoint", "record_ids",
+        "acquired_at", "response_byte_size", "response_sha256",
+        "raw_bytes_preserved", "nonretention_reason", "rights_state"
+      ],
+      "properties": {
+        "source_id": {"const": "src-boamp-schoolyard-works-2022"},
+        "artifact_version_id": {"const": "boamp-notices-22-149017-and-22-157373-metadata-20260801"},
+        "requested_endpoint": {"type": "string", "format": "uri"},
+        "record_ids": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"enum": ["22-149017", "22-157373"]}
+        },
+        "acquired_at": {"const": "2026-08-01T15:34:48Z"},
+        "response_byte_size": {"const": 5835},
+        "response_sha256": {"const": "ae26e7c7a216b75c828472474e6ce09385b7260fa6d0eb44e84fc96a147c1683"},
+        "raw_bytes_preserved": {"const": false},
+        "nonretention_reason": {"const": "dataset_license_not_stated_in_official_catalog_metadata"},
+        "rights_state": {"const": "qualified_review_pending"}
+      }
+    },
     "records": {
       "type": "array",
-      "minItems": 3,
+      "minItems": 6,
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": [
           "record_id", "evidence_id", "source_ids", "title", "role",
-          "authority", "scope", "dates", "duration_months", "amount",
+          "authority", "scope", "dates", "duration_months", "amount", "amount_bounds",
           "lots", "source_locators", "observation_state", "establishes",
           "does_not_establish"
         ],
@@ -84,7 +129,11 @@
           },
           "title": {"type": "string", "minLength": 1},
           "role": {
-            "enum": ["study_service_contract", "competition_notice", "award_notice"]
+            "enum": [
+              "study_service_contract", "competition_notice", "award_notice",
+              "works_framework_contract", "works_competition_notice",
+              "works_competition_rectification"
+            ]
           },
           "authority": {
             "type": "object",
@@ -92,7 +141,11 @@
             "required": ["fact_type", "outcome", "basis", "limitations"],
             "properties": {
               "fact_type": {
-                "enum": ["procurement_contract_metadata", "procurement_competition", "procurement_award"]
+                "enum": [
+                  "procurement_contract_metadata", "procurement_competition",
+                  "procurement_award", "procurement_works_framework",
+                  "procurement_works_competition", "procurement_notice_rectification"
+                ]
               },
               "outcome": {"const": "authoritative_with_limitation"},
               "basis": {"type": "string", "minLength": 1},
@@ -149,8 +202,26 @@
               "value": {"type": "number", "minimum": 0},
               "currency": {"const": "EUR"},
               "tax_basis": {"enum": ["HT", "not_stated"]},
-              "financial_stage": {"enum": ["contracted_service_value", "published_award_value"]},
+              "financial_stage": {
+                "enum": [
+                  "contracted_service_value", "published_award_value",
+                  "published_framework_maximum"
+                ]
+              },
               "aggregation_rule": {"type": "string", "minLength": 1}
+            }
+          },
+          "amount_bounds": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "required": ["minimum", "maximum", "currency", "tax_basis", "period_months", "financial_stage"],
+            "properties": {
+              "minimum": {"type": ["number", "null"], "minimum": 0},
+              "maximum": {"type": "number", "minimum": 0},
+              "currency": {"const": "EUR"},
+              "tax_basis": {"enum": ["HT", "not_stated"]},
+              "period_months": {"type": "integer", "minimum": 1},
+              "financial_stage": {"enum": ["published_framework_bounds", "published_framework_maximum"]}
             }
           },
           "lots": {
@@ -231,8 +302,8 @@
         "school_level_accounting", "fulfillment_conclusion"
       ],
       "properties": {
-        "procurement": {"const": "partial_candidate_services_evidence"},
-        "attributable_works_procurement": {"const": "not_located"},
+        "procurement": {"const": "partial_candidate_services_and_works_framework_evidence"},
+        "attributable_works_procurement": {"const": "candidate_citywide_frameworks_found_site_attribution_missing"},
         "competent_completion": {"const": "not_located"},
         "school_level_accounting": {"const": "not_located"},
         "fulfillment_conclusion": {"const": "not_verifiable"}

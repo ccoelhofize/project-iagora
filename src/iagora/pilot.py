@@ -91,6 +91,8 @@ def validate_inputs(
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
 ]:
     profiles_path = root / SOURCE_PROFILES.relative_to(ROOT)
     snapshot_path = root / SNAPSHOT.relative_to(ROOT)
@@ -138,6 +140,14 @@ def validate_inputs(
         root / procurement_evidence["city_dataset_acquisition"]["raw_local_path"]
     )
     procurement_raw = load_json(procurement_raw_path)
+    works_acquisition_path = (
+        root / procurement_evidence["city_works_acquisition"]["acquisition_event_path"]
+    )
+    works_acquisition_event = validate_files(
+        works_acquisition_path, root / "contracts/v1/acquisition-event.schema.json"
+    )
+    works_raw_path = root / procurement_evidence["city_works_acquisition"]["raw_local_path"]
+    works_raw = load_json(works_raw_path)
     dataset_path = root / snapshot["source_dataset"]["local_path"]
     dataset = load_json(dataset_path)
 
@@ -244,6 +254,33 @@ def validate_inputs(
     ):
         raise ContractViolation("Procurement acquisition ordering changed unexpectedly")
 
+    works_raw_hash = file_sha256(works_raw_path)
+    city_works_acquisition = procurement_evidence["city_works_acquisition"]
+    if works_raw_hash != city_works_acquisition["raw_sha256"]:
+        raise ContractViolation(
+            "Raw schoolyard-works artifact fingerprint differs from its evidence bundle"
+        )
+    if works_raw_hash != works_acquisition_event["raw_artifact"]["sha256"]:
+        raise ContractViolation(
+            "Raw schoolyard-works artifact fingerprint differs from its acquisition event"
+        )
+    if works_raw_path.stat().st_size != works_acquisition_event["response"]["byte_size"]:
+        raise ContractViolation(
+            "Raw schoolyard-works artifact byte size differs from its acquisition event"
+        )
+    if works_acquisition_event["raw_artifact"]["local_path"] != str(
+        works_raw_path.relative_to(root)
+    ):
+        raise ContractViolation(
+            "Raw schoolyard-works artifact path differs from its acquisition event"
+        )
+    if works_acquisition_event["request"].get("market_ids") != ["20212105200"]:
+        raise ContractViolation(
+            "Schoolyard-works acquisition must remain bounded to the reviewed identifier"
+        )
+    if works_acquisition_event["request"]["order_by"] != "marche_id,titulaires_denomination":
+        raise ContractViolation("Schoolyard-works acquisition ordering changed unexpectedly")
+
     source_index = {source["source_id"]: source for source in profiles["sources"]}
     selected_source = source_index.get(snapshot["source_dataset"]["source_id"])
     if not selected_source or selected_source["status"] != "approved_prototype":
@@ -263,6 +300,15 @@ def validate_inputs(
         raise ContractViolation("BOAMP raw response redistribution must remain blocked")
     if procurement_evidence["boamp_acquisition"]["raw_bytes_preserved"]:
         raise ContractViolation("Rights-pending BOAMP response bytes must not be committed")
+    boamp_works_source = source_index.get(
+        procurement_evidence["boamp_works_acquisition"]["source_id"]
+    )
+    if not boamp_works_source or boamp_works_source["status"] != "link_only":
+        raise ContractViolation("BOAMP works evidence must remain metadata-only and link-only")
+    if boamp_works_source["rights"]["redistribution"] != "blocked":
+        raise ContractViolation("BOAMP works response redistribution must remain blocked")
+    if procurement_evidence["boamp_works_acquisition"]["raw_bytes_preserved"]:
+        raise ContractViolation("Rights-pending BOAMP works bytes must not be committed")
 
     campaign_source = source_index.get(snapshot["campaign_artifact"]["source_id"])
     if not campaign_source or campaign_source["status"] != "link_only":
@@ -626,6 +672,20 @@ def validate_inputs(
         "record_count"
     ]:
         raise ContractViolation("Procurement record count differs from its acquisition event")
+    city_works_acquisition = procurement_evidence["city_works_acquisition"]
+    if works_acquisition_event["source_id"] != city_works_acquisition["source_id"]:
+        raise ContractViolation("Schoolyard-works acquisition source reference does not resolve")
+    if (
+        works_acquisition_event["artifact_version_id"]
+        != city_works_acquisition["artifact_version_id"]
+    ):
+        raise ContractViolation("Schoolyard-works artifact version reference does not resolve")
+    if works_acquisition_event["response"]["record_count"] != city_works_acquisition[
+        "record_count"
+    ]:
+        raise ContractViolation(
+            "Schoolyard-works record count differs from its acquisition event"
+        )
 
     procurement_rows = procurement_raw.get("results")
     if (
@@ -660,6 +720,30 @@ def validate_inputs(
     if row_level_sum != 602150 or unique_contract_sum != 204050:
         raise ContractViolation("Procurement duplicate-grain guard values changed")
 
+    works_rows = works_raw.get("results")
+    if (
+        works_raw.get("total_count") != 1
+        or not isinstance(works_rows, list)
+        or len(works_rows) != 1
+    ):
+        raise ContractViolation(
+            "The bounded schoolyard-works response must contain exactly one row"
+        )
+    works_row = works_rows[0]
+    if set(works_row) != set(works_acquisition_event["request"]["selected_fields"]):
+        raise ContractViolation(
+            "Raw schoolyard-works row differs from the selected field contract"
+        )
+    if works_row["marche_id"] != "20212105200":
+        raise ContractViolation("Unexpected schoolyard-works procurement identifier")
+    if (
+        works_row["marche_nature"] != "Accord-cadre"
+        or works_row["marche_type"] != "Travaux"
+        or works_row["duree_mois"] != 24
+        or works_row["montant"] != 2600000
+    ):
+        raise ContractViolation("Schoolyard-works framework metadata changed unexpectedly")
+
     procurement_records = procurement_evidence["records"]
     procurement_record_ids = [record["record_id"] for record in procurement_records]
     if len(procurement_record_ids) != len(set(procurement_record_ids)):
@@ -681,11 +765,47 @@ def validate_inputs(
         raise ContractViolation("Published award total must equal the two unique lot values")
     if sum(lot["amount"]["value"] for lot in award_record["lots"]) != 158300:
         raise ContractViolation("Award lot values do not reconcile to the published total")
+    works_framework = next(
+        record
+        for record in procurement_records
+        if record["role"] == "works_framework_contract"
+    )
+    if works_framework["amount"]["financial_stage"] != "published_framework_maximum":
+        raise ContractViolation("Works framework amount must remain a non-spending maximum")
+    if works_framework["amount_bounds"]["maximum"] != 2600000:
+        raise ContractViolation("Works framework maximum differs from the preserved City row")
+    works_competition = next(
+        record
+        for record in procurement_records
+        if record["role"] == "works_competition_notice"
+    )
+    if works_competition["amount_bounds"] != {
+        "minimum": 1600000,
+        "maximum": 4000000,
+        "currency": "EUR",
+        "tax_basis": "HT",
+        "period_months": 48,
+        "financial_stage": "published_framework_bounds",
+    }:
+        raise ContractViolation("BOAMP works-framework bounds changed unexpectedly")
+    if works_framework["scope"]["pilot_case_ids"] or works_competition["scope"][
+        "pilot_case_ids"
+    ]:
+        raise ContractViolation("Citywide works frameworks must not be assigned to pilot schools")
     if (
         procurement_evidence["chain_summary"]["procurement"]
-        != "partial_candidate_services_evidence"
+        != "partial_candidate_services_and_works_framework_evidence"
     ):
-        raise ContractViolation("Located service procurement must remain a partial chain state")
+        raise ContractViolation(
+            "Located services and works frameworks must remain a partial chain state"
+        )
+    if (
+        procurement_evidence["chain_summary"]["attributable_works_procurement"]
+        != "candidate_citywide_frameworks_found_site_attribution_missing"
+    ):
+        raise ContractViolation(
+            "Citywide works candidates must not become school-attributable procurement"
+        )
     if any(
         record["scope"]["relationship_to_programme"]
         != "candidate_relevant_object_not_directly_named"
@@ -727,6 +847,8 @@ def validate_inputs(
         procurement_evidence,
         procurement_acquisition_event,
         procurement_raw,
+        works_acquisition_event,
+        works_raw,
     )
 
 
@@ -756,6 +878,8 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
         commitment_mapping_review,
         procurement_evidence,
         procurement_acquisition_event,
+        _,
+        works_acquisition_event,
         _,
     ) = validate_inputs(root)
     current_advisory_runs = [
@@ -799,16 +923,29 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
         }
     ]
     for record in procurement_evidence["records"]:
-        if record["role"] == "study_service_contract":
-            artifact_version_id = procurement_evidence["city_dataset_acquisition"][
-                "artifact_version_id"
-            ]
+        if record["role"] in {"study_service_contract", "works_framework_contract"}:
+            acquisition_key = (
+                "city_dataset_acquisition"
+                if record["role"] == "study_service_contract"
+                else "city_works_acquisition"
+            )
+            artifact_version_id = procurement_evidence[acquisition_key]["artifact_version_id"]
             source_url = source_index["src-city-procurement-open-data"]["canonical_url"]
-        else:
+        elif record["role"] in {"competition_notice", "award_notice"}:
             artifact_version_id = procurement_evidence["boamp_acquisition"][
                 "artifact_version_id"
             ]
             notice_id = "25-110034" if record["role"] == "competition_notice" else "26-4348"
+            source_url = f"https://www.boamp.fr/pages/avis/?q=idweb:{notice_id}"
+        else:
+            artifact_version_id = procurement_evidence["boamp_works_acquisition"][
+                "artifact_version_id"
+            ]
+            notice_id = (
+                "22-149017"
+                if record["role"] == "works_competition_notice"
+                else "22-157373"
+            )
             source_url = f"https://www.boamp.fr/pages/avis/?q=idweb:{notice_id}"
         evidence.append(
             {
@@ -905,8 +1042,9 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "The bounded evidence authenticates an unquantified primary campaign commitment "
                 "and documents adopted policy, programme-level authorization and expenditure, and "
                 "source-linked delivery states for three school cases. It also documents partial "
-                "candidate procurement evidence for study and design services whose source "
-                "records do not directly name the programme. The commitment mapping, "
+                "candidate procurement evidence for study and design services plus citywide "
+                "schoolyard works frameworks whose source records do not directly name the "
+                "programme or a pilot-school purchase order. The commitment mapping, "
                 "attributable works procurement and competent completion chain, public fulfillment conclusion, "
                 "observed outcome, and causal impact remain unverified."
             ),
@@ -1164,16 +1302,27 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
                 "deterministic": False,
             },
             {
+                "event_id": works_acquisition_event["event_id"],
+                "event_type": "acquisition",
+                "input": works_acquisition_event["resolved_url"],
+                "output": works_acquisition_event["raw_artifact"]["local_path"],
+                "output_sha256": works_acquisition_event["raw_artifact"]["sha256"],
+                "result": "accepted_after_contract_validation",
+                "deterministic": False,
+            },
+            {
                 "event_id": "lineage-review-procurement-evidence-001",
                 "event_type": "evidence_review",
                 "inputs": [
                     procurement_evidence["city_dataset_acquisition"]["raw_local_path"],
+                    procurement_evidence["city_works_acquisition"]["raw_local_path"],
                     procurement_evidence["boamp_acquisition"]["requested_endpoint"],
+                    procurement_evidence["boamp_works_acquisition"]["requested_endpoint"],
                 ],
-                "rule_version": "iagora.procurement-evidence/0.1.0",
+                "rule_version": "iagora.procurement-evidence/0.2.0",
                 "output": snapshot["procurement_evidence"]["local_path"],
                 "output_sha256": snapshot["procurement_evidence"]["sha256"],
-                "result": "partial_candidate_services_evidence",
+                "result": "partial_candidate_services_and_works_framework_evidence",
                 "deterministic": False,
             },
             {
@@ -1219,7 +1368,7 @@ def build_passport(root: Path = ROOT) -> dict[str, Any]:
             "The all-neighbourhood scope appears in supporting interview evidence, not in the retained primary fragment.",
             "Pierre-et-Marie-Curie has different reported states for its maternelle and élémentaire units; this is a scope difference, not a resolved contradiction.",
             "The 1.09 million euros reported for 2022 and 1,939,810.63 euros of cumulative mandates before 2023 have different periods and precision; they must not be treated as contradictory or interchangeable.",
-            "The located procurement records cover study, design, and user-assistance services but do not directly name the Respire programme; they remain candidate evidence and do not establish attributable schoolyard works or competent completion.",
+            "The located procurement records cover study, design, user-assistance, and citywide schoolyard works frameworks but do not directly name the Respire programme or identify a pilot-school purchase order; they remain candidate evidence and do not establish attributable schoolyard works or competent completion.",
             "The 2025 design awards were published and issued after the observation cut-off and therefore remain post-cut-off historical evidence.",
             "The Pierre-et-Marie-Curie design lot also covers Alphonse-Daudet and cannot be allocated to one school or linked to the reported 2023 maternal delivery.",
             "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.",
@@ -1414,8 +1563,18 @@ def render_html(passport: dict[str, Any]) -> str:
         ),
         (
             "Contrats publics retrouvés",
-            "Ils concernent des études et de la conception. Ils ne prouvent ni les travaux, ni leur paiement, ni leur fin",
+            "Des services et deux cadres généraux de travaux sont retrouvés. Aucun document ne relie encore une commande de travaux à une école étudiée",
             evidence_link("evidence-procurement-city-study-2020", "Étude notifiée en 2020")
+            + " ; "
+            + evidence_link(
+                "evidence-procurement-city-schoolyard-works-framework-2021",
+                "Accord-cadre de travaux notifié en 2021",
+            )
+            + " ; "
+            + evidence_link(
+                "evidence-procurement-boamp-schoolyard-works-competition-22-149017",
+                "Consultation de travaux publiée en 2022",
+            )
             + " ; "
             + evidence_link("evidence-procurement-boamp-competition-25-110034", "Consultation 2025")
             + " ; "
@@ -1489,7 +1648,7 @@ def render_html(passport: dict[str, Any]) -> str:
         "The all-neighbourhood scope appears in supporting interview evidence, not in the retained primary fragment.": "La portée « tous les quartiers » apparaît dans un entretien de soutien, pas dans le fragment primaire retenu.",
         "Pierre-et-Marie-Curie has different reported states for its maternelle and élémentaire units; this is a scope difference, not a resolved contradiction.": "Pierre-et-Marie-Curie présente des états déclarés différents pour la maternelle et l’élémentaire ; il s’agit d’une différence de périmètre, pas d’une contradiction résolue.",
         "The 1.09 million euros reported for 2022 and 1,939,810.63 euros of cumulative mandates before 2023 have different periods and precision; they must not be treated as contradictory or interchangeable.": "Les 1,09 M€ déclarés pour 2022 et les 1 939 810,63 € d’ordres de paiement enregistrés avant 2023 ne couvrent pas exactement la même période. Nous ne les additionnons pas et ne les remplaçons pas l’un par l’autre.",
-        "The located procurement records cover study, design, and user-assistance services but do not directly name the Respire programme; they remain candidate evidence and do not establish attributable schoolyard works or competent completion.": "Les contrats retrouvés portent sur des études, de la conception et de l’accompagnement des usagers. Ils ne nomment pas directement le programme Respire et ne prouvent ni les travaux dans les écoles ni leur fin officielle.",
+        "The located procurement records cover study, design, user-assistance, and citywide schoolyard works frameworks but do not directly name the Respire programme or identify a pilot-school purchase order; they remain candidate evidence and do not establish attributable schoolyard works or competent completion.": "Les documents retrouvés couvrent des études, de la conception, de l’accompagnement et des cadres généraux de travaux dans les cours d’école. Aucun ne nomme directement le programme Respire ni ne relie une commande à une école étudiée ; ils ne prouvent donc ni les travaux attribuables à ces écoles ni leur fin officielle.",
         "The 2025 design awards were published and issued after the observation cut-off and therefore remain post-cut-off historical evidence.": "Les attributions de conception de 2025 ont été publiées et contractualisées après la date d’observation ; elles restent donc des preuves historiques postérieures à cette date.",
         "The Pierre-et-Marie-Curie design lot also covers Alphonse-Daudet and cannot be allocated to one school or linked to the reported 2023 maternal delivery.": "Le lot de conception mentionnant Pierre-et-Marie-Curie couvre aussi Alphonse-Daudet ; son montant ne peut être attribué à une seule école ni relié à la livraison maternelle déclarée en 2023.",
         "No reviewed baseline, outcome indicator, counterfactual, or contribution analysis is available.": "Nous n’avons pas de mesure de départ validée, ni de mesure des résultats, ni de méthode permettant de savoir si les changements viennent réellement du programme.",

@@ -173,7 +173,13 @@
         "policy_adoption": {"const": "evidenced"},
         "budget_authorization": {"const": "evidenced_at_programme_level"},
         "executed_expenditure": {"const": "evidenced_at_programme_level"},
-        "procurement": {"enum": ["not_located", "partial_candidate_services_evidence"]},
+        "procurement": {
+          "enum": [
+            "not_located",
+            "partial_candidate_services_evidence",
+            "partial_candidate_services_and_works_framework_evidence"
+          ]
+        },
         "competent_completion": {"const": "not_located"},
         "outcome_evidence": {"const": "missing"},
         "causal_impact": {"const": "missing"},

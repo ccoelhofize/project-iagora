@@ -2,9 +2,9 @@
   "contract_id": "iagora.pilot-snapshot",
   "contract_version": "1.6.0",
   "snapshot_id": "pilot-respire-recre-2025",
-  "snapshot_version": "0.10.0",
+  "snapshot_version": "0.11.0",
   "observation_cutoff": "2025-12-31",
-  "generated_at": "2026-08-01T14:56:52Z",
+  "generated_at": "2026-08-01T15:34:48Z",
   "territory": "fr-63113-clermont-ferrand",
   "programme": {
     "programme_id": "programme-respire-a-la-recre",
@@ -50,9 +50,9 @@
   },
   "procurement_evidence": {
     "bundle_id": "procurement-evidence-respire-recre-2025",
-    "bundle_version": "0.1.0",
+    "bundle_version": "0.2.0",
     "local_path": "data/pilot/procurement-evidence.json",
-    "sha256": "496b7544a7391b426966f4aa8841b56b516b851246577107e359e6fa40c9601f"
+    "sha256": "e878d62cc105b01e2b5067e38ae5f4ee1943793fe3a3be90093cb64fa039f00e"
   },
   "source_dataset": {
     "source_id": "src-city-open-data-schools",

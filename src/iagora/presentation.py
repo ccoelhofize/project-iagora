@@ -487,12 +487,22 @@ def render_policy_timeline(passport: dict[str, Any]) -> str:
     archive_url = html.escape(
         passport["provenance"]["campaign_artifact"]["archive_url"], quote=True
     )
+    procurement_evidence = {
+        item["evidence_id"]: item for item in passport["evidence"]
+    }
+    works_framework_url = html.escape(
+        procurement_evidence[
+            "evidence-procurement-city-schoolyard-works-framework-2021"
+        ]["source_url"],
+        quote=True,
+    )
     return f"""
 <ol class="timeline">
   <li><time datetime="2019">2019</time><strong>La phrase de campagne est retrouvée</strong><p><a href="{archive_url}" rel="external noreferrer">« Végétalisation des cours d’école »</a>. Le texte retrouvé ne précise ni combien d’écoles, ni quel budget, ni quelle date de fin.</p></li>
+  <li><time datetime="2021">2021</time><strong>Un cadre municipal pour des travaux dans les cours d’école est retrouvé</strong><p>Le <a href="{works_framework_url}" rel="external noreferrer">registre municipal des marchés</a> mentionne un accord-cadre de voirie et d’aménagement paysager. Il ne dit pas quelles écoles ont reçu des travaux ni s’il appartient au programme « Respire à la récré ».</p></li>
   <li><time datetime="2022">2022</time><strong>Un budget et une première école apparaissent dans les documents</strong><p>Les documents montrent un {evidence_link("evidence-apcp-respire-total-2022", "budget total autorisé")} et indiquent que {evidence_link("evidence-transition-nestor-reported-use", "les élèves utilisent le nouvel espace de Nestor-Perret")}. Ils ne disent pas clairement que ces actions viennent de la promesse.</p></li>
   <li><time datetime="2023">2023</time><strong>Le conseil municipal adopte le projet éducatif qui contient « Respire à la récré »</strong><p>Le {evidence_link("evidence-pev-adoption-2023", "projet éducatif municipal")} décrit cette action. Elle est plus large que la phrase prononcée pendant la campagne.</p></li>
-  <li><time datetime="2025-12-31">2025</time><strong>Dernière date étudiée par ce prototype</strong><p>Nous disposons d’informations sur trois écoles. Il manque encore les contrats de travaux, les documents confirmant leur fin et les mesures de leurs effets.</p></li>
+  <li><time datetime="2025-12-31">2025</time><strong>Dernière date étudiée par ce prototype</strong><p>Nous disposons d’informations sur trois écoles et de cadres généraux pour des travaux. Il manque encore les commandes ou contrats qui relient ces cadres à chaque école, les documents confirmant la fin des travaux et les mesures de leurs effets.</p></li>
 </ol>
 """
 
@@ -755,6 +765,14 @@ def render_finance_table(passport: dict[str, Any]) -> str:
             "Registre municipal des marchés publics",
         ),
         (
+            "evidence-procurement-city-schoolyard-works-framework-2021",
+            "Plafond d’un accord-cadre de travaux",
+            "24 mois à partir de mai 2021",
+            "Cours d’école de Clermont-Ferrand · aucune école indiquée",
+            "C’est le montant maximal de commandes permis par l’accord-cadre, pas une somme dépensée. Le registre ne le rattache pas directement à « Respire à la récré ».",
+            "Registre municipal des marchés publics",
+        ),
+        (
             "evidence-procurement-boamp-award-26-4348",
             "Contrats de conception et d’accompagnement",
             "Publié en 2026, après la dernière date couverte par cette démonstration",
@@ -796,7 +814,7 @@ def render_finance_table(passport: dict[str, Any]) -> str:
         <tbody>{''.join(rendered_rows)}</tbody>
       </table>
     </div>
-    <p class="chain-note">Nous n’additionnons pas ces montants : certains parlent du même argent à des moments différents ; d’autres concernent une année ou une école particulière.</p>
+    <p class="chain-note">Nous n’additionnons pas ces montants : certains parlent du même argent à des moments différents ; d’autres concernent une année, une école ou seulement un plafond de commandes. Un <a href="{html.escape(evidence['evidence-procurement-boamp-schoolyard-works-competition-22-149017']['source_url'], quote=True)}" rel="external noreferrer">autre avis de travaux publié en 2022</a> annonce une fourchette de 1,6 à 4 millions d’euros HT sur quatre ans, mais nous n’avons pas retrouvé son attribution ni les commandes par école.</p>
 """
 
 
