@@ -8,7 +8,7 @@
 
 **Last reviewed:** 2026-08-03
 
-**Implementation status:** Absent
+**Implementation status:** Increment 0 partially implemented; network connector and workflows absent
 
 **Decision dependency:** A later ADR is required before adopting material persistence, source scheduling, or external-storage choices
 
@@ -20,7 +20,7 @@ The first connector is limited to reviewed Opendatasoft JSON API sources. This R
 
 ## Status of this proposal
 
-The project maintainer validated the drafting direction on 3 August 2026. This document remains a draft until its exact contracts, boundaries, risks, and rollout are reviewed. Its presence does not prove that the engine, workflows, storage, or controls exist.
+The project maintainer validated the drafting direction on 3 August 2026. This document remains a draft. Its five Increment 0 contracts, bounded first plan, synthetic pending-review example, and historical compatibility projections are now present and executable. Their presence does not prove that the engine, network connector, workflows, quarantine storage, or production controls exist.
 
 ## Problem
 
@@ -49,6 +49,7 @@ This RFC concerns **upstream source APIs** used to retrieve public data. It does
 - deterministic fingerprint, byte-size, selected-field, scope, and projection checks;
 - a fail-closed Knowledge Passport and static local product projection;
 - read-only CI for validation, tests, and deterministic build.
+- five generalized acquisition and admission contracts, one reviewed six-school plan, one explicitly synthetic pending-review fixture, and deterministic compatibility projections for the three historical acquisitions.
 
 ### Present but too narrow for a reusable collector
 
@@ -60,7 +61,7 @@ This RFC concerns **upstream source APIs** used to retrieve public data. It does
 ### Planned but absent
 
 - reusable network acquisition;
-- acquisition plans and connector interfaces;
+- connector interfaces and executable network transport;
 - quarantine and atomic promotion;
 - failed-attempt and retry records;
 - content-addressed deduplication;
@@ -460,6 +461,12 @@ Live-source smoke tests, if later approved, are operational diagnostics and must
 ## Rollout
 
 ### Increment 0: contracts and fixtures
+
+**Current state:** Partially implemented. The five reusable boundary contracts,
+the bounded first plan, one synthetic pending-admission example, safe failure
+vocabulary, and deterministic projections of all three historical acquisitions
+are present. No live attempt, quarantine package, or human admission has been
+created through the proposed pipeline.
 
 - define acquisition-plan, generalized attempt, artifact-version, and admission-review contracts;
 - encode `plan-city-schools-pilot-cases` as the first bounded plan after its field and limit review;

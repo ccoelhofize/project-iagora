@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-30
+**Last reviewed:** 2026-08-03
 
 ## Purpose
 
@@ -34,6 +34,8 @@ The Knowledge Passport exposes the source and acquisition context needed for ins
 
 ## Current implementation
 
-The pilot source registry and normalized open-data subset record publisher, URLs, acquisition and source-modification times, rights, retention class, and a local content fingerprint. Two bounded City API responses are now preserved byte-for-byte with validated [acquisition events](../../contracts/v1/acquisition-event.schema.json), request parameters, sizes, media types, SHA-256 fingerprints, rights, privacy minimization, security results, and immutable relative paths. The normalized six-record school file must reproduce its selected raw fields exactly. The procurement response retains eight holder-grain rows for three procurement identifiers and records the rule that repeated contract amounts are aggregated once per identifier.
+The pilot source registry and normalized open-data subset record publisher, URLs, acquisition and source-modification times, rights, retention class, and a local content fingerprint. Three bounded City API responses are preserved byte-for-byte with validated [historical acquisition events](../../contracts/v1/acquisition-event.schema.json), request parameters, sizes, media types, SHA-256 fingerprints, rights, privacy minimization, security results, and immutable relative paths. The normalized six-record school file must reproduce its selected raw fields exactly. The procurement responses retain eight holder-grain rows for three procurement identifiers and one citywide works-framework row; repeated contract amounts are aggregated once per identifier and framework maxima are not spending.
 
-The archived campaign artifact separately records the original and archive URLs, Wayback capture time, acquisition time, media type, byte size, replay fingerprint, precise fragment, authenticity basis, rights notice, and governed non-retention reason. Its raw HTML is not stored because the archived notice restricts redistribution. BOAMP notice metadata follows the same fail-closed principle: the official catalog stated no dataset licence, so the pilot retains notice identifiers, minimal extracted facts, response size, SHA-256 fingerprint, and non-retention reason, but no raw response bytes. General production acquisition, custody, quarantine, and artifact-version contracts remain incomplete.
+The pre-stable generalized [attempt](../../contracts/v1/acquisition-attempt.schema.json), [artifact-version](../../contracts/v1/source-artifact-version.schema.json), [safe-receipt](../../contracts/v1/acquisition-receipt.schema.json), and [admission-review](../../contracts/v1/admission-review.schema.json) contracts are executable. Deterministic compatibility projections expose the three historical acquisitions through those boundaries without fabricating missing plan versions, connector-rule versions, package dates, or decision times. No live component emits these records yet.
+
+The archived campaign artifact separately records the original and archive URLs, Wayback capture time, acquisition time, media type, byte size, replay fingerprint, precise fragment, authenticity basis, rights notice, and governed non-retention reason. Its raw HTML is not stored because the archived notice restricts redistribution. BOAMP notice metadata follows the same fail-closed principle: the official catalog stated no dataset licence, so the pilot retains notice identifiers, minimal extracted facts, response size, SHA-256 fingerprint, and non-retention reason, but no raw response bytes. General production acquisition, custody, quarantine storage, and lifecycle operation remain incomplete.

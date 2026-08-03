@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-08-03
 
 ## Principle
 
@@ -40,4 +40,4 @@ This workflow is a development control for the bounded prototype. A passing run 
 
 ## Current state
 
-The first standard-library test suite covers contract rejection, source-snapshot integrity, commitment decomposition and mapping review gates, school-unit scope separation, precise evidence locators, deterministic replay, fail-closed publication, unsupported fulfillment and causal conclusions, separated financial stages, bounded dashboard metrics, route generation, and basic semantic HTML and chart-equivalent content. The minimal CI workflow executes these local controls on GitHub-hosted infrastructure. No coverage baseline, browser or assistive-technology run, visual-regression test, security test harness, production integration test, or recovery environment exists.
+The first standard-library test suite covers contract rejection, source-snapshot integrity, commitment decomposition and mapping review gates, school-unit scope separation, precise evidence locators, deterministic replay, fail-closed publication, unsupported fulfillment and causal conclusions, separated financial stages, bounded dashboard metrics, route generation, and basic semantic HTML and chart-equivalent content. It also validates the six-school acquisition plan against its exact source profile, rejects an unregistered host, binds all three historical compatibility projections to exact bytes, and keeps the synthetic admission example pending and fail-closed. The minimal CI workflow executes these local controls on GitHub-hosted infrastructure. No live-network test, coverage baseline, browser or assistive-technology run, visual-regression test, full security harness, production integration test, or recovery environment exists.

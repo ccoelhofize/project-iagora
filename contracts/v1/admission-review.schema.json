@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-iagora.example/contracts/v1/admission-review.schema.json",
+  "title": "IAgora human admission review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id", "contract_version", "review_id", "record_origin",
+    "package_id", "artifact_version_id", "attempt_id", "plan_reference",
+    "source_profile_reference", "rule_versions", "deterministic_checks",
+    "review_state", "reviewer_role", "decided_at", "rationale", "targets",
+    "pull_request_url", "publication_authorized", "automatic_merge_allowed",
+    "limitations", "required_follow_up"
+  ],
+  "properties": {
+    "contract_id": {"const": "iagora.admission-review"},
+    "contract_version": {"const": "1.0.0"},
+    "review_id": {"type": "string", "pattern": "^admission-review-[a-z0-9-]+$"},
+    "record_origin": {"enum": ["live_execution", "synthetic_non_civic_fixture"]},
+    "package_id": {"type": "string", "pattern": "^package-[a-z0-9-]+$"},
+    "artifact_version_id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "attempt_id": {"type": "string", "pattern": "^attempt-[a-z0-9-]+$"},
+    "plan_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_id", "plan_version"],
+      "properties": {
+        "plan_id": {"type": "string", "pattern": "^plan-[a-z0-9-]+$"},
+        "plan_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "source_profile_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "source_profile_version"],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^src-[a-z0-9-]+$"},
+        "source_profile_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "rule_versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["connector", "contract_validation", "policy_validation"],
+      "properties": {
+        "connector": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "contract_validation": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "policy_validation": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "deterministic_checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "result"],
+        "properties": {
+          "check_id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "result": {"enum": ["passed", "failed", "not_run"]}
+        }
+      }
+    },
+    "review_state": {"enum": ["admission_pending", "admitted", "rejected", "extended", "expired_without_admission"]},
+    "reviewer_role": {"type": ["string", "null"]},
+    "decided_at": {"type": ["string", "null"], "format": "date-time"},
+    "rationale": {"type": ["string", "null"]},
+    "targets": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "pull_request_url": {"type": ["string", "null"], "format": "uri"},
+    "publication_authorized": {"const": false},
+    "automatic_merge_allowed": {"const": false},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "required_follow_up": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  }
+}

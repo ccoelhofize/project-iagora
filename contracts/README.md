@@ -32,6 +32,15 @@ fail-closed publication state.
 The acquisition-event contract covers the three bounded City API responses and
 binds each request, exact bytes, fingerprint, rights, minimization, security
 result, and limitations. It is not a general production acquisition contract.
+Five separate pre-stable contracts now define the reusable Increment 0
+boundaries proposed by RFC-0001: acquisition plan, generalized attempt, source
+artifact version, safe attempt receipt, and admission review. The executable
+plan remains bounded to six reviewed school UAIs, fourteen fields, one
+registered host and dataset, and fail-closed human admission. The generalized
+contracts expose safe failure states and allow retrospective compatibility
+projections to state which plan, connector, timing, package, or review metadata
+was not recorded by the three historical acquisitions. They do not implement a
+connector, networking, quarantine storage, GitHub workflow, or admission action.
 
 The administrative-evidence contract binds ten official document versions to
 precise fragments while keeping adopted policy, budget authorization, executed
@@ -66,4 +75,5 @@ fields require explicit review because publication consumers must be able to
 ignore them safely.
 
 These contracts are present and executable. They are not yet a stable public API
-and do not authorize production acquisition or publication.
+and do not authorize production acquisition or publication. In particular, a
+valid plan or deterministic check cannot bypass human admission.

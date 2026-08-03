@@ -1,0 +1,117 @@
+{
+  "contract_id": "iagora.acquisition-plan",
+  "contract_version": "1.0.0",
+  "plan_id": "plan-city-schools-pilot-cases",
+  "plan_version": "0.1.0",
+  "lifecycle_state": "approved_prototype",
+  "source_profile_reference": {
+    "source_id": "src-city-open-data-schools",
+    "source_profile_version": "1.1.0"
+  },
+  "connector": {
+    "connector_type": "opendatasoft_explore_v2_json",
+    "connector_rule_version": "0.1.0",
+    "dataset_id": "respire-a-la-recre-et-les-enfants-d-abord-vcf"
+  },
+  "purpose": "Acquire only the reviewed school-unit fields for the six units in the bounded Clermont-Ferrand pilot.",
+  "territory": "fr-63113-clermont-ferrand",
+  "observation_scope": {
+    "scope_type": "bounded_school_units",
+    "identity_field": "uai",
+    "identity_values": [
+      "0630258N",
+      "0630268Z",
+      "0630303M",
+      "0630307S",
+      "0630992L",
+      "0631845N"
+    ]
+  },
+  "query": {
+    "selected_fields": [
+      "uai",
+      "denomination_ecole",
+      "nature",
+      "nombre_d_enfants_concernes",
+      "annee_vegetalisation",
+      "vegetalisation_terminee",
+      "cour_commune",
+      "nombre_de_cours_concernees",
+      "surface_de_la_cour_existante",
+      "surface_de_la_cour_apres_vegetalisation",
+      "nombre_d_arbres_existant",
+      "nb_arbres_plantes",
+      "surface_demineralisee_en_m2_surface_nette",
+      "pourcentage_de_surface_totale_de_la_cour_rendue_permeable"
+    ],
+    "filter_operator": "identity_in_reviewed_set",
+    "order_by": "uai",
+    "result_limit": 10
+  },
+  "transport_policy": {
+    "scheme": "https",
+    "allowed_host": "opendata.clermont-ferrand.fr",
+    "endpoint_path": "/api/explore/v2.1/catalog/datasets/respire-a-la-recre-et-les-enfants-d-abord-vcf/records",
+    "authentication_class": "public_unauthenticated",
+    "expected_media_types": [
+      "application/json",
+      "application/json; charset=utf-8"
+    ],
+    "timeout_seconds": 20,
+    "maximum_response_bytes": 65536,
+    "maximum_accepted_records": 6,
+    "maximum_redirects": 2,
+    "maximum_attempts": 1
+  },
+  "policy_gates": {
+    "rights": {
+      "required_state": "open_license",
+      "license_id": "etalab-2.0",
+      "redistribution": "allowed_with_attribution"
+    },
+    "privacy": {
+      "classification": "public_non_personal",
+      "personal_data_expected": false,
+      "child_data_allowed": false,
+      "excluded_field_classes": [
+        "coordinates",
+        "images",
+        "free_text",
+        "contact_data",
+        "child_level_data"
+      ]
+    },
+    "security": {
+      "risk_tier": "low",
+      "remote_content_untrusted": true,
+      "arbitrary_url_allowed": false
+    },
+    "retention": {
+      "retention_class": "open_data_prototype",
+      "temporary_package_days": 14,
+      "reminder_day": 10,
+      "maximum_extensions": 1
+    }
+  },
+  "admission_policy": {
+    "human_review_required": true,
+    "direct_main_write_allowed": false,
+    "automatic_merge_allowed": false,
+    "publication_authorized": false
+  },
+  "review": {
+    "review_state": "approved_for_bounded_prototype",
+    "reviewer_role": "maintainer",
+    "reviewed_at": "2026-08-03",
+    "suspension_conditions": [
+      "Suspend if the registered source profile, host, dataset identity, licence, privacy classification, or field semantics changes.",
+      "Suspend after any unexpected identity, duplicate identity, malformed record, seventh record, or policy-gate failure."
+    ]
+  },
+  "limitations": [
+    "This plan authorizes only a future manually triggered bounded prototype acquisition; it does not itself access the network.",
+    "A changed response creates a candidate version for quarantine and human review, not an automatic update or civic conclusion.",
+    "The source reports school-unit values and is not competent evidence of payment, acceptance, outcomes, impact, or campaign fulfillment.",
+    "The 29 July 2026 fingerprint is a historical comparison point, not a permanent expected response."
+  ]
+}
