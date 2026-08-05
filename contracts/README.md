@@ -2,7 +2,7 @@
 
 **Status:** Pre-stable implementation
 **Owner:** Maintainers
-**Last reviewed:** 2026-08-03
+**Last reviewed:** 2026-08-05
 
 The `v1` directory contains the first field-level contracts for the bounded
 “Respire à la récré” proof of concept. They implement a deliberately small
@@ -32,19 +32,26 @@ fail-closed publication state.
 The acquisition-event contract covers the three bounded City API responses and
 binds each request, exact bytes, fingerprint, rights, minimization, security
 result, and limitations. It is not a general production acquisition contract.
-Six separate pre-stable contracts now define the reusable acquisition
+Seven separate pre-stable contracts now define the reusable acquisition
 boundaries proposed by RFC-0001: acquisition plan, generalized attempt, source
 artifact version, safe attempt receipt, admission review, and deterministic
-source-change report. The executable
+source-change report, plus the temporary remote-package manifest. The executable
 plan remains bounded to six reviewed school UAIs, fourteen fields, one
 registered host and dataset, and fail-closed human admission. The generalized
 contracts expose safe failure states and allow retrospective compatibility
 projections to state which plan, connector, timing, package, or review metadata
-was not recorded by the three historical acquisitions. They do not implement a
-GitHub workflow or admission action. A local Increment 1 core now implements
+was not recorded by the three historical acquisitions. They do not implement an
+admission action. A local Increment 1 core implements
 the registered Opendatasoft connector, constrained HTTPS transport, structural
 validation, content-addressed quarantine, deterministic change reports, and
-offline replay. Its tests do not contact the civic endpoint.
+offline replay. Increment 2 adds a manually triggered read-only GitHub adapter,
+14-day package manifests, metadata-only issue receipts, and deterministic
+reminder and expiry transitions. The workflows have not yet been remotely
+exercised, and their tests do not contact the civic endpoint or GitHub API.
+The pre-stable receipt contract is version `1.1.0`: this increment adds the
+required reminder timestamp and operational no-review states. Historical
+compatibility projections are regenerated at that version. No stable public
+consumer or persisted remote receipt exists to migrate.
 
 The administrative-evidence contract binds ten official document versions to
 precise fragments while keeping adopted policy, budget authorization, executed

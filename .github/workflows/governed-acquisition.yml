@@ -1,0 +1,119 @@
+# SPDX-License-Identifier: EUPL-1.2
+
+name: Governed acquisition
+
+on:
+  workflow_dispatch:
+    inputs:
+      plan:
+        description: Reviewed acquisition plan
+        required: true
+        type: choice
+        options:
+          - plan-city-schools-pilot-cases
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governed-acquisition-${{ github.event.inputs.plan }}
+  cancel-in-progress: false
+
+jobs:
+  acquire:
+    name: Acquire into temporary quarantine
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      package_id: ${{ steps.adapter.outputs.package_id }}
+      receipt_payload_base64: ${{ steps.adapter.outputs.receipt_payload_base64 }}
+      review_state: ${{ steps.adapter.outputs.review_state }}
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src
+
+    steps:
+      - name: Check out repository without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.11"
+
+      - name: Validate contracts and deterministic invariants
+        run: python -m iagora validate
+
+      - name: Verify retained-fixture equivalence
+        run: >-
+          python -m iagora replay
+          --plan plan-city-schools-pilot-cases
+          --input data/raw/respire-a-la-recre/2026-07-29/records-selected.json
+          --quarantine-dir "$RUNNER_TEMP/iagora-equivalence"
+
+      - name: Run the reviewed remote plan and build its package
+        run: >-
+          python -m iagora remote-acquire
+          --plan "${{ github.event.inputs.plan }}"
+          --quarantine-dir "$RUNNER_TEMP/iagora-quarantine"
+          --package-dir "$RUNNER_TEMP/iagora-package"
+          --adapter-output "$RUNNER_TEMP/iagora-adapter.json"
+
+      - name: Export safe adapter outputs
+        id: adapter
+        run: |
+          jq -r '"package_id=" + .package_id' "$RUNNER_TEMP/iagora-adapter.json" >> "$GITHUB_OUTPUT"
+          jq -r '"receipt_payload_base64=" + .receipt_payload_base64' "$RUNNER_TEMP/iagora-adapter.json" >> "$GITHUB_OUTPUT"
+          jq -r '"review_state=" + .review_state' "$RUNNER_TEMP/iagora-adapter.json" >> "$GITHUB_OUTPUT"
+
+      - name: Publish safe job summary
+        run: cat "$RUNNER_TEMP/iagora-package/summary.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify acquisition did not modify the repository
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain)"
+
+      - name: Upload the temporary review package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ steps.adapter.outputs.package_id }}
+          path: ${{ runner.temp }}/iagora-package
+          if-no-files-found: error
+          include-hidden-files: false
+          retention-days: 14
+
+  receipt:
+    name: Create durable metadata-only receipt
+    needs: acquire
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Check out repository without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.11"
+
+      - name: Create receipt issue without package access
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONPATH: src
+          RECEIPT_PAYLOAD_BASE64: ${{ needs.acquire.outputs.receipt_payload_base64 }}
+        run: >-
+          python -m iagora create-receipt-issue
+          --payload-base64 "$RECEIPT_PAYLOAD_BASE64"
+          --repository "$GITHUB_REPOSITORY"
