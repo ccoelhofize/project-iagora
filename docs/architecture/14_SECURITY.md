@@ -53,8 +53,25 @@ export safe metadata. A separate job has `issues: write`, `contents: read` for
 the checked-out adapter code, and no package access. It receives only the
 validated receipt payload. The deadline monitor reads receipt metadata and
 cannot execute acquisition. Official actions are pinned to exact revisions.
-These controls are tested statically and with controlled fixtures; the
-workflows have not yet been exercised remotely.
+These controls are tested statically and with controlled fixtures. The
+acquisition and receipt path also completed one controlled remote exercise with
+an unchanged response and no raw-byte duplication or admission. The deadline
+monitor remains operationally unexercised.
+
+The Increment 3 admission adapter adds an Actions-only boundary, exact open
+receipt and package-expiry checks, full component fingerprints, current plan
+and source-profile binding, deterministic target paths, and a fresh receipt
+fingerprint check before any repository write. Validation runs with read-only
+permissions. Only the later `governed-admission` environment job receives
+bounded content, issue, and pull-request writes; checkout credentials remain
+unpersisted, direct `main` writes and force updates are absent, and every pull
+request is draft. A repository variable keeps the workflow disabled until the
+external environment protection is explicitly configured. Synthetic tests
+exercise tampering, stale state, unsafe paths, permission separation, rejection,
+and the lack of automatic merge or publication. The environment is not yet
+configured and no real admission has been exercised. A provider failure after
+branch creation can require visible manual reconciliation; automatic rollback
+is not implemented.
 
 These controls cover only one JSON plan and do not constitute a production
 security assessment. No complete threat model, parser sandbox, active-content

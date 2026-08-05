@@ -16,6 +16,8 @@ dependencies. They are not bundled with the prototype runtime:
   `a309ff8b426b58ec0e2a45f0f869d46889d02405`, under the MIT License.
 - [`actions/upload-artifact`](https://github.com/actions/upload-artifact) v7.0.1,
   pinned to `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`, under the MIT License.
+- [`actions/download-artifact`](https://github.com/actions/download-artifact) v8.0.1,
+  pinned to `3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c`, under the MIT License.
 
 Their official repositories and licence notices remain the authoritative
 sources. Revision pinning limits silent supply-chain changes; it does not

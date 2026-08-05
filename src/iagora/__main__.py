@@ -23,11 +23,14 @@ from .acquisition_transport import (
 )
 from .contracts import ContractViolation, load_json, validate
 from .github_receipts import (
+    GitHubAdmissionClient,
     GitHubAdapterFailure,
     GitHubIssueClient,
     apply_receipt_monitor,
     create_receipt_issue,
 )
+from .github_admission import apply_admission_proposal
+from .admission import prepare_admission_proposal, receipt_resolution
 from .pilot import ROOT, build, build_passport, validate_inputs
 from .remote_acquisition import (
     build_remote_package,
@@ -94,6 +97,32 @@ def main() -> int:
     )
     remote_monitor_parser.add_argument("--repository", required=True)
     remote_monitor_parser.add_argument("--now")
+    resolve_admission_parser = subcommands.add_parser(
+        "resolve-admission-receipt",
+        help="Resolve one still-pending receipt to its bounded package coordinates",
+    )
+    resolve_admission_parser.add_argument("--issue-number", required=True, type=int)
+    resolve_admission_parser.add_argument("--repository", required=True)
+    resolve_admission_parser.add_argument("--output", type=Path, required=True)
+    prepare_admission_parser = subcommands.add_parser(
+        "prepare-admission",
+        help="Revalidate one package and prepare a protected admission proposal",
+    )
+    prepare_admission_parser.add_argument("--resolution", type=Path, required=True)
+    prepare_admission_parser.add_argument("--package-dir", type=Path, required=True)
+    prepare_admission_parser.add_argument("--proposal-dir", type=Path, required=True)
+    prepare_admission_parser.add_argument(
+        "--decision", required=True, choices=("admit", "reject")
+    )
+    prepare_admission_parser.add_argument("--rationale", required=True)
+    prepare_admission_parser.add_argument("--repository", required=True)
+    apply_admission_parser = subcommands.add_parser(
+        "apply-admission",
+        help="Apply one protected admission proposal through bounded GitHub writes",
+    )
+    apply_admission_parser.add_argument("--proposal-dir", type=Path, required=True)
+    apply_admission_parser.add_argument("--repository", required=True)
+    apply_admission_parser.add_argument("--expected-main-sha", required=True)
     args = parser.parse_args()
 
     if args.command == "validate":
@@ -207,6 +236,108 @@ def main() -> int:
             )
             return 2
         print(json.dumps(output, sort_keys=True))
+        return 0
+
+    if args.command in {
+        "resolve-admission-receipt",
+        "prepare-admission",
+        "apply-admission",
+    }:
+        try:
+            if os.environ.get("GITHUB_ACTIONS") != "true":
+                raise ContractViolation(
+                    "Protected admission is restricted to GitHub Actions"
+                )
+            if args.repository != os.environ.get("GITHUB_REPOSITORY"):
+                raise ContractViolation(
+                    "Admission repository differs from the GitHub Actions context"
+                )
+            if os.environ.get("IAGORA_ADMISSION_ENVIRONMENT_READY") != "true":
+                raise ContractViolation(
+                    "Protected admission environment has not been explicitly enabled"
+                )
+            now = datetime.now(timezone.utc)
+            if args.command == "resolve-admission-receipt":
+                token = os.environ.get("GITHUB_TOKEN")
+                if not token:
+                    raise ContractViolation("GitHub admission token is unavailable")
+                issue = GitHubIssueClient(args.repository, token).get_issue(
+                    args.issue_number
+                )
+                resolution = receipt_resolution(issue, args.repository, now)
+                output = {
+                    "issue": {
+                        "number": issue["number"],
+                        "title": issue["title"],
+                        "body": issue["body"],
+                        "state": issue["state"],
+                    },
+                    "workflow_run_id": resolution["workflow_run_id"],
+                    "package_id": resolution["package_id"],
+                }
+                args.output.write_text(
+                    json.dumps(output, ensure_ascii=False, indent=2, sort_keys=True)
+                    + "\n",
+                    encoding="utf-8",
+                )
+            elif args.command == "prepare-admission":
+                resolution = json.loads(
+                    args.resolution.read_text(encoding="utf-8")
+                )
+                if not isinstance(resolution, dict) or not isinstance(
+                    resolution.get("issue"), dict
+                ):
+                    raise ContractViolation("Admission resolution is invalid")
+                proposal = prepare_admission_proposal(
+                    root=ROOT,
+                    package_directory=args.package_dir,
+                    proposal_directory=args.proposal_dir,
+                    issue=resolution["issue"],
+                    repository=args.repository,
+                    decision=args.decision,
+                    rationale=args.rationale,
+                    now=now,
+                )
+                output = {
+                    "proposal_id": proposal.manifest["proposal_id"],
+                    "decision": proposal.manifest["decision"],
+                    "target_count": len(proposal.manifest["target_files"]),
+                    "publication_authorized": False,
+                    "automatic_merge_allowed": False,
+                }
+            else:
+                token = os.environ.get("GITHUB_TOKEN")
+                if not token:
+                    raise ContractViolation("GitHub admission token is unavailable")
+                output = apply_admission_proposal(
+                    root=ROOT,
+                    proposal_directory=args.proposal_dir,
+                    issue_client=GitHubIssueClient(args.repository, token),
+                    admission_client=GitHubAdmissionClient(args.repository, token),
+                    expected_main_sha=args.expected_main_sha,
+                    now=now,
+                )
+        except (
+            ContractViolation,
+            GitHubAdapterFailure,
+            OSError,
+            ValueError,
+            json.JSONDecodeError,
+        ) as exc:
+            print(
+                json.dumps(
+                    {
+                        "outcome": "failed",
+                        "safe_failure_code": "protected_admission_failure",
+                        "message": str(exc),
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                ),
+                file=sys.stderr,
+            )
+            return 2
+        print(json.dumps(output, ensure_ascii=False, sort_keys=True))
         return 0
 
     try:

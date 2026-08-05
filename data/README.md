@@ -17,9 +17,12 @@ explicitly synthetic and describes no real civic fact or operational event.
 
 Local acquisition and replay attempts write to a configured quarantine
 directory outside this repository. They do not add, replace, or promote files
-under `data/`. The local core has no admission command; moving eligible bytes
-from quarantine into this curated tree requires a future governed review and
-admission implementation.
+under `data/`. The local core has no admission command. The separate protected
+remote admission workflow can revalidate one exact, non-expired candidate and,
+after human approval, propose its bounded raw bytes, acquisition event,
+source-change report, and admission review on a dedicated branch and draft pull
+request. It cannot write directly to `main`, merge, canonicalize, or publish.
+That path is implemented but externally disabled and operationally unexercised.
 
 The three exact records under `raw/` remain the real historical compatibility
 fixtures. Validation projects their immutable acquisition metadata into the new
