@@ -219,6 +219,17 @@ def validate_receipt_semantics(receipt: dict[str, Any]) -> None:
                 raise ContractViolation("Reviewable live receipt requires package deadline metadata")
             if not receipt["bytes_available"]:
                 raise ContractViolation("Pending or extended package bytes must remain available")
+        if receipt["review_state"] == "admission_pending":
+            if receipt["safe_outcome"] != "candidate_new_version":
+                raise ContractViolation("Pending admission requires a candidate new version")
+        if receipt["review_state"] == "no_admission_required":
+            if receipt["safe_outcome"] != "unchanged" or not receipt["bytes_available"]:
+                raise ContractViolation("Unchanged governed bytes require no new admission")
+        if receipt["review_state"] == "not_reviewable":
+            if receipt["safe_outcome"] in {"unchanged", "candidate_new_version"}:
+                raise ContractViolation("Successful acquisition cannot be marked not reviewable")
+            if receipt["bytes_available"]:
+                raise ContractViolation("Non-reviewable attempt cannot expose package bytes")
         if receipt["review_state"] in {"admitted", "rejected", "extended"}:
             if receipt["decision_at"] is None or not receipt["decision_rationale"]:
                 raise ContractViolation("Recorded live decision requires time and rationale")
@@ -358,7 +369,7 @@ def project_historical_acquisition(
     }
     receipt = {
         "contract_id": "iagora.acquisition-receipt",
-        "contract_version": "1.0.0",
+        "contract_version": "1.1.0",
         "receipt_id": f"receipt-compat-{event_suffix}",
         "record_origin": "retrospective_compatibility_fixture",
         "attempt_id": attempt_id,
@@ -374,6 +385,7 @@ def project_historical_acquisition(
         "policy_states": policy_states,
         "package_created_at": None,
         "reminder_due_at": None,
+        "reminder_sent_at": None,
         "package_expires_at": None,
         "extension_count": 0,
         "review_state": "admitted",

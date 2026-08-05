@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-08-03
+**Last reviewed:** 2026-08-05
 
 ## Security objectives
 
@@ -44,6 +44,17 @@ and append-only quarantine outside the repository. Tests exercise loopback and
 mixed-address rejection, changed and cross-host redirects, media and size
 failures, missing stored bytes, and safe output without contacting the civic
 endpoint.
+
+The remote adapter keeps acquisition at `contents: read`, disables persisted
+checkout credentials, accepts one choice-based plan identifier, verifies that
+the checkout remains unchanged, and uploads only a 14-day bounded package.
+Raw bytes are exported only for a structurally valid candidate; invalid results
+export safe metadata. A separate job has `issues: write`, `contents: read` for
+the checked-out adapter code, and no package access. It receives only the
+validated receipt payload. The deadline monitor reads receipt metadata and
+cannot execute acquisition. Official actions are pinned to exact revisions.
+These controls are tested statically and with controlled fixtures; the
+workflows have not yet been exercised remotely.
 
 These controls cover only one JSON plan and do not constitute a production
 security assessment. No complete threat model, parser sandbox, active-content

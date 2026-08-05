@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: EUPL-1.2
+
+name: Acquisition receipt monitor
+
+on:
+  schedule:
+    - cron: "17 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: acquisition-receipt-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    name: Remind and close expiring receipts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src
+      GITHUB_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Check out repository without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.11"
+
+      - name: Apply reminders and expiry transitions
+        run: >-
+          python -m iagora monitor-receipt-issues
+          --repository "$GITHUB_REPOSITORY"

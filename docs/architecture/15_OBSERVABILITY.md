@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-08-03
+**Last reviewed:** 2026-08-05
 
 ## Purpose
 
@@ -40,6 +40,9 @@ Local acquisition and replay attempts emit append-only safe records containing
 stable identifiers, outcome, timing, fingerprints when available, rule
 versions, validation state, and bounded failure codes. They exclude response
 bodies, request URLs, local paths, and secrets. These records are local
-prototype metadata, not a durable audit or telemetry service. No telemetry
-stack, service objectives, dashboards, alerts, on-call process, remote receipt
-adapter, or production environment exists.
+prototype metadata, not a durable audit or telemetry service. The remote
+adapter can add a 14-day package manifest and a durable
+metadata-only issue receipt with one reminder timestamp and an explicit expiry
+transition. The workflow code is present but has not yet emitted an operational
+receipt. No telemetry stack, service objectives, dashboards, alerts, on-call
+process, generalized audit store, or production environment exists.

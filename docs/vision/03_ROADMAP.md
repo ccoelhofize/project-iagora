@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-07-30
+**Last reviewed:** 2026-08-05
 
 ## How to read this roadmap
 
@@ -22,9 +22,9 @@ The initial decision foundation is merged. A local, non-public vertical slice no
 - All architecture specifications, the remaining development guides, and the remaining governance specifications remain drafts.
 - The product scope is accepted and the three case studies are confirmed through an active source inventory.
 - The exact EUPL-1.2 text, artifact-class notice, and third-party notice are present.
-- Eight pre-stable executable schemas cover source profiles, campaign artifacts, commitment mappings, acquisition events, administrative evidence, procurement evidence, pilot snapshots, and Knowledge Passports, with a standard-library validator.
-- A deterministic local transformation, three-level static HTML product projection, and initial contract, methodology, and presentation guardrail tests exist.
-- Three exact bounded City API responses and acquisition events exist; no production connector, general immutable raw store, database, network service, public API, deployment, or public service exists.
+- Seventeen pre-stable executable schemas now include bounded acquisition plans, attempts, artifact versions, source-change reports, receipts, admission reviews, and temporary remote-package manifests alongside the civic-evidence and product contracts.
+- A deterministic local transformation, three-level static HTML product projection, bounded local Opendatasoft acquisition core, and contract, methodology, presentation, network-boundary, quarantine, package, and receipt-lifecycle tests exist.
+- Three exact bounded City API responses and acquisition events exist. One manually triggered GitHub Actions workflow can run the single reviewed six-school plan with read-only repository access, create a 14-day package, and hand only safe metadata to a separate receipt job. The workflow is present but has not yet been remotely exercised. No production connector fleet, general immutable raw store, database, public API, deployment, or public service exists.
 - Ten metadata-only municipal document versions establish a partial administrative chain without conflating adopted policy, programme finance, reported delivery, and funding forecasts.
 - A minimal read-only CI workflow runs deterministic validation, tests, and the local build on Python 3.11.
 - A primary campaign fragment is authenticated with limitations and retained as rights-aware metadata. Its one-component mapping to the later programme is now an explicit AI-assisted proposal. A separate executable bundle documents candidate procurement evidence for a 2020 study, a 2021 citywide schoolyard works framework, a separate 2022 works-framework competition, and 2025 design services, with explicit relationship, amount-stage, scope, cut-off, and rights limits; none directly names Respire or identifies a purchase order for a pilot school. Independent methodological and authority review, school-attributable works procurement, competent-completion evidence, retention schedule, privacy assessment, threat model, incident plan, qualified reviews, and production security controls remain incomplete.
@@ -88,10 +88,12 @@ Implement one end-to-end path for the programme and three selected school case s
 - publication gate that fails closed on known blockers;
 - initial automated tests for contracts, scope separation, evidence coverage, determinism, and unsupported conclusions;
 - minimal CI execution of validation, tests, and deterministic build on Python 3.11.
+- bounded local acquisition with exact request normalization, constrained HTTPS, append-only content-addressed quarantine, deterministic source-change reports, and offline replay;
+- a manual read-only GitHub acquisition workflow, 14-day manifest-validated package, metadata-only durable issue receipt, and metadata-only day-10 reminder and expiry monitor, all present but not yet remotely exercised;
 
 ### Remaining outcomes
 
-- idempotent acquisition from the approved official corpus;
+- operationally exercise and review the bounded remote acquisition path without widening its one-plan scope;
 - immutable raw evidence with recovery and governed redaction behavior;
 - parsing, validation, and canonical transformation;
 - source-fragment citations and transformation lineage;
@@ -102,6 +104,7 @@ Implement one end-to-end path for the programme and three selected school case s
 - reviewed accessible plain-language exploration;
 - contract, lineage, accessibility, and security tests;
 - observability for acquisition and publication failures.
+- protected remote human admission that revalidates an exact package and can only propose a pull request;
 
 ### Exit criteria
 

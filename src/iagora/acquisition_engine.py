@@ -451,6 +451,7 @@ def _attempt(
     plan: dict[str, Any],
     source: dict[str, Any],
     record_origin: str,
+    execution_environment: str,
     attempt_id: str,
     correlation_id: str,
     started_at: str,
@@ -499,7 +500,7 @@ def _attempt(
         },
         "started_at": started_at,
         "completed_at": completed_at,
-        "execution_environment": "local",
+        "execution_environment": execution_environment,
         "requested_endpoint": endpoint_url,
         "resolved_url": _safe_endpoint(resolved_url),
         "outcome": outcome,
@@ -590,11 +591,15 @@ class AcquisitionEngine:
         *,
         now: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
         identifier: Callable[[str], str] = _default_identifier,
+        execution_environment: str = "local",
     ) -> None:
         self.root = root.resolve()
         self.store = store
         self._now = now
         self._identifier = identifier
+        if execution_environment not in {"local", "github_actions"}:
+            raise ContractViolation("Acquisition execution environment is not supported")
+        self.execution_environment = execution_environment
 
     def run(self, plan_id: str, transport: Transport) -> AcquisitionResult:
         plan, source = load_reviewed_plan(self.root, plan_id)
@@ -626,6 +631,7 @@ class AcquisitionEngine:
                 plan=plan,
                 source=source,
                 record_origin=record_origin,
+                execution_environment=self.execution_environment,
                 attempt_id=attempt_id,
                 correlation_id=correlation_id,
                 started_at=started_at,
@@ -661,6 +667,7 @@ class AcquisitionEngine:
                 plan=plan,
                 source=source,
                 record_origin=record_origin,
+                execution_environment=self.execution_environment,
                 attempt_id=attempt_id,
                 correlation_id=correlation_id,
                 started_at=started_at,
@@ -716,6 +723,7 @@ class AcquisitionEngine:
                 plan=plan,
                 source=source,
                 record_origin=record_origin,
+                execution_environment=self.execution_environment,
                 attempt_id=attempt_id,
                 correlation_id=correlation_id,
                 started_at=started_at,
@@ -754,6 +762,7 @@ class AcquisitionEngine:
             plan=plan,
             source=source,
             record_origin=record_origin,
+            execution_environment=self.execution_environment,
             attempt_id=attempt_id,
             correlation_id=correlation_id,
             started_at=started_at,

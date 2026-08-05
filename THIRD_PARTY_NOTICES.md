@@ -2,7 +2,7 @@
 
 **Status:** Active
 **Owner:** Maintainers
-**Last reviewed:** 2026-07-29
+**Last reviewed:** 2026-08-05
 
 The first vertical slice has no third-party runtime package dependency. It uses
 the Python standard library.
@@ -14,6 +14,8 @@ dependencies. They are not bundled with the prototype runtime:
   `3d3c42e5aac5ba805825da76410c181273ba90b1`, under the MIT License;
 - [`actions/setup-python`](https://github.com/actions/setup-python) v6.2.0, pinned to
   `a309ff8b426b58ec0e2a45f0f869d46889d02405`, under the MIT License.
+- [`actions/upload-artifact`](https://github.com/actions/upload-artifact) v7.0.1,
+  pinned to `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`, under the MIT License.
 
 Their official repositories and licence notices remain the authoritative
 sources. Revision pinning limits silent supply-chain changes; it does not

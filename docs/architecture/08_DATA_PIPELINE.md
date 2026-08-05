@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Owner:** Maintainers  
-**Last reviewed:** 2026-08-03
+**Last reviewed:** 2026-08-05
 
 ## Pipeline stages
 
@@ -33,7 +33,7 @@ Restriction or removal events invalidate or rebuild affected fragments, assertio
 
 ## Current state
 
-The local vertical slice implements bounded source registration, three manually captured constrained City API responses, exact preservation of their selected-field bytes, acquisition-event validation, deterministic raw-to-normalized comparison, canonical scope-preserving transformation, row-level evidence location, passport projection, and a fail-closed publication check. Increment 0 and the local part of Increment 1 of [RFC-0001](../rfc/RFC-0001-portable-governed-source-acquisition.md) are now implemented for one six-school plan: six reusable contracts, deterministic historical compatibility projections, a registered Opendatasoft connector, constrained HTTPS transport, exact structural validation, append-only content-addressed quarantine outside the repository, offline replay, deduplication, safe attempt metadata, and a field-level change report. The tests use retained or injected responses; this lot records no live civic acquisition. The repository still does not implement sandboxed general parsing, managed shared persistence, durable receipts, GitHub acquisition or admission workflows, governed admission, scheduling, automated retry, restriction propagation, or production publication. RFC-0001 remains a draft proposal.
+The local vertical slice implements bounded source registration, three manually captured constrained City API responses, exact preservation of their selected-field bytes, acquisition-event validation, deterministic raw-to-normalized comparison, canonical scope-preserving transformation, row-level evidence location, passport projection, and a fail-closed publication check. Increments 0–2 of [RFC-0001](../rfc/RFC-0001-portable-governed-source-acquisition.md) are implemented for one six-school plan: seven reusable acquisition contracts, deterministic historical compatibility projections, a registered Opendatasoft connector, constrained HTTPS transport, exact structural validation, append-only content-addressed local quarantine, offline replay, deduplication, safe attempt metadata, field-level change reports, a manually triggered read-only GitHub adapter, 14-day manifest-validated packages, metadata-only durable issue receipts, and deterministic reminder and expiry transitions. The remote workflows are unexercised and tests use retained or injected responses; this lot records no new live civic acquisition. The repository still does not implement sandboxed general parsing, managed shared persistence, governed admission, civic-source scheduling, automated retry, restriction propagation, or production publication. RFC-0001 remains a draft proposal.
 
 ## Related records
 

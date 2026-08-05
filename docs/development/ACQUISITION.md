@@ -1,24 +1,24 @@
-# Local Governed Acquisition
+# Governed Acquisition
 
 **Status:** Draft
 
 **Owner:** Maintainers
 
-**Last reviewed:** 2026-08-03
+**Last reviewed:** 2026-08-05
 
 ## Scope
 
-This guide covers the local part of Increment 1 of
+This guide covers the local Increment 1 and remote Increment 2 parts of
 [RFC-0001](../rfc/RFC-0001-portable-governed-source-acquisition.md). The
 implementation can replay a retained response or manually retrieve the one
 registered six-school Opendatasoft plan. It validates the exact response shape,
 compares the result with the historical baseline, and records safe metadata in
 an append-only quarantine store outside the repository.
 
-This is not a scheduled collector, a GitHub Actions acquisition workflow, a
-governed raw-evidence store, an admission workflow, or a publication path. No
-command in this guide admits bytes to `data/raw/`, changes canonical records, or
-authorizes a civic conclusion.
+This is not a scheduled collector, governed raw-evidence store, admission
+workflow, or publication path. No command or workflow in this guide admits
+bytes to `data/raw/`, changes canonical records, or authorizes a civic
+conclusion.
 
 ## Safety boundary
 
@@ -111,12 +111,44 @@ validation, change report, rights, privacy, retention, and security metadata.
 The future admission path requires a separate implementation and human
 decision before any eligible material can be proposed for `data/raw/`.
 
+## Manual GitHub Actions acquisition
+
+The `Governed acquisition` workflow exposes one choice input containing only
+`plan-city-schools-pilot-cases`. It cannot accept a URL, dataset name, query, or
+shell fragment. The acquisition job has `contents: read`, checks out without
+persisting credentials, validates the repository and historical fixture,
+executes the same core in the `github_actions` environment, and verifies that
+the checkout remains unchanged.
+
+The resulting package is retained for 14 days. It contains a validated manifest,
+safe summary, exact attempt metadata, receipt, and eligible comparison or
+candidate material. A structurally invalid response exports metadata only; its
+untrusted raw bytes are not uploaded. The workflow has been implemented and
+tested with controlled inputs but has not yet been remotely exercised.
+
+The separate receipt job has `issues: write`, read-only access to the checked-out
+adapter code, and no package access. It receives only a validated base64-encoded
+issue payload and creates a durable metadata-only issue. Receipts for unchanged
+or non-reviewable attempts are closed immediately; a candidate issue remains
+open for human review.
+
+The `Acquisition receipt monitor` runs daily and may also be triggered manually.
+It reads receipt issues only. It never executes the acquisition command or
+contacts a civic source. At day 10 it records one reminder. At or after day 14,
+an undecided receipt becomes `expired_without_admission`, records that the
+temporary bytes are unavailable, and closes the issue.
+
+Neither workflow implements admission. A later Increment 3 must revalidate the
+exact package under protected human approval before it can propose a pull
+request. Merge and publication remain separate human decisions.
+
 ## Known limitations
 
 - only one registered Opendatasoft JSON plan is executable;
 - the quarantine store is local and is not a durable shared evidence store;
-- no GitHub Actions acquisition, receipt, expiry, or remote admission workflow
-  exists;
+- the GitHub acquisition and receipt workflows are present but have not yet
+  been remotely exercised;
+- no remote admission workflow exists;
 - no scheduling, retries, parser sandbox, malware scanning, telemetry stack, or
   production incident process exists;
 - the implementation has been tested with retained and injected responses, not
