@@ -1,0 +1,186 @@
+# SPDX-License-Identifier: EUPL-1.2
+
+name: Governed admission
+
+on:
+  workflow_dispatch:
+    inputs:
+      receipt_issue:
+        description: Pending acquisition receipt issue number
+        required: true
+        type: string
+      decision:
+        description: Maintainer admission decision
+        required: true
+        type: choice
+        options:
+          - admit
+          - reject
+      rationale:
+        description: One-line decision rationale (10 to 500 characters)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governed-admission-${{ inputs.receipt_issue }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Revalidate exact candidate without repository writes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+      issues: read
+    outputs:
+      proposal_artifact: ${{ steps.coordinates.outputs.proposal_artifact }}
+    env:
+      IAGORA_ADMISSION_ENVIRONMENT_READY: ${{ vars.IAGORA_ADMISSION_ENVIRONMENT_READY }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src
+
+    steps:
+      - name: Require explicit protected-environment enablement
+        run: test "$IAGORA_ADMISSION_ENVIRONMENT_READY" = "true"
+
+      - name: Check out the exact workflow commit without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.11"
+
+      - name: Validate contracts and deterministic invariants
+        run: python -m iagora validate
+
+      - name: Resolve the exact pending receipt
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RECEIPT_ISSUE: ${{ inputs.receipt_issue }}
+        run: >-
+          python -m iagora resolve-admission-receipt
+          --issue-number "$RECEIPT_ISSUE"
+          --repository "$GITHUB_REPOSITORY"
+          --output "$RUNNER_TEMP/iagora-admission-resolution.json"
+
+      - name: Export bounded package coordinates
+        id: coordinates
+        run: |
+          jq -r '"workflow_run_id=" + .workflow_run_id' "$RUNNER_TEMP/iagora-admission-resolution.json" >> "$GITHUB_OUTPUT"
+          jq -r '"package_id=" + .package_id' "$RUNNER_TEMP/iagora-admission-resolution.json" >> "$GITHUB_OUTPUT"
+          echo "proposal_artifact=admission-proposal-${GITHUB_RUN_ID}" >> "$GITHUB_OUTPUT"
+
+      - name: Download the exact temporary acquisition package
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ steps.coordinates.outputs.package_id }}
+          path: ${{ runner.temp }}/iagora-package
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.coordinates.outputs.workflow_run_id }}
+
+      - name: Prepare the exact admission proposal
+        env:
+          ADMISSION_DECISION: ${{ inputs.decision }}
+          ADMISSION_RATIONALE: ${{ inputs.rationale }}
+        run: >-
+          python -m iagora prepare-admission
+          --resolution "$RUNNER_TEMP/iagora-admission-resolution.json"
+          --package-dir "$RUNNER_TEMP/iagora-package"
+          --proposal-dir "$RUNNER_TEMP/iagora-admission-proposal"
+          --decision "$ADMISSION_DECISION"
+          --rationale "$ADMISSION_RATIONALE"
+          --repository "$GITHUB_REPOSITORY"
+
+      - name: Publish the exact proposal summary for human review
+        env:
+          PROPOSAL: ${{ runner.temp }}/iagora-admission-proposal/proposal.json
+        run: |
+          jq -r '[
+            "## Protected admission proposal",
+            "",
+            "- Proposal: `" + .proposal_id + "`",
+            "- Decision: `" + .decision + "`",
+            "- Receipt issue: `#" + (.receipt_issue_number | tostring) + "`",
+            "- Package: `" + .package_reference.package_id + "`",
+            "- Candidate SHA-256: `" + .candidate.sha256 + "`",
+            "- Candidate bytes: `" + (.candidate.byte_size | tostring) + "`",
+            "- Candidate records: `" + (.candidate.record_count | tostring) + "`",
+            "- Rationale: " + .rationale,
+            "- Proposed targets: `" + ([.target_files[].path] | join("`, `")) + "`",
+            "",
+            "Publication and automatic merge remain forbidden."
+          ] | join("\n")' "$PROPOSAL" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify validation did not modify the repository
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain)"
+
+      - name: Upload the protected inter-job proposal
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ steps.coordinates.outputs.proposal_artifact }}
+          path: ${{ runner.temp }}/iagora-admission-proposal
+          if-no-files-found: error
+          include-hidden-files: false
+          retention-days: 1
+
+  apply:
+    name: Apply the approved decision to a branch and receipt
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: governed-admission
+    permissions:
+      actions: read
+      contents: write
+      issues: write
+      pull-requests: write
+    env:
+      IAGORA_ADMISSION_ENVIRONMENT_READY: ${{ vars.IAGORA_ADMISSION_ENVIRONMENT_READY }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: src
+
+    steps:
+      - name: Require explicit protected-environment enablement
+        run: test "$IAGORA_ADMISSION_ENVIRONMENT_READY" = "true"
+
+      - name: Check out the exact workflow commit without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.11"
+
+      - name: Download the validated proposal from this workflow run
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ needs.validate.outputs.proposal_artifact }}
+          path: ${{ runner.temp }}/iagora-admission-proposal
+
+      - name: Apply only the protected proposal
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python -m iagora apply-admission
+          --proposal-dir "$RUNNER_TEMP/iagora-admission-proposal"
+          --repository "$GITHUB_REPOSITORY"
+          --expected-main-sha "$GITHUB_SHA"
+
+      - name: Verify the checked-out repository remained untouched
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain)"

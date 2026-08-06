@@ -4,7 +4,9 @@
 
 from __future__ import annotations
 
+import base64
 import json
+import re
 from typing import Any, Callable
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -95,6 +97,13 @@ class GitHubIssueClient:
             )
         return number
 
+    def get_issue(self, issue_number: int) -> dict[str, Any]:
+        self._issue_number(issue_number)
+        response = self._request("GET", f"/issues/{issue_number}")
+        if not isinstance(response, dict):
+            raise GitHubAdapterFailure("GitHub returned an invalid receipt issue.")
+        return response
+
     def update_issue_body(self, issue_number: int, body: str) -> None:
         self._issue_number(issue_number)
         self._request("PATCH", f"/issues/{issue_number}", {"body": body})
@@ -124,6 +133,179 @@ class GitHubIssueClient:
     def _issue_number(value: int) -> None:
         if not isinstance(value, int) or value < 1:
             raise ContractViolation("GitHub issue number is invalid")
+
+
+class GitHubAdmissionClient:
+    """Bounded Git-data and pull-request adapter for protected admission."""
+
+    _SHA_PATTERN = re.compile(r"^[a-f0-9]{40}$")
+    _BRANCH_PATTERN = re.compile(r"^admission/[a-z0-9-]+$")
+
+    def __init__(
+        self,
+        repository: str,
+        token: str,
+        *,
+        opener: Callable[..., Any] = urlopen,
+    ) -> None:
+        if not REPOSITORY_PATTERN.fullmatch(repository):
+            raise ContractViolation("GitHub repository identifier is invalid")
+        if not token or any(character.isspace() for character in token):
+            raise ContractViolation("GitHub workflow token is missing or malformed")
+        self.repository = repository
+        self._token = token
+        self._opener = opener
+
+    def _request(
+        self,
+        method: str,
+        suffix: str,
+        payload: dict[str, Any] | None = None,
+    ) -> Any:
+        allowed = suffix.startswith("/git/") or suffix == "/pulls"
+        if not allowed:
+            raise ContractViolation("GitHub admission path is outside its boundary")
+        body = None if payload is None else json.dumps(payload).encode("utf-8")
+        request = Request(
+            f"{API_ROOT}/repos/{self.repository}{suffix}",
+            data=body,
+            method=method,
+            headers={
+                "Accept": "application/vnd.github+json",
+                "Authorization": f"Bearer {self._token}",
+                "Content-Type": "application/json",
+                "User-Agent": "Project-IAgora/0.1 admission-adapter",
+                "X-GitHub-Api-Version": API_VERSION,
+            },
+        )
+        try:
+            with self._opener(request, timeout=20) as response:
+                content = response.read(MAXIMUM_RESPONSE_BYTES + 1)
+        except (HTTPError, URLError, OSError, TimeoutError) as exc:
+            raise GitHubAdapterFailure(
+                "The GitHub admission operation could not be completed."
+            ) from exc
+        if len(content) > MAXIMUM_RESPONSE_BYTES:
+            raise GitHubAdapterFailure(
+                "The GitHub admission response exceeded its safe size limit."
+            )
+        if not content:
+            return None
+        try:
+            return json.loads(content.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise GitHubAdapterFailure(
+                "The GitHub admission response was not valid JSON."
+            ) from exc
+
+    @classmethod
+    def _sha(cls, value: str) -> None:
+        if not isinstance(value, str) or not cls._SHA_PATTERN.fullmatch(value):
+            raise ContractViolation("GitHub object identifier is invalid")
+
+    @classmethod
+    def _branch(cls, value: str) -> None:
+        if not isinstance(value, str) or not cls._BRANCH_PATTERN.fullmatch(value):
+            raise ContractViolation("GitHub admission branch is invalid")
+
+    def main_commit(self) -> tuple[str, str]:
+        reference = self._request("GET", "/git/ref/heads/main")
+        sha = reference.get("object", {}).get("sha") if isinstance(reference, dict) else None
+        self._sha(sha)
+        commit = self._request("GET", f"/git/commits/{sha}")
+        tree_sha = commit.get("tree", {}).get("sha") if isinstance(commit, dict) else None
+        self._sha(tree_sha)
+        return sha, tree_sha
+
+    def create_blob(self, content: bytes) -> str:
+        response = self._request(
+            "POST",
+            "/git/blobs",
+            {
+                "content": base64.b64encode(content).decode("ascii"),
+                "encoding": "base64",
+            },
+        )
+        sha = response.get("sha") if isinstance(response, dict) else None
+        self._sha(sha)
+        return sha
+
+    def create_tree(
+        self, base_tree_sha: str, entries: list[dict[str, str]]
+    ) -> str:
+        self._sha(base_tree_sha)
+        for entry in entries:
+            if set(entry) != {"path", "sha"}:
+                raise ContractViolation("GitHub tree entry is invalid")
+            if entry["path"].startswith("/") or ".." in entry["path"].split("/"):
+                raise ContractViolation("GitHub tree path is unsafe")
+            self._sha(entry["sha"])
+        response = self._request(
+            "POST",
+            "/git/trees",
+            {
+                "base_tree": base_tree_sha,
+                "tree": [
+                    {
+                        "path": entry["path"],
+                        "mode": "100644",
+                        "type": "blob",
+                        "sha": entry["sha"],
+                    }
+                    for entry in entries
+                ],
+            },
+        )
+        sha = response.get("sha") if isinstance(response, dict) else None
+        self._sha(sha)
+        return sha
+
+    def create_commit(self, message: str, tree_sha: str, parent_sha: str) -> str:
+        self._sha(tree_sha)
+        self._sha(parent_sha)
+        response = self._request(
+            "POST",
+            "/git/commits",
+            {"message": message, "tree": tree_sha, "parents": [parent_sha]},
+        )
+        sha = response.get("sha") if isinstance(response, dict) else None
+        self._sha(sha)
+        return sha
+
+    def create_branch(self, branch: str, commit_sha: str) -> None:
+        self._branch(branch)
+        self._sha(commit_sha)
+        self._request(
+            "POST", "/git/refs", {"ref": f"refs/heads/{branch}", "sha": commit_sha}
+        )
+
+    def update_branch(self, branch: str, commit_sha: str) -> None:
+        self._branch(branch)
+        self._sha(commit_sha)
+        self._request(
+            "PATCH", f"/git/refs/heads/{branch}", {"sha": commit_sha, "force": False}
+        )
+
+    def create_pull_request(self, branch: str, title: str, body: str) -> str:
+        self._branch(branch)
+        response = self._request(
+            "POST",
+            "/pulls",
+            {
+                "title": title,
+                "head": branch,
+                "base": "main",
+                "body": body,
+                "draft": True,
+                "maintainer_can_modify": True,
+            },
+        )
+        url = response.get("html_url") if isinstance(response, dict) else None
+        if not isinstance(url, str) or not url.startswith(
+            f"https://github.com/{self.repository}/pull/"
+        ):
+            raise GitHubAdapterFailure("GitHub did not return an admission pull request URL.")
+        return url
 
 
 def create_receipt_issue(

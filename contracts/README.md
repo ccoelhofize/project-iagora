@@ -32,26 +32,33 @@ fail-closed publication state.
 The acquisition-event contract covers the three bounded City API responses and
 binds each request, exact bytes, fingerprint, rights, minimization, security
 result, and limitations. It is not a general production acquisition contract.
-Seven separate pre-stable contracts now define the reusable acquisition
+Eight separate pre-stable contracts now define the reusable acquisition
 boundaries proposed by RFC-0001: acquisition plan, generalized attempt, source
-artifact version, safe attempt receipt, admission review, and deterministic
-source-change report, plus the temporary remote-package manifest. The executable
+artifact version, safe attempt receipt, admission proposal, admission review,
+and deterministic source-change report, plus the temporary remote-package manifest. The executable
 plan remains bounded to six reviewed school UAIs, fourteen fields, one
 registered host and dataset, and fail-closed human admission. The generalized
 contracts expose safe failure states and allow retrospective compatibility
 projections to state which plan, connector, timing, package, or review metadata
-was not recorded by the three historical acquisitions. They do not implement an
-admission action. A local Increment 1 core implements
+was not recorded by the three historical acquisitions. A local Increment 1 core implements
 the registered Opendatasoft connector, constrained HTTPS transport, structural
 validation, content-addressed quarantine, deterministic change reports, and
 offline replay. Increment 2 adds a manually triggered read-only GitHub adapter,
 14-day package manifests, metadata-only issue receipts, and deterministic
-reminder and expiry transitions. The workflows have not yet been remotely
-exercised, and their tests do not contact the civic endpoint or GitHub API.
+reminder and expiry transitions. The acquisition and receipt path completed its
+first controlled remote exercise on 5 August 2026 with an `unchanged` result;
+the deadline monitor remains unexercised. Increment 3 adds the admission-proposal
+contract, full package revalidation, deterministic target construction, bounded
+GitHub issue and Git-data adapters, and a protected two-job workflow that can
+only reject a candidate or create a dedicated branch and draft pull request.
+It remains inactive until the external `governed-admission` environment and
+explicit enablement variable are configured, and no real admission has been
+exercised. Tests still contact neither the civic endpoint nor GitHub API.
 The pre-stable receipt contract is version `1.1.0`: this increment adds the
 required reminder timestamp and operational no-review states. Historical
 compatibility projections are regenerated at that version. No stable public
-consumer or persisted remote receipt exists to migrate.
+consumer exists to migrate. The first persisted remote receipt uses this
+version and is operational metadata, not civic evidence.
 
 The administrative-evidence contract binds ten official document versions to
 precise fragments while keeping adopted policy, budget authorization, executed

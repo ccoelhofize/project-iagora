@@ -8,15 +8,17 @@
 
 **Last reviewed:** 2026-08-05
 
-**Implementation status:** Increments 0–2 implemented; remote workflow not yet exercised; admission absent
+**Implementation status:** Increments 0–3 implemented; first acquisition and receipt exercised; deadline monitor and admission unexercised; external admission environment not configured
 
 **Decision dependency:** A later ADR is required before adopting material persistence, source scheduling, or external-storage choices
 
 **Validated scope:** The project maintainer validated the bounded Increment 2
-scope on 3 August 2026: manual remote execution, the single reviewed plan,
-14-day packages, metadata-only durable receipts, a day-10 metadata reminder,
-and mandatory later human admission. Automatic civic scheduling, admission,
-publication, additional connectors, and external storage remain excluded.
+scope on 3 August 2026 and the bounded Increment 3 scope on 5 August 2026:
+manual remote execution, the single reviewed plan, 14-day packages,
+metadata-only durable receipts, a day-10 metadata reminder, and protected human
+admission limited to rejection or a dedicated draft pull request. Automatic
+civic scheduling, merge, publication, additional connectors, and external
+storage remain excluded.
 
 ## Summary
 
@@ -26,7 +28,7 @@ The first connector is limited to reviewed Opendatasoft JSON API sources. This R
 
 ## Status of this proposal
 
-The project maintainer validated the drafting direction and bounded Increment 2 scope on 3 August 2026. This document remains a draft because remote admission, external storage, production operation, and other open choices are unresolved. Increment 0 contracts, the bounded first plan, the synthetic pending-review example, and historical compatibility projections are present and executable. Increment 1 provides the local registered Opendatasoft connector, constrained HTTPS transport, structural validation, append-only content-addressed quarantine, offline replay, deduplication, safe attempt metadata, and deterministic source-change reports. Increment 2 now adds a manually triggered read-only acquisition job, a 14-day package manifest, a separately privileged metadata-only GitHub issue receipt, deterministic day-10 reminder and expiry transitions, and local-versus-runner fixture equivalence checks. The remote workflow has not yet been exercised, so no live civic acquisition, package, or receipt created by it is repository evidence. Governed admission, civic scheduling, external storage, and production controls remain absent.
+The project maintainer validated the drafting direction and bounded Increment 2 scope on 3 August 2026 and the bounded Increment 3 scope on 5 August 2026. This document remains a draft because external storage, production operation, scheduling, extension behavior, and other open choices remain unresolved. Increment 0 contracts, the bounded first plan, the synthetic pending-review example, and historical compatibility projections are present and executable. Increment 1 provides the local registered Opendatasoft connector, constrained HTTPS transport, structural validation, append-only content-addressed quarantine, offline replay, deduplication, safe attempt metadata, and deterministic source-change reports. Increment 2 adds a manually triggered read-only acquisition job, a 14-day package manifest, a separately privileged metadata-only GitHub issue receipt, deterministic day-10 reminder and expiry transitions, and local-versus-runner fixture equivalence checks. Its first controlled remote run completed on 5 August 2026 with an exact-byte `unchanged` result and a closed `no_admission_required` receipt. Increment 3 adds an exact admission-proposal contract, full candidate and package revalidation, a bounded GitHub adapter, and a separate protected workflow that can reject a candidate or propose eligible evidence on a dedicated branch and draft pull request. It cannot merge or publish. The deadline monitor and admission path remain operationally unexercised because no candidate was pending, and the required external admission environment is not configured. Civic scheduling, external storage, and production controls remain absent.
 
 ## Problem
 
@@ -55,9 +57,10 @@ This RFC concerns **upstream source APIs** used to retrieve public data. It does
 - deterministic fingerprint, byte-size, selected-field, scope, and projection checks;
 - a fail-closed Knowledge Passport and static local product projection;
 - read-only CI for validation, tests, and deterministic build.
-- seven generalized acquisition, comparison, package, and admission contracts, one reviewed six-school plan, one explicitly synthetic pending-review fixture, and deterministic compatibility projections for the three historical acquisitions.
+- eight generalized acquisition, comparison, package, and admission contracts, one reviewed six-school plan, one explicitly synthetic pending-review fixture, and deterministic compatibility projections for the three historical acquisitions.
 - one bounded local Opendatasoft connector, constrained HTTPS transport, append-only content-addressed quarantine, offline replay, deduplication, and deterministic source-change reporting.
-- one manually triggered GitHub acquisition workflow, a separate metadata-only receipt monitor, and deterministic temporary-package and receipt adapters; these are present but have not yet produced a real remote run.
+- one manually triggered GitHub acquisition workflow, a separate metadata-only receipt monitor, and deterministic temporary-package and receipt adapters; the acquisition and receipt path has produced one exact-byte `unchanged` remote run, while the pending-candidate monitor remains unexercised.
+- one protected remote-admission workflow, exact proposal contract, and bounded issue, Git-data, and draft-PR adapters; external protection and a real candidate exercise remain pending.
 
 ### Present but too narrow for a reusable collector
 
@@ -68,9 +71,7 @@ This RFC concerns **upstream source APIs** used to retrieve public data. It does
 
 ### Planned but absent
 
-- atomic admission from quarantine into the governed evidence tree;
 - automated retry policy and records;
-- a remote human-admission workflow;
 - durable external evidence storage;
 - source scheduling, production monitoring, and incident operations.
 
@@ -498,13 +499,15 @@ increment.
 
 ### Increment 2: remote acquisition
 
-**Current state:** Implemented for the validated one-plan prototype, but not yet
-remotely exercised. The workflow is manual and read-only during acquisition,
-uploads a manifest-validated package for 14 days, creates a separately
-privileged metadata-only issue receipt, and uses a metadata-only monitor for
-one day-10 reminder and fail-closed expiry. Tests use retained or injected
-responses and static workflow guardrails; they do not contact the civic source
-or GitHub API.
+**Current state:** Implemented for the validated one-plan prototype. The
+workflow is manual and read-only during acquisition, uploads a
+manifest-validated package for 14 days, creates a separately privileged
+metadata-only issue receipt, and uses a metadata-only monitor for one day-10
+reminder and fail-closed expiry. The first controlled remote run returned exact
+bytes already present in the governed evidence tree and closed without
+admission. The pending-candidate monitor remains unexercised. Tests use retained
+or injected responses and static workflow guardrails; they do not contact the
+civic source or GitHub API.
 
 - run the same plan through a read-only manual GitHub Actions workflow;
 - publish only a 14-day review package and safe summary;
@@ -514,9 +517,49 @@ or GitHub API.
 
 ### Increment 3: remote human admission
 
-- add protected manual approval;
-- revalidate the selected package;
-- create an admission pull request with no direct write to `main` and no automatic merge.
+**Current state:** The maintainer validated this bounded scope on 5 August 2026.
+It is implemented with synthetic candidate tests, but remains inactive until
+the external `governed-admission` environment and repository enablement variable
+are configured. No real candidate admission has been exercised.
+
+The recommended first admission path is deliberately narrower than a general
+data-management workflow:
+
+1. expose one manual `workflow_dispatch` input containing a metadata-only
+   receipt issue number, never an arbitrary URL, artifact path, branch, or shell
+   fragment;
+2. resolve the workflow run and package only from the validated receipt, and
+   contact no civic source during admission;
+3. accept only a non-expired `admission_pending` candidate for
+   `plan-city-schools-pilot-cases` and reject unchanged, failed, malformed,
+   rights-blocked, privacy-blocked, expired, or already decided receipts;
+4. revalidate the receipt, manifest, all component fingerprints, candidate raw
+   bytes, plan and source-profile versions, structural result, change report,
+   rights, privacy, retention, security, and exact target paths before any write;
+5. require a protected GitHub environment named `governed-admission`. Its
+   reviewer settings are external repository configuration and MUST be verified
+   before the workflow is considered usable;
+6. keep validation read-only, grant write permissions only to a later approved
+   admission job, and constrain that job to creating one dedicated branch, one
+   admission review record, the eligible small open-data evidence files, and one
+   pull request;
+7. update the durable receipt with the human decision, timestamp, rationale,
+   admission-review identifier, and pull-request URL;
+8. leave `main`, merge, canonical interpretation, promise assessment, product
+   publication, deployment, and civic scheduling untouched; and
+9. test the candidate path with clearly synthetic changed bytes because the
+   first real remote run was unchanged and created nothing eligible to admit.
+
+The initial decision choices SHOULD be `admit` and `reject`. A one-time
+`extend` path SHOULD remain a separate sub-increment because it must reproduce
+the exact verified bytes into a new protected temporary package without silently
+re-acquiring the source. Until that path exists, the interface MUST NOT offer an
+extension it cannot execute safely.
+
+The maintainer is currently the only available human approver. That approval
+can govern prototype admission, but it does not count as the separated
+independent methodological or evidence-authority review still required before
+public release.
 
 ### Deferred increments
 
@@ -577,8 +620,14 @@ The increment is complete only when:
 ## Open questions for review
 
 1. Which Python HTTP transport best satisfies streaming, redirect, DNS, timeout, and testability requirements with the smallest justified dependency surface?
-2. Which GitHub environment and approval settings should protect the admission workflow?
-3. Should the first admission increment export only metadata or also the reviewed small open raw response?
+2. **Resolved in the repository for Increment 3:** use a
+   `governed-admission` GitHub environment with the maintainer as required
+   reviewer and a separate explicit enablement variable. Repository-plan
+   support and the external configuration still require operational
+   verification before use.
+3. **Resolved for Increment 3:** admit only the exact reviewed small open JSON
+   response, acquisition event, source-change report, and admission review on
+   deterministic dated paths through a dedicated draft pull request.
 4. Which exact operational evidence will trigger a later source-scheduling proposal?
 5. **Resolved for Increment 2:** use a metadata-only GitHub issue created by a
    separate least-privilege receipt job. Revisit only if measured operation

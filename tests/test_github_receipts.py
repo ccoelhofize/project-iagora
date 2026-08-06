@@ -9,6 +9,7 @@ from urllib.error import URLError
 
 from iagora.contracts import ContractViolation
 from iagora.github_receipts import (
+    GitHubAdmissionClient,
     GitHubAdapterFailure,
     GitHubIssueClient,
     apply_receipt_monitor,
@@ -213,6 +214,45 @@ class GitHubReceiptAdapterTests(unittest.TestCase):
         message = str(context.exception)
         self.assertNotIn("secret-token", message)
         self.assertNotIn("private response detail", message)
+
+    def test_admission_client_is_bounded_to_git_objects_and_draft_prs(self) -> None:
+        opener = RecordingOpener(
+            [
+                {"object": {"sha": "1" * 40}},
+                {"tree": {"sha": "2" * 40}},
+                {"sha": "3" * 40},
+                {"sha": "4" * 40},
+                {"sha": "5" * 40},
+                {},
+                {"html_url": "https://github.com/owner/repository/pull/7"},
+            ]
+        )
+        client = GitHubAdmissionClient("owner/repository", "test-token", opener=opener)
+        main, tree = client.main_commit()
+        blob = client.create_blob(b"bounded evidence")
+        new_tree = client.create_tree(tree, [{"path": "data/example.json", "sha": blob}])
+        commit = client.create_commit("Admit evidence", new_tree, main)
+        client.create_branch("admission/test-0001", commit)
+        url = client.create_pull_request(
+            "admission/test-0001", "Admit evidence", "Governed proposal"
+        )
+        self.assertEqual("https://github.com/owner/repository/pull/7", url)
+        request, _timeout = opener.requests[-1]
+        payload = json.loads(request.data)
+        self.assertEqual("main", payload["base"])
+        self.assertTrue(payload["draft"])
+        self.assertEqual("admission/test-0001", payload["head"])
+
+    def test_admission_client_rejects_out_of_scope_paths_and_branches(self) -> None:
+        client = GitHubAdmissionClient("owner/repository", "test-token")
+        with self.assertRaises(ContractViolation):
+            client._request("POST", "/issues")
+        with self.assertRaises(ContractViolation):
+            client.create_branch("main", "1" * 40)
+        with self.assertRaises(ContractViolation):
+            client.create_tree(
+                "1" * 40, [{"path": "../unsafe.json", "sha": "2" * 40}]
+            )
 
 
 if __name__ == "__main__":

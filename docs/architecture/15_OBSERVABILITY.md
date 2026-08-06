@@ -43,6 +43,13 @@ bodies, request URLs, local paths, and secrets. These records are local
 prototype metadata, not a durable audit or telemetry service. The remote
 adapter can add a 14-day package manifest and a durable
 metadata-only issue receipt with one reminder timestamp and an explicit expiry
-transition. The workflow code is present but has not yet emitted an operational
-receipt. No telemetry stack, service objectives, dashboards, alerts, on-call
-process, generalized audit store, or production environment exists.
+transition. The first controlled remote run emitted one closed
+`no_admission_required` receipt for an unchanged response. The reminder and
+expiry transitions have not yet been exercised. The protected admission path
+can add a validated proposal summary, a durable admitted or rejected receipt,
+an admission-review record for admitted candidates, and a draft pull-request
+reference. These remain operational workflow records, not civic conclusions or
+a generalized audit store. No real admission has run, and partial apply-phase
+failure still requires manual reconciliation from workflow, branch, PR, and
+receipt state. No telemetry stack, service objectives, dashboards, alerts,
+on-call process, generalized audit store, or production environment exists.

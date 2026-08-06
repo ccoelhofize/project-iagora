@@ -16,4 +16,4 @@ The repository does not yet define a complete RFC lifecycle. Until it does, ever
 
 | RFC | Status | Proposal | Implementation state |
 | --- | --- | --- | --- |
-| [RFC-0001](RFC-0001-portable-governed-source-acquisition.md) | Draft | Portable governed source acquisition, runnable locally and through manually triggered GitHub Actions | Increments 0–2 present; remote workflow unexercised and human admission absent |
+| [RFC-0001](RFC-0001-portable-governed-source-acquisition.md) | Draft | Portable governed source acquisition, runnable locally and through manually triggered GitHub Actions | Increments 0–3 present; first acquisition and receipt exercised; deadline monitor and admission unexercised; external admission protection not configured |
